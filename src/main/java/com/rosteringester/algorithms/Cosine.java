@@ -1,13 +1,18 @@
 package com.rosteringester.algorithms;
 
+import com.rosteringester.main.RosterIngester;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by a212083 on 06/15/2017.
  */
 public class Cosine implements AlgoInterface {
+
+    private static final Logger LOGGER = Logger.getLogger( Levenshtein.class.getName() );
 
     // ----------------------------------------------------------
     public static Map<String, Integer> getTermFrequencyMap(String[] terms) {
@@ -23,6 +28,7 @@ public class Cosine implements AlgoInterface {
 
     // ----------------------------------------------------------
     public Double startAlgo(String algoName, String text1, String text2) {
+        if(RosterIngester.debug) LOGGER.info("COSINE");
         //Get vectors
         Map<String, Integer> a = getTermFrequencyMap(text1.split("\\W+"));
         Map<String, Integer> b = getTermFrequencyMap(text2.split("\\W+"));
@@ -50,6 +56,10 @@ public class Cosine implements AlgoInterface {
 
         //return cosine similarity
         return dotProduct / Math.sqrt(magnitudeA * magnitudeB);
+
+
     }
+
+
 
 } // End of Cosine

@@ -26,14 +26,16 @@ public class DbMySQL implements DbInterface {
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/knime","fut","Table00#");
             conn.close();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        catch (SQLException e1) {
+            e1.printStackTrace();
         }
 
         return conn;
 
     } // End of getDBConn method
-
 
 
 

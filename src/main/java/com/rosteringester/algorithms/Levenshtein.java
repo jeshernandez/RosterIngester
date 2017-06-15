@@ -14,7 +14,10 @@ public class Levenshtein implements AlgoInterface {
         scoreValue = StringUtils.getLevenshteinDistance(text1, text2);
         System.out.println("Value inside: " + scoreValue);
         double returnDouble = (double) scoreValue;
-
+        returnDouble = returnDouble / 100;
+        returnDouble = 1 - returnDouble;
+        //returnDouble = returnDouble;
+        System.out.println("Printing inside: " + returnDouble);
 
         return returnDouble;
     }

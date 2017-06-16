@@ -17,7 +17,7 @@ public class Levenshtein implements AlgoInterface {
         returnDouble = returnDouble / 100;
         returnDouble = 1 - returnDouble;
         //returnDouble = returnDouble;
-        System.out.println("Printing inside: " + returnDouble + ", String: " + discovery);
+        //System.out.println("Printing inside: " + returnDouble + ", String: " + discovery);
 
         return returnDouble;
     }

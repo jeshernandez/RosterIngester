@@ -29,8 +29,8 @@ public class FileRead extends FileSystem {
 
 
             for (int i = 0; i < headers.length; i++) {
-                docHeaders.put(i, headers[i].toUpperCase());
-                System.out.println("Header>>: " + headers[i]);
+                docHeaders.put(i, this.getAlgoReady(headers[i]));
+                //System.out.println("Header>>: " + headers[i]);
             }
 
             int lines = 1;

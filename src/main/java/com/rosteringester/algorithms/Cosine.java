@@ -27,11 +27,11 @@ public class Cosine implements AlgoInterface {
 
 
     // ----------------------------------------------------------
-    public Double startAlgo(String algoName, String text1, String text2) {
-        if(RosterIngester.debug) LOGGER.info("COSINE");
+    public Double startAlgo(String algoName, String staticField, String discovery) {
+        double scoreValue = 0.0;
         //Get vectors
-        Map<String, Integer> a = getTermFrequencyMap(text1.split("\\W+"));
-        Map<String, Integer> b = getTermFrequencyMap(text2.split("\\W+"));
+        Map<String, Integer> a = getTermFrequencyMap(staticField.split("\\W+"));
+        Map<String, Integer> b = getTermFrequencyMap(discovery.split("\\W+"));
 
         //Get unique words from both sequences
         HashSet<String> intersection = new HashSet<String>(a.keySet());
@@ -54,8 +54,12 @@ public class Cosine implements AlgoInterface {
             magnitudeB += Math.pow(b.get(k), 2);
         }
 
+        scoreValue = dotProduct / Math.sqrt(magnitudeA * magnitudeB);
+        System.out.println("Printing inside: " + scoreValue + ", String: " + discovery);
+
         //return cosine similarity
-        return dotProduct / Math.sqrt(magnitudeA * magnitudeB);
+        return scoreValue;
+
 
 
     }

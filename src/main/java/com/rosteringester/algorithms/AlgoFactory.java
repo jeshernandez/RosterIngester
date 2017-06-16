@@ -1,7 +1,9 @@
 package com.rosteringester.algorithms;
 
+import com.rosteringester.filesystem.DelimitedText;
 import com.rosteringester.main.RosterIngester;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -9,6 +11,23 @@ import java.util.logging.Logger;
  */
 public class AlgoFactory {
     private static final Logger LOGGER = Logger.getLogger( AlgoFactory.class.getName() );
+
+
+
+    // -------------------------------------------
+    public static HashMap getHeaders(String fileType, String fileName, String delimeter) {
+
+        if(fileType.equals("pipe")) {
+            return new DelimitedText().getHeaders(fileName, delimeter);
+        } else {
+            return new DelimitedText().getHeaders(fileName, delimeter);
+        }
+
+
+
+    } // end of getHeaders method
+
+
 
     // -------------------------------------------
     public static Double getScore(String algoNames, String text1,

@@ -1,19 +1,31 @@
 package com.rosteringester.main;
 
-import com.rosteringester.db.DbFactory;
-import com.rosteringester.db.DbInterface;
+import com.rosteringester.algorithms.AlgoFactory;
+
 
 /**
  * Created by jesse on 6/14/17.
  */
 public class RosterIngester {
+    public static boolean debug = false;
 
     public static void main(String [] args) {
         System.out.println("Starting...");
 
-        DbFactory df = new DbFactory();
-        DbInterface di = df.getDatabase("mysql");
-        di.getDBName();
+        debug = true;
+
+        AlgoFactory af = new AlgoFactory();
+        Double returnedScore = 0.0;
+        returnedScore  = af.getScore("cosine", "address", "address ");
+        System.out.println("Your Score: " + returnedScore);
+
+        String[] discoveryList = {"PRACTICE PHONE", "PHONE", "CALL", "ADDRESS",
+                "PRACTICE ADDRESS", "TIN", "TAX ID", "DEGREE", "SPECIALTY", "LAST NAME", "FIRST NAME", "ACCEPT",
+                "ACCEPT NEW PATIENTS", "EMAIL", "EMAIL ADDRESS"};
+
+        returnedScore = af.getBestScore("levenshtein", "address", discoveryList);
+        System.out.println("BEST Score: " + returnedScore);
+
 
     }
 

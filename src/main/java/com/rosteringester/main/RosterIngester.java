@@ -1,6 +1,7 @@
 package com.rosteringester.main;
 
-import com.rosteringester.algorithms.AlgoFactory;
+import com.rosteringester.filesystem.FileFactory;
+import com.rosteringester.filesystem.FileInterface;
 
 
 /**
@@ -14,17 +15,23 @@ public class RosterIngester {
 
         debug = true;
 
-        AlgoFactory af = new AlgoFactory();
-        Double returnedScore = 0.0;
-        returnedScore  = af.getScore("cosine", "address", "address ");
-        System.out.println("Your Score: " + returnedScore);
+        FileFactory ff = new FileFactory();
+        FileInterface fi =ff.getInstance("delimeted");
+        fi.getHeaders("C:\\DATA\\rosters\\roster_cm.dat", "|");
 
-        String[] discoveryList = {"PRACTICE PHONE", "PHONE", "CALL", "ADDRESS",
-                "PRACTICE ADDRESS", "TIN", "TAX ID", "DEGREE", "SPECIALTY", "LAST NAME", "FIRST NAME", "ACCEPT",
-                "ACCEPT NEW PATIENTS", "EMAIL", "EMAIL ADDRESS"};
+//        AlgoFactory af = new AlgoFactory();
+//        Double returnedScore = 0.0;
+//        returnedScore  = af.getScore("cosine", "address", "address ");
+//        System.out.println("Your Score: " + returnedScore);
+//
+//        String[] discoveryList = {"PRACTICE PHONE", "PHONE", "CALL", "ADDRESS",
+//                "PRACTICE ADDRESS", "TIN", "TAX ID", "DEGREE", "SPECIALTY", "LAST NAME", "FIRST NAME", "ACCEPT",
+//                "ACCEPT NEW PATIENTS", "EMAIL", "EMAIL ADDRESS"};
+//
+//        returnedScore = af.getBestScore("levenshtein", "address", discoveryList);
+//        System.out.println("BEST Score: " + returnedScore);
 
-        returnedScore = af.getBestScore("levenshtein", "address", discoveryList);
-        System.out.println("BEST Score: " + returnedScore);
+
 
 
     }

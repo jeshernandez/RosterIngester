@@ -18,4 +18,23 @@ public class FileSystem {
 
     }
 
+
+
+    // ---------------------------------------------------
+    public String getCleanDelimeter(String delimeter) {
+        String cleanDelimeter = null;
+
+        if(delimeter.equals("|")) {
+            cleanDelimeter = "\\|";
+        }
+
+        return cleanDelimeter;
+
+    } // end of getCleanDelimeter
+
+
+
+
+
+
 } // End of FileSystem parent class

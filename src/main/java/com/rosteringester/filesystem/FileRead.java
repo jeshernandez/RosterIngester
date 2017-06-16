@@ -9,12 +9,14 @@ import java.util.HashMap;
 /**
  * Created by a212083 on 06/16/2017.
  */
-public class FileRead {
+public class FileRead extends FileSystem {
 
 
+    // ---------------------------------------------------
     public HashMap getHeaders(String fileName, String delimeter) {
 
         String[] headers = null;
+
         HashMap<Integer, String> docHeaders = new HashMap<Integer, String>();
 
         try {
@@ -23,10 +25,11 @@ public class FileRead {
             BufferedReader br = new BufferedReader(new InputStreamReader(fs));
 
 
-            headers = br.readLine().split(delimeter);
+            headers = br.readLine().split(this.getCleanDelimeter(delimeter));
+
 
             for (int i = 0; i < headers.length; i++) {
-                docHeaders.put(i, headers[i]);
+                docHeaders.put(i, headers[i].toUpperCase());
                 System.out.println("Header>>: " + headers[i]);
             }
 
@@ -45,6 +48,10 @@ public class FileRead {
         return docHeaders;
 
     } // End of getHeaders
+
+
+
+
 
 
 } // End of FileRead Class

@@ -50,13 +50,13 @@ public class AlgoFactory {
 
 
 
+    // ---------------------------------------------------------------------
     public static Double getBestScore(String algoNames, String staticValue,
                                       String[] discoveryList) {
         String cleanAlgoName = algoNames.toUpperCase();
-        double finalDistance = 1.0;
+        double finalDistance = -1;
         String cleanField = staticValue;
         cleanField = cleanField.toUpperCase();
-        int index = 0;
 
             if(cleanAlgoName.equals("LEVENSHTEIN")) {
                 if(RosterIngester.debug) LOGGER.info("Levenshtein Best Getting Score.");
@@ -67,17 +67,25 @@ public class AlgoFactory {
                     tempDistance = l.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
-                    if(!cleanField.contains(discoveryList[i].toString())) {
-                        if(tempDistance < finalDistance) {
-                            finalDistance = tempDistance;
-                            index = i;
-                        }
+                    // -- start of if-hell-statements
+                    if(!cleanField.equals(discoveryList[i].toString())) {
+                      if(!cleanField.contains(discoveryList[i].toString())) {
+                          if(tempDistance > finalDistance) {
+                              finalDistance = tempDistance;
+                          }
+                      } else {
+                        finalDistance = 1;
+                      }
                     } else {
-                        finalDistance = 1.0;
+                        finalDistance = 2;
                     }
+
+                    // -- end of if-hell-statements
+
 
                 } // end for-loop
 
+                System.out.println(">>>>>>>: " + finalDistance);
                 return finalDistance;
             }
             else {
@@ -89,16 +97,26 @@ public class AlgoFactory {
                     tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
-                    if(!cleanField.contains(discoveryList[i].toString())) {
-                        if(tempDistance < finalDistance) {
-                            finalDistance = tempDistance;
-                            index = i;
+                    // -- start of if-hell-statements
+                    if(!cleanField.equals(discoveryList[i].toString())) {
+                        if(!cleanField.contains(discoveryList[i].toString())) {
+                            if(tempDistance > finalDistance) {
+                                finalDistance = tempDistance;
+                            }
+                        } else {
+                            finalDistance = 1;
                         }
                     } else {
-                        finalDistance = 1.0;
+                        finalDistance = 2;
                     }
 
+                    // -- end of if-hell-statements
+
+
                 } // end for-loop
+
+                System.out.println(">>>>>>>: " + finalDistance);
+
 
                 return finalDistance;
             } // end-if

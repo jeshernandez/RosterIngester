@@ -8,16 +8,16 @@ import org.apache.commons.lang.StringUtils;
  */
 public class Levenshtein implements AlgoInterface {
 
-    public Double startAlgo(String getName, String staticField, String discovery) {
+    public Double startAlgo(String getName, String rosterField, String discovery) {
 
         int scoreValue = 0;
-        scoreValue = StringUtils.getLevenshteinDistance(staticField, discovery);
-        System.out.println("Value inside: " + scoreValue);
+        scoreValue = StringUtils.getLevenshteinDistance(rosterField, discovery);
+       // System.out.println("Value inside: " + scoreValue);
         double returnDouble = (double) scoreValue;
         returnDouble = returnDouble / 100;
         returnDouble = 1 - returnDouble;
         //returnDouble = returnDouble;
-        //System.out.println("Printing inside: " + returnDouble + ", String: " + discovery);
+        System.out.println("Printing inside: " + returnDouble + ", String: " + rosterField);
 
         return returnDouble;
     }

@@ -28,14 +28,14 @@ public class RosterIngester {
         AlgoFactory af = new AlgoFactory();
         Double returnedScore = 0.0;
 
-        String[] discoveryList = {"NPI"};
+        String[] discoveryList = {"PHONE"};
 
         Iterator it = headerMap.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
-            returnedScore = af.getBestScore("levenshtein", pair.getValue().toString(), discoveryList);
-            System.out.println("Your Score: " + returnedScore + " For, " + pair.getValue().toString() + " : Key: " + pair.getKey());
+            returnedScore = af.getBestScore("cosine", pair.getValue().toString(), discoveryList);
+            //System.out.println("Your Score: " + returnedScore + " For, " + pair.getValue().toString() + " : Key: " + pair.getKey());
             //it.remove(); // avoids a ConcurrentModificationException
         }
 

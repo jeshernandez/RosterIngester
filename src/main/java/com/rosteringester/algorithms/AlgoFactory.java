@@ -1,9 +1,5 @@
 package com.rosteringester.algorithms;
 
-import com.rosteringester.filesystem.DelimitedText;
-import com.rosteringester.main.RosterIngester;
-
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -11,23 +7,6 @@ import java.util.logging.Logger;
  */
 public class AlgoFactory {
     private static final Logger LOGGER = Logger.getLogger( AlgoFactory.class.getName() );
-
-
-
-    // -------------------------------------------
-    public static HashMap getHeaders(String fileType, String fileName, String delimeter) {
-
-        if(fileType.equals("pipe")) {
-            return new DelimitedText().getHeaders(fileName, delimeter);
-        } else {
-            return new DelimitedText().getHeaders(fileName, delimeter);
-        }
-
-
-
-    } // end of getHeaders method
-
-
 
     // -------------------------------------------
     public static Double getScore(String algoNames, String text1,
@@ -50,13 +29,13 @@ public class AlgoFactory {
 
 
 
-    // ---------------------------------------------------------------------
     public static Double getBestScore(String algoNames, String staticValue,
                                       String[] discoveryList) {
         String cleanAlgoName = algoNames.toUpperCase();
-        double finalDistance = -1;
+        double finalDistance = 1.0;
         String cleanField = staticValue;
         cleanField = cleanField.toUpperCase();
+        int index = 0;
 
             if(cleanAlgoName.equals("LEVENSHTEIN")) {
                 if(RosterIngester.debug) LOGGER.info("Levenshtein Best Getting Score.");
@@ -67,25 +46,17 @@ public class AlgoFactory {
                     tempDistance = l.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
-                    // -- start of if-hell-statements
-                    if(!cleanField.equals(discoveryList[i].toString())) {
-                      if(!cleanField.contains(discoveryList[i].toString())) {
-                          if(tempDistance > finalDistance) {
-                              finalDistance = tempDistance;
-                          }
-                      } else {
-                        finalDistance = 1;
-                      }
+                    if(!cleanField.contains(discoveryList[i].toString())) {
+                        if(tempDistance < finalDistance) {
+                            finalDistance = tempDistance;
+                            index = i;
+                        }
                     } else {
-                        finalDistance = 2;
+                        finalDistance = 1.0;
                     }
-
-                    // -- end of if-hell-statements
-
 
                 } // end for-loop
 
-                System.out.println(">>>>>>>: " + finalDistance);
                 return finalDistance;
             }
             else {
@@ -97,26 +68,16 @@ public class AlgoFactory {
                     tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
-                    // -- start of if-hell-statements
-                    if(!cleanField.equals(discoveryList[i].toString())) {
-                        if(!cleanField.contains(discoveryList[i].toString())) {
-                            if(tempDistance > finalDistance) {
-                                finalDistance = tempDistance;
-                            }
-                        } else {
-                            finalDistance = 1;
+                    if(!cleanField.contains(discoveryList[i].toString())) {
+                        if(tempDistance < finalDistance) {
+                            finalDistance = tempDistance;
+                            index = i;
                         }
                     } else {
-                        finalDistance = 2;
+                        finalDistance = 1.0;
                     }
 
-                    // -- end of if-hell-statements
-
-
                 } // end for-loop
-
-                System.out.println(">>>>>>>: " + finalDistance);
-
 
                 return finalDistance;
             } // end-if

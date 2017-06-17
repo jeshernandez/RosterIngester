@@ -1,7 +1,5 @@
 package com.rosteringester.algorithms;
 
-import com.rosteringester.main.RosterIngester;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

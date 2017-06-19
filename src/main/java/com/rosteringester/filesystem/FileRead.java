@@ -1,5 +1,7 @@
 package com.rosteringester.filesystem;
 
+import com.rosteringester.filesystem.FileSystem;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;

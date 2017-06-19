@@ -13,8 +13,10 @@ public class FileFactory {
 
         if(cleanKeyword.equals("DELIMITED")) {
             return new DelimitedText();
+        } else if(cleanKeyword.equals("TEST")){
+            return new TestFile();
         } else {
-            return new DelimitedText();
+            return null;
         }
 
     } // End of getInstance method

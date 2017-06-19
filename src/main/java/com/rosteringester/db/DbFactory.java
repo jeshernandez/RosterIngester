@@ -9,19 +9,7 @@ public class DbFactory {
 
 
 
-    public DbInterface getDatabase(String dbName) {
-
-        dbName = dbName.toUpperCase();
-
-        if(dbName.equals("MYSQL"))
-            return new DbMySQL();
-        else
-            return new DbMySQL();
-    }
-
-
-
-    // Get the database connection
+    // Get the database connectionß
     public Connection getDBConn(String dbName) {
 
         Connection conn = null;

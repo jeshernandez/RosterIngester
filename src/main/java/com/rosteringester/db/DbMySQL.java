@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by jesse on 6/14/17.
  */
-public class DbMySQL implements DbInterface {
+public class DbMySQL  {
 
 
     // ----------------------------------------

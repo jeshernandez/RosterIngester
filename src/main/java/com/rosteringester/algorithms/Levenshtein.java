@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Created by a212083 on 06/15/2017.
+ * Created by jeshernandez on 06/15/2017.
  */
 public class Levenshtein implements AlgoInterface {
 

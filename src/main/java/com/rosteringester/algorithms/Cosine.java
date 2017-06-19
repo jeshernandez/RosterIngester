@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Created by a212083 on 06/15/2017.
+ * Created by jeshernandez on 06/15/2017.
  */
 public class Cosine implements AlgoInterface {
 

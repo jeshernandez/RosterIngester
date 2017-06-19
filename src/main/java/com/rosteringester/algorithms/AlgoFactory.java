@@ -1,9 +1,11 @@
 package com.rosteringester.algorithms;
 
+import com.rosteringester.main.RosterIngester;
+
 import java.util.logging.Logger;
 
 /**
- * Created by a212083 on 06/15/2017.
+ * Created by jeshernandez on 06/15/2017.
  */
 public class AlgoFactory {
     private static final Logger LOGGER = Logger.getLogger( AlgoFactory.class.getName() );
@@ -13,16 +15,18 @@ public class AlgoFactory {
                                   String text2) {
         String cleanAlgoName = algoNames.toUpperCase();
 
-        if(cleanAlgoName.equals("LEVENSHTEIN")) {
+        if(cleanAlgoName.equals("L")) {
             if(RosterIngester.debug) LOGGER.info("Levenshtein Getting Score.");
-            System.out.println("Starting LEV...");
             Levenshtein l = new Levenshtein();
             return l.startAlgo(cleanAlgoName, text1, text2);
-        }
-        else {
+        } else if (cleanAlgoName.equals("C")) {
             if(RosterIngester.debug) LOGGER.info("Cosine Getting Score.");
             Cosine c = new Cosine();
             return c.startAlgo(cleanAlgoName, text1, text2);
+        }
+        else {
+            if(RosterIngester.debug) LOGGER.info("No Valid Algorithm Selected.");
+            return null;
         }
 
     } // End of getScore method
@@ -37,7 +41,7 @@ public class AlgoFactory {
         cleanField = cleanField.toUpperCase();
         int index = 0;
 
-            if(cleanAlgoName.equals("LEVENSHTEIN")) {
+            if(cleanAlgoName.equals("L")) {
                 if(RosterIngester.debug) LOGGER.info("Levenshtein Best Getting Score.");
                 Levenshtein l = new Levenshtein();
 

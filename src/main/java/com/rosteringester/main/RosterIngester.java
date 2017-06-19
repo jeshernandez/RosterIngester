@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 /**
- * Created by jesse on 6/14/17.
+ * Created by jeshernandez on 6/14/17.
  */
 public class RosterIngester {
     public static boolean debug = false;
@@ -22,7 +22,7 @@ public class RosterIngester {
 
         HashMap<Integer, String> headerMap = new HashMap<Integer, String>();
         FileFactory ff = new FileFactory();
-        FileInterface fi =ff.getInstance("delimeted");
+        FileInterface fi =ff.getInstance("test");
         headerMap = fi.getHeaders("C:\\DATA\\rosters\\roster_cm.dat", "|");
 
         AlgoFactory af = new AlgoFactory();
@@ -34,7 +34,7 @@ public class RosterIngester {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
-            returnedScore = af.getBestScore("cosine", pair.getValue().toString(), discoveryList);
+            returnedScore = af.getBestScore("l", pair.getValue().toString(), discoveryList);
             //System.out.println("Your Score: " + returnedScore + " For, " + pair.getValue().toString() + " : Key: " + pair.getKey());
             //it.remove(); // avoids a ConcurrentModificationException
         }

@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 /**
- * Created by a212083 on 06/16/2017.
+ * Created by jeshernandez on 06/16/2017.
  */
 public class FileRead extends FileSystem {
 

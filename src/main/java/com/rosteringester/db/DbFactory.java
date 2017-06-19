@@ -3,7 +3,7 @@ package com.rosteringester.db;
 import java.sql.Connection;
 
 /**
- * Created by jesse on 6/14/17.
+ * Created by jeshernandez on 6/14/17.
  */
 public class DbFactory {
 

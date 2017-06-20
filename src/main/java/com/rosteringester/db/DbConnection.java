@@ -12,9 +12,9 @@ public class DbConnection extends DbFactory {
 
     static DbConnection conn = new DbConnection();
 
-    private DbConnection() {
-
-    }
+//    private DbConnection() {
+//
+//    }
 
     public static DbConnection getInstance(String dbName) {
 

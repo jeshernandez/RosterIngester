@@ -9,10 +9,6 @@ import static org.junit.Assert.*;
  */
 public class DbConnectionTest {
 
-
-    @Test
-    public void getInstance() throws Exception {
-    }
     //TODO: MySql, SQL Server 2015, DB2
     @Test
     public void testGetInstance() {

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by jeshernandez on 6/14/17.
  */
-public class DbMySQL  {
+public class DbMySQL  extends DbCommonP {
 
 
     // ----------------------------------------

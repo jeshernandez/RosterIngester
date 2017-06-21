@@ -2,3 +2,5 @@
 .idea
 .metadata
 RemoteSystemsTempFiles
+/src/main/resources/env.yaml
+/out

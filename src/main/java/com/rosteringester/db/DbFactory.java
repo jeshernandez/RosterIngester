@@ -9,7 +9,7 @@ public class DbFactory {
 
 
 
-    // Get the database connectionß
+    // Get the database connection
     public Connection getDBConn(String dbName) {
 
         Connection conn = null;

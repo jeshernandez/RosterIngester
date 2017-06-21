@@ -24,7 +24,7 @@ public class DbMySQL  extends DbCommonP {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/knime","fut","Table00#");
+                    "jdbc:mysql://localhost:3306/knime","","");
             conn.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

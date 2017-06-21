@@ -5,25 +5,15 @@ package com.rosteringester.db;
  */
 public class DbConnection extends DbFactory {
 
-
-
-
     // Creating Singleton class
 
     static DbConnection conn = new DbConnection();
 
-//    private DbConnection() {
-//
-//    }
-
     public static DbConnection getInstance(String dbName) {
-
-
         DbFactory df = new DbFactory();
         df.getDBConn(dbName);
         return conn;
     }
-
 
 
 }

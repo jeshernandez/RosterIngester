@@ -3,9 +3,10 @@ package com.rosteringester.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
- * Created by MichaelChrisco on 6/14/17.
+ * Created by MichaelChrisco on 6/21/17.
  */
 public class DbSqlServer extends DbCommonP {
 
@@ -19,7 +20,14 @@ public class DbSqlServer extends DbCommonP {
 
     // ----------------------------------------
     public Connection getDBConn() {
-        String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=master;user=sa;password=your_password";
+        Map<String, String> map = setConfig("env.yaml");
+
+        //TODO: This should be set in the constructor or parent class.
+        String connectionUrl = "jdbc:sqlserver://" + map.get("url") +
+                ":" + String.valueOf(map.get("port")) +
+                ";databaseName=" + map.get("database") +
+                ";user=" + map.get("username") +
+                ";password=" + map.get("password");
 
         Connection conn = null;
         try {
@@ -32,7 +40,6 @@ public class DbSqlServer extends DbCommonP {
         return conn;
 
     } // End of getDBConn method
-
 
 
 } // End of DbMySQL class

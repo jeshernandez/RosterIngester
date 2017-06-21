@@ -25,9 +25,10 @@ public class DbSqlServer extends DbCommonP {
         //TODO: This should be set in the constructor or parent class.
         String connectionUrl = "jdbc:sqlserver://" + map.get("url") +
                 ":" + String.valueOf(map.get("port")) +
-                ";databaseName=" + map.get("database") +
+                ";IntegratedSecurity=true;databaseName=" + map.get("database") +
                 ";user=" + map.get("username") +
                 ";password=" + map.get("password");
+//        System.out.println(connectionUrl);
 
         Connection conn = null;
         try {

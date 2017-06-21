@@ -1,12 +1,15 @@
 package com.rosteringester.main;
 
 import com.rosteringester.algorithms.AlgoFactory;
+import com.rosteringester.db.DbSqlServer;
+import java.sql.Connection;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 
 
 /**
@@ -39,9 +42,10 @@ public class RosterIngester {
             //it.remove(); // avoids a ConcurrentModificationException
         }
 
-
-
-
+        //Testing connection to Sql Server 2014
+        //Takes place of an integration test
+        DbSqlServer sqlServer = new DbSqlServer();
+        Connection connection = sqlServer.getDBConn();
 
     }
 

@@ -38,7 +38,6 @@
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: com.microsoft.azure:adal4j:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.nimbusds:oauth2-oidc-sdk:4.5" level="project" />
-    <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.1" level="project" />
     <orderEntry type="library" name="Maven: net.minidev:json-smart:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.nimbusds:lang-tag:1.4" level="project" />
@@ -48,5 +47,7 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.18" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.10.19" level="project" />
+    <orderEntry type="library" name="Maven: info.debatty:java-string-similarity:0.24" level="project" />
+    <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
   </component>
 </module>

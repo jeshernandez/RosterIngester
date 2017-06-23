@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by a119887 on 06/22/2017.
+ * Created by MichaelChrisco on 06/22/2017.
  */
 public class CosineTest {
 //    @Test

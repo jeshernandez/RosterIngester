@@ -45,7 +45,7 @@ public class RosterIngester {
         //Testing connection to Sql Server 2014
         //Takes place of an integration test
         DbSqlServer sqlServer = new DbSqlServer();
-        Connection connection = sqlServer.getDBConn();
+//        Connection connection = sqlServer.getDBConn();
 
     }
 

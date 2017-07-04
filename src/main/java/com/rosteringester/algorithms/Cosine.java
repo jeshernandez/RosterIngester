@@ -3,14 +3,13 @@ package com.rosteringester.algorithms;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created by jeshernandez on 06/15/2017.
  */
 public class Cosine implements AlgoInterface {
 
-    private static final Logger LOGGER = Logger.getLogger( Levenshtein.class.getName() );
+
 
     // ----------------------------------------------------------
     public static Map<String, Integer> getTermFrequencyMap(String[] terms) {

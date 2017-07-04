@@ -24,6 +24,11 @@ public class AlgoFactory {
             Cosine c = new Cosine();
             return c.startAlgo(cleanAlgoName, text1, text2);
         }
+        else if (cleanAlgoName.equals("J")) {
+            if(RosterIngester.debug) LOGGER.info("Jaro Winkler Score.");
+            JaroWinkler c = new JaroWinkler();
+            return c.startAlgo(cleanAlgoName, text1, text2);
+        }
         else {
             if(RosterIngester.debug) LOGGER.info("No Valid Algorithm Selected.");
             return null;
@@ -62,6 +67,30 @@ public class AlgoFactory {
                 } // end for-loop
 
                 return finalDistance;
+            }
+            else if(cleanAlgoName.equals("J")) {
+                {
+                    if(RosterIngester.debug) LOGGER.info("Jaro Winkler Best Getting Score.");
+                    JaroWinkler c = new JaroWinkler();
+
+                    for (int i = 0; i < discoveryList.length; i++) {
+                        double tempDistance = 0.0;
+                        tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
+
+
+                        if(!cleanField.contains(discoveryList[i].toString())) {
+                            if(tempDistance < finalDistance) {
+                                finalDistance = tempDistance;
+                                index = i;
+                            }
+                        } else {
+                            finalDistance = 1.0;
+                        }
+
+                    } // end for-loop
+
+                    return finalDistance;
+                } // end-if
             }
             else {
                 if(RosterIngester.debug) LOGGER.info("Cosine Best Getting Score.");

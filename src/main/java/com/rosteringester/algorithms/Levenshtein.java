@@ -11,8 +11,9 @@ public class Levenshtein implements AlgoInterface {
     public Double startAlgo(String getName, String rosterField, String discovery) {
 
         int scoreValue = 0;
-        scoreValue = StringUtils.getLevenshteinDistance(rosterField, discovery);
-       // System.out.println("Value inside: " + scoreValue);
+
+        scoreValue = StringUtils.getLevenshteinDistance(rosterField, discovery.toString());
+
         double returnDouble = (double) scoreValue;
         returnDouble = returnDouble / 100;
         returnDouble = 1 - returnDouble;

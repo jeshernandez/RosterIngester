@@ -10,7 +10,7 @@ public class JaroWinkler implements AlgoInterface {
 
     public Double startAlgo(String getName, String rosterField, String discovery) {
 
-        System.out.println("roster: " + rosterField + ", " + "Discovery: " + discovery.toString());
+        //System.out.println("roster: " + rosterField + ", " + "Discovery: " + discovery.toString());
         double returnDouble;
 
         returnDouble = StringUtils.getJaroWinklerDistance(rosterField, discovery);

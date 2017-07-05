@@ -7,6 +7,21 @@
     <groupId>groupId</groupId>
     <artifactId>RosterIngester</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Jesse Hernandez</name>
+            <email>jeshernandez@ieee.org</email>
+        </developer>
+        <developer>
+            <name>Michael Chrisco</name>
+        </developer>
+    </developers>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
         <dependency>
@@ -38,6 +53,7 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+
 
     </dependencies>
 </project>

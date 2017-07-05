@@ -28,6 +28,7 @@ public class RosterIngester {
         HashMap<String, Integer> headerMap = new HashMap<String, Integer>();
         FileFactory ff = new FileFactory();
         FileInterface fi =ff.getInstance("test");
+//        String delimiter = fi.detectDelimiter("C:\DATA\rosters\roster_cm.dat");
         headerMap = fi.getHeaders("C:\\DATA\\rosters\\roster_cm.dat", "|");
 
         AlgoFactory af = new AlgoFactory();

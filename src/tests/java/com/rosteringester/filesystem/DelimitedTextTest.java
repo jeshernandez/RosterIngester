@@ -33,4 +33,21 @@ public class DelimitedTextTest {
         assertEquals(hash, subject);
     }
 
+    @Test
+    public void detectDelimiterTest() throws Exception {
+        File resourcesDirectory = new File("src/main/resources/example.roster.txt");
+        File resourcesAstDirectory = new File("src/main/resources/example.astRoster.txt");
+        File resourcesCSVDirectory = new File("src/main/resources/example.csvRoster.txt");
+        File resourcesYAMLDirectory = new File("src/main/resources/example.env.yaml");
+        
+        DelimitedText subject = new DelimitedText();
+        //When delimiter is given
+        assertEquals("|", subject.detectDelimiter(resourcesDirectory.getAbsolutePath(), "|"));
+        //When delimiter is not given
+        assertEquals("|", subject.detectDelimiter(resourcesDirectory.getAbsolutePath()));
+        assertEquals("*", subject.detectDelimiter(resourcesAstDirectory.getAbsolutePath()));
+        assertEquals(",", subject.detectDelimiter(resourcesCSVDirectory.getAbsolutePath()));
+        assertEquals("", subject.detectDelimiter(resourcesYAMLDirectory.getAbsolutePath()));
+    }
+
 }

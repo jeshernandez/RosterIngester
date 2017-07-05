@@ -11,7 +11,7 @@ import info.debatty.java.stringsimilarity.*;
  */
 public class Cosine implements AlgoInterface {
 
-    private static final Logger LOGGER = Logger.getLogger( Levenshtein.class.getName() );
+
 
     // ----------------------------------------------------------
     public static Map<String, Integer> getTermFrequencyMap(String[] terms) {

@@ -24,6 +24,11 @@ public class AlgoFactory {
             Cosine c = new Cosine();
             return c.startAlgo(cleanAlgoName, text1, text2);
         }
+        else if (cleanAlgoName.equals("J")) {
+            if(RosterIngester.debug) LOGGER.info("Jaro Winkler Score.");
+            JaroWinkler c = new JaroWinkler();
+            return c.startAlgo(cleanAlgoName, text1, text2);
+        }
         else {
             if(RosterIngester.debug) LOGGER.info("No Valid Algorithm Selected.");
             return null;
@@ -36,13 +41,13 @@ public class AlgoFactory {
     public static Double getBestScore(String algoNames, String staticValue,
                                       String[] discoveryList) {
         String cleanAlgoName = algoNames.toUpperCase();
-        double finalDistance = 1.0;
+        double finalDistance = 0.0;
         String cleanField = staticValue;
         cleanField = cleanField.toUpperCase();
         int index = 0;
 
             if(cleanAlgoName.equals("L")) {
-                if(RosterIngester.debug) LOGGER.info("Levenshtein Best Getting Score.");
+                //if(RosterIngester.debug) LOGGER.info("Levenshtein Best Getting Score.");
                 Levenshtein l = new Levenshtein();
 
                 for (int i = 0; i < discoveryList.length; i++) {
@@ -51,7 +56,7 @@ public class AlgoFactory {
 
 
                     if(!cleanField.contains(discoveryList[i].toString())) {
-                        if(tempDistance < finalDistance) {
+                        if(tempDistance > finalDistance) {
                             finalDistance = tempDistance;
                             index = i;
                         }
@@ -63,8 +68,34 @@ public class AlgoFactory {
 
                 return finalDistance;
             }
-            else {
-                if(RosterIngester.debug) LOGGER.info("Cosine Best Getting Score.");
+            else if(cleanAlgoName.equals("J")) {
+                {
+                    //if(RosterIngester.debug) LOGGER.info("Jaro Winkler Best Getting Score.");
+                    JaroWinkler c = new JaroWinkler();
+
+                    for (int i = 0; i < discoveryList.length; i++) {
+                        double tempDistance = 0.0;
+                        //System.out.println("Clean: " + cleanField + ": Discover: " + discoveryList[i].toString());
+                        tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
+
+                        //System.out.println("Getting inside value: " + tempDistance);
+                        if(!cleanField.contains(discoveryList[i].toString())) {
+                            if(tempDistance > finalDistance) {
+                                finalDistance = tempDistance;
+                                index = i;
+                            }
+                        } else {
+                            finalDistance = 1.0;
+                        }
+
+                    } // end for-loop
+
+                    //System.out.println("Your best score>>>>>>>" + finalDistance);
+                    return finalDistance;
+                } // end-if
+            }
+            else if(cleanAlgoName.equals("C")) {
+                //if(RosterIngester.debug) LOGGER.info("Cosine Best Getting Score.");
                 Cosine c = new Cosine();
 
                 for (int i = 0; i < discoveryList.length; i++) {
@@ -84,7 +115,9 @@ public class AlgoFactory {
                 } // end for-loop
 
                 return finalDistance;
-            } // end-if
+            } else {
+                return null;
+            }// end-if
 
 
 

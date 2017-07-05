@@ -142,6 +142,7 @@ public class RosterIngester {
         //Takes place of an integration test
         DBRoster rosterModel = new DBRoster();
         //TODO: After scores are created for each field, consume each record in the file with this model and save.
+        //TODO: Finish Jira 18 by adding integration tests with sample files here!
 //        DbSqlServer sqlServer = new DbSqlServer();
 //        Connection connection = sqlServer.getDBConn();
 //TODO: Fully spec out save operation (batch)

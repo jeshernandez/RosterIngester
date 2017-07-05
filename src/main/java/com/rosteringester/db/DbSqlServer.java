@@ -37,13 +37,6 @@ public class DbSqlServer extends DbCommonP {
                 ";password=" + map.get("password");
     }
 
-    /**
-     * Debug message for starting connection to SQL Server.
-     */
-    public void getDBName() {
-        System.out.println("Connecting to SQL Server ... ");
-    }
-
 
     public Connection getDBConn() {
         Connection conn = null;

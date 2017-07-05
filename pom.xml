@@ -53,6 +53,11 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>info.debatty</groupId>
+            <artifactId>java-string-similarity</artifactId>
+            <version>RELEASE</version>
+        </dependency>
 
 
     </dependencies>

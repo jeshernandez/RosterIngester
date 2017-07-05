@@ -3,6 +3,8 @@ package com.rosteringester.algorithms;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Logger;
+import info.debatty.java.stringsimilarity.*;
 
 /**
  * Created by jeshernandez on 06/15/2017.
@@ -25,40 +27,8 @@ public class Cosine implements AlgoInterface {
 
     // ----------------------------------------------------------
     public Double startAlgo(String algoName, String staticField, String discovery) {
-        double scoreValue = 0.0;
-        //Get vectors
-        Map<String, Integer> a = getTermFrequencyMap(staticField.split("\\W+"));
-        Map<String, Integer> b = getTermFrequencyMap(discovery.split("\\W+"));
-
-        //Get unique words from both sequences
-        HashSet<String> intersection = new HashSet<String>(a.keySet());
-        intersection.retainAll(b.keySet());
-
-        double dotProduct = 0, magnitudeA = 0, magnitudeB = 0;
-
-        //Calculate dot product
-        for (String item : intersection) {
-            dotProduct += a.get(item) * b.get(item);
-        }
-
-        //Calculate magnitude a
-        for (String k : a.keySet()) {
-            magnitudeA += Math.pow(a.get(k), 2);
-        }
-
-        //Calculate magnitude b
-        for (String k : b.keySet()) {
-            magnitudeB += Math.pow(b.get(k), 2);
-        }
-
-        scoreValue = dotProduct / Math.sqrt(magnitudeA * magnitudeB);
-        //System.out.println("Printing inside: " + scoreValue + ", String: " + discovery);
-
-        //return cosine similarity
-        return scoreValue;
-
-
-
+        info.debatty.java.stringsimilarity.Cosine twogram = new info.debatty.java.stringsimilarity.Cosine();
+        return (Double)twogram.distance(staticField, discovery);
     }
 
 

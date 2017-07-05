@@ -135,7 +135,7 @@ public class RosterIngester {
         System.out.println("Static field: " + requiredFields[2]);
         //Testing connection to Sql Server 2014
         //Takes place of an integration test
-//        DbSqlServer sqlServer = new DbSqlServer();
+        DbSqlServer sqlServer = new DbSqlServer();
 //        Connection connection = sqlServer.getDBConn();
 
     }

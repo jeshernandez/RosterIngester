@@ -1,6 +1,7 @@
 package com.rosteringester.main;
 
 import com.rosteringester.algorithms.AlgoFactory;
+import com.rosteringester.db.DBRoster;
 import com.rosteringester.db.DbSqlServer;
 import java.sql.Connection;
 import com.rosteringester.filesystem.FileFactory;
@@ -21,6 +22,9 @@ public class RosterIngester {
     public static String[] requiredFields;
 
     public static void main(String [] args) {
+        //1. Pull files
+        //TODO: 2. Save into Database. (logs/error reporting/field changes/etc...)
+        //TODO: 3. A/C/D operations
         System.out.println("Starting...");
 
         debug = true;
@@ -136,9 +140,11 @@ public class RosterIngester {
         System.out.println("Static field: " + requiredFields[2]);
         //Testing connection to Sql Server 2014
         //Takes place of an integration test
-        DbSqlServer sqlServer = new DbSqlServer();
+        DBRoster rosterModel = new DBRoster();
+        //TODO: After scores are created for each field, consume each record in the file with this model and save.
+//        DbSqlServer sqlServer = new DbSqlServer();
 //        Connection connection = sqlServer.getDBConn();
-
+//TODO: Fully spec out save operation (batch)
     }
 
 } // End of RosterIngester

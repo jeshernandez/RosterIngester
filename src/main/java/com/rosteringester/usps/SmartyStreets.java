@@ -6,10 +6,12 @@ import com.smartystreets.api.StaticCredentials;
 import com.smartystreets.api.us_street.Candidate;
 import com.smartystreets.api.us_street.Client;
 import com.smartystreets.api.us_street.Lookup;
+import org.yaml.snakeyaml.Yaml;
 
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -21,19 +23,25 @@ import java.util.logging.Logger;
  */
 public class SmartyStreets {
 
+    public final String authId;
+    public final String authToken;
+
+    public SmartyStreets(){
+        Yaml yaml = new Yaml();
+        Map<String, String> config = (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream("env.yaml"));
+        this.authId = config.get("smarty_auth_id");
+        this.authToken = config.get("smarty_auth_token");
+    }
+
     public void start() {
 
 
         try {
-            // This keypair will have been deleted by the time you are watching this video...
-            String authId = "22a5c9cb-29d5-994f-b927-d38e7226cc2b";
-            String authToken = "79SLc96KcZ69aV5YxOav";
-
-            StaticCredentials credentials = new StaticCredentials(System.getenv(authId), System.getenv(authToken));
+            StaticCredentials credentials = new StaticCredentials(System.getenv(this.authId), System.getenv(this.authToken));
             System.out.println("Step 0. Wire up the client with your keypair.");
 
 
-            Client client2 = new ClientBuilder(authId, authToken)
+            Client client2 = new ClientBuilder(this.authId, this.authToken)
                     //.withProxy(Proxy.Type.HTTP, "proxy", 9119)
                     .buildUsStreetApiClient();
 

@@ -12,8 +12,7 @@ public class DBRosterTest {
     @Test
     public void set() throws Exception {
         DBRoster subject = new DBRoster();
-        subject.set(1, "2", "3", "4", "5", 6, "7", Boolean.TRUE, Boolean.FALSE);
-        assertEquals((Integer)1, subject.row_id);
+        subject.set("2", "3", "4", "5", 6, "7", Boolean.TRUE, Boolean.FALSE);
         assertEquals("2", subject.office_phone);
         assertEquals("3", subject.primary_address);
         assertEquals("4", subject.suite);

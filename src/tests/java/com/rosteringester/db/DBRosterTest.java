@@ -13,14 +13,14 @@ public class DBRosterTest {
     public void set() throws Exception {
         DBRoster subject = new DBRoster();
         subject.set("2", "3", "4", "5", 6, "7", Boolean.TRUE, Boolean.FALSE);
-        assertEquals("2", subject.office_phone);
-        assertEquals("3", subject.primary_address);
+        assertEquals("2", subject.officePhone);
+        assertEquals("3", subject.primaryAddress);
         assertEquals("4", subject.suite);
         assertEquals("5", subject.city);
-        assertEquals((Integer)6, subject.zip_code);
+        assertEquals((Integer)6, subject.zipCode);
         assertEquals("7", subject.speciality);
-        assertTrue(subject.accepting_new_patients);
-        assertFalse(subject.print_in_directory);
+        assertTrue(subject.acceptingNewPatients);
+        assertFalse(subject.printInDirectory);
     }
 
     @Test

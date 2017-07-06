@@ -29,8 +29,8 @@ public class SmartyStreets {
     public SmartyStreets(){
         Yaml yaml = new Yaml();
         Map<String, String> config = (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream("env.yaml"));
-        this.authId = config.get("smarty_auth_id");
-        this.authToken = config.get("smarty_auth_token");
+        this.authId = config.get("smartyAuthId");
+        this.authToken = config.get("smartyAuthToken");
     }
 
     public void start() {

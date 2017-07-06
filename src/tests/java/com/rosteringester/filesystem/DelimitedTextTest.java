@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -31,6 +32,31 @@ public class DelimitedTextTest {
         hash.put(2, "C");
         HashMap subject = testing.getHeaders(resourcesDirectory.getAbsolutePath(), "|");
         assertEquals(hash, subject);
+    }
+
+//    //Get single record for processing
+//    @Test
+//    public void getRecord(){
+//
+//    }
+//
+//    //Get multiple records from the file and batch insert the records.
+//    @Test
+//    public void getBatchedRecords(){
+//
+//    }
+
+    //Get all records from a file.
+    @Test
+    public void getRecords(){
+        File resourcesDirectory = new File("src/main/resources/example.roster.txt");
+        DelimitedText testing = new DelimitedText();
+        HashMap hash = new HashMap();
+        hash.put(0, "A");
+        hash.put(1, "B");
+        hash.put(2, "C");
+        HashMap result[] = {hash};
+        assertEquals(result, testing.getRecords(resourcesDirectory.getAbsolutePath()));
     }
 
     @Test

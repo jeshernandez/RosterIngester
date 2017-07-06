@@ -22,7 +22,6 @@ public class TestFile extends FileSystem implements FileInterface {
         docHeaders.put(7, "ACCEPTING NEW PATIENTS");
         docHeaders.put(8, "PRINT IN DIRECTORY");
 
-
         return docHeaders;
     }
 

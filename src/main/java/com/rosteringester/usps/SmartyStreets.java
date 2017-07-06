@@ -9,6 +9,7 @@ import com.smartystreets.api.us_street.Lookup;
 
 
 import java.io.IOException;
+import java.net.Proxy;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -32,7 +33,9 @@ public class SmartyStreets {
             System.out.println("Step 0. Wire up the client with your keypair.");
 
 
-            Client client2 = new ClientBuilder(authId, authToken).buildUsStreetApiClient();
+            Client client2 = new ClientBuilder(authId, authToken)
+                    //.withProxy(Proxy.Type.HTTP, "proxy", 9119)
+                    .buildUsStreetApiClient();
 
             System.out.println("Step 1. Make a lookup. (BTW, you can also send entire batches of lookups...)");
             Lookup lookup = new Lookup();

@@ -2,6 +2,8 @@ package com.rosteringester.db;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.io.FileNotFoundException;
+
 /**
  * Created by MichaelChrisco on 7/5/17.
  * Model class that acts in the same way as a MVC model.
@@ -38,7 +40,7 @@ public class DBRoster {
        this.printInDirectory = (Boolean)initArray[7];
     }
 
-    public DBRoster save(){
+    public DBRoster save() throws FileNotFoundException {
         this.isSavedFlag = Boolean.TRUE;
         //TODO: DB operation to save DB Roster
         DbSqlServer sqlServer = new DbSqlServer();

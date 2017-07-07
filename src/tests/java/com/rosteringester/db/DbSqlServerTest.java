@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class DbSqlServerTest {
     @Test
-    public void testGetConnectionUrl(){
+    public void testGetConnectionUrl() throws Exception{
         DbSqlServer tester = new DbSqlServer();
         String subject = tester.getConnectionUrl();
         assertTrue(subject.contains("IntegratedSecurity"));
@@ -21,7 +21,7 @@ public class DbSqlServerTest {
     }
 
     @Test
-    public void testSetConnectionUrl(){
+    public void testSetConnectionUrl() throws Exception{
         DbSqlServer tester = new DbSqlServer();
         Map<String, String> map = tester.setConfig("example.env.yaml");
         tester.setConnectionUrl(map);
@@ -30,14 +30,14 @@ public class DbSqlServerTest {
     }
 
     @Test
-    public void testGetDBConn(){
+    public void testGetDBConn() throws Exception{
         DbSqlServer subject = new DbSqlServer();
         assertEquals("class com.microsoft.sqlserver.jdbc.SQLServerConnection", subject.getDBConn().getClass().toString());
     }
 
     //TODO: REMOVE Table!! This is an integration test.
     @Test
-    public void testQuery(){
+    public void testQuery() throws Exception{
         DbSqlServer connection = new DbSqlServer();
         List<Map<String, Object>> subject = connection.query("Select 1 as hello");
         assertEquals("[{hello=1}]", subject.toString());

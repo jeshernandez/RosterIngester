@@ -11,15 +11,11 @@ import static org.junit.Assert.*;
  */
 public class ConfigurationTest {
     @Test
-    public void setMap() throws Exception {
+    public void getSetMap() throws Exception {
         Configuration testing = new Configuration();
         File resourcesDirectory = new File("src/main/resources/example.env.yaml");
         testing.setMap(resourcesDirectory.getAbsolutePath());
-//        assertEquals("", testing.getMap());
+        assertEquals(9, testing.getMap().size());
     }
-
-//    @Test
-//    public void getMap() throws Exception {
-//    }
 
 }

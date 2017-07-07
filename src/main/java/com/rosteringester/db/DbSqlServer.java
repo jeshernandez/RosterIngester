@@ -1,5 +1,6 @@
 package com.rosteringester.db;
 
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class DbSqlServer extends DbCommonP {
     private String connectionUrl;
 
-    public DbSqlServer(){
+    public DbSqlServer() throws FileNotFoundException {
         Map<String, String> map = setConfig("env.yaml");
         this.setConnectionUrl(map);
     }

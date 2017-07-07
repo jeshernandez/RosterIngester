@@ -10,6 +10,8 @@ import org.yaml.snakeyaml.Yaml;
 
 
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.util.Map;
 import java.util.logging.Handler;
@@ -23,14 +25,24 @@ import java.util.logging.Logger;
  */
 public class SmartyStreets {
 
-    public final String authId;
-    public final String authToken;
+    private final String authId;
+    private final String authToken;
+    private final String proxyServer;
+    private final String proxyPort;
+    private final String proxyUser;
+    private final String proxyPWD;
+    //private Map<String, String> config;
 
     public SmartyStreets(){
         Yaml yaml = new Yaml();
         Map<String, String> config = (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream("env.yaml"));
         this.authId = config.get("smartyAuthId");
         this.authToken = config.get("smartyAuthToken");
+        this.proxyServer = config.get("proxyServer");
+        this.proxyPort = config.get("proxyPort");
+        this.proxyUser = config.get("proxyUser");
+        this.proxyPWD = config.get("proxyPWD");
+
     }
 
     public void start() {
@@ -40,9 +52,9 @@ public class SmartyStreets {
             StaticCredentials credentials = new StaticCredentials(System.getenv(this.authId), System.getenv(this.authToken));
             System.out.println("Step 0. Wire up the client with your keypair.");
 
-
+            authProxy();
             Client client2 = new ClientBuilder(this.authId, this.authToken)
-                    //.withProxy(Proxy.Type.HTTP, "proxy", 9119)
+                     .withProxy(Proxy.Type.HTTP, "proxy", 9119)
                     .buildUsStreetApiClient();
 
             System.out.println("Step 1. Make a lookup. (BTW, you can also send entire batches of lookups...)");
@@ -74,27 +86,30 @@ public class SmartyStreets {
     }
 
 
-
-    public void enableLogging() {
-        Logger logger = Logger.getLogger(HttpTransport.class.getName());
-        logger.setLevel(Level.ALL);
-        logger.addHandler(new Handler() {
+    public void authProxy() {
+        // Java ignores http.proxyUser. Here come's the workaround.
+        Authenticator.setDefault(new Authenticator() {
             @Override
-            public void close() throws SecurityException {
-            }
+            protected PasswordAuthentication getPasswordAuthentication() {
+                if (getRequestorType() == Authenticator.RequestorType.PROXY) {
+                    String prot = getRequestingProtocol().toLowerCase();
+                    String host = System.getProperty(prot + ".proxyHost", proxyServer);
+                    String port = System.getProperty(prot + ".proxyPort", proxyPort);
+                    String user = System.getProperty(prot + ".proxyUser", proxyUser);
+                    String password = System.getProperty(prot + ".proxyPassword", proxyPWD);
 
-            @Override
-            public void flush() {
-            }
-
-            @Override
-            public void publish (LogRecord record) {
-                // default ConsoleHandler will print >= INFO to System.err
-                if (record.getLevel().intValue() < Level.INFO.intValue())
-                    System.out.println(record.getMessage());
+                    if (getRequestingHost().equalsIgnoreCase(host)) {
+                        if (Integer.parseInt(port) == getRequestingPort()) {
+                            // Seems to be OK.
+                            return new PasswordAuthentication(user, password.toCharArray());
+                        }
+                    }
+                }
+                return null;
             }
         });
     }
+
 
 } // End of class
 

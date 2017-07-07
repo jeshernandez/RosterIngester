@@ -31,7 +31,6 @@ public class SmartyStreets {
     private final String proxyPort;
 
 
-
     public SmartyStreets(){
         Yaml yaml = new Yaml();
         Map<String, String> config = (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream("env.yaml"));
@@ -42,17 +41,23 @@ public class SmartyStreets {
 
     }
 
-    public void start() {
+    public void start(boolean isBehindProxy) {
 
 
         try {
             StaticCredentials credentials = new StaticCredentials(System.getenv(this.authId), System.getenv(this.authToken));
             System.out.println("Step 0. Wire up the client with your keypair.");
 
-            //authProxy();
-            Client client2 = new ClientBuilder(this.authId, this.authToken)
-                     .withProxy(Proxy.Type.HTTP, proxyServer, Integer.parseInt(proxyPort))
-                    .buildUsStreetApiClient();
+
+            Client client2;
+            if(isBehindProxy) {
+                client2 = new ClientBuilder(this.authId, this.authToken)
+                        .withProxy(Proxy.Type.HTTP, proxyServer, Integer.parseInt(proxyPort))
+                        .buildUsStreetApiClient();
+            } else {
+                client2 = new ClientBuilder(this.authId, this.authToken)
+                        .buildUsStreetApiClient();
+            }
 
             System.out.println("Step 1. Make a lookup. (BTW, you can also send entire batches of lookups...)");
             Lookup lookup = new Lookup();

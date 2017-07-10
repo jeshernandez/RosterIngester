@@ -3,6 +3,7 @@ package com.rosteringester.filesystem;
 /**
  * Created by Michael Chrisco on 07/10/2017.
  */
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +57,7 @@ public class ExcelFile {
     }
 
     //TODO: Add something other than sample elements.
-    public static void writeXLSFile(string excelFileName) throws IOException {
+    public static void writeXLSFile(String excelFileName) throws IOException {
 
         String sheetName = "Sheet1";//default name of sheet
 
@@ -89,7 +90,7 @@ public class ExcelFile {
      * @param excelFileName
      * @throws IOException
      */
-    public static void readXLSXFile(string excelFileName) throws IOException {
+    public static void readXLSXFile(String excelFileName) throws IOException {
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
@@ -122,7 +123,7 @@ public class ExcelFile {
     }
 
     //TODO: Add something other than sample elements.
-    public static void writeXLSXFile(string excelFileName) throws IOException {
+    public static void writeXLSXFile(String excelFileName) throws IOException {
 
         String sheetName = "Sheet1";//name of sheet
 

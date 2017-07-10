@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -54,6 +55,15 @@ public class ExcelFile {
             System.out.println();
         }
 
+    }
+
+    /**
+     * Shallow interface to find the number of sheets for a roster.
+     * @param wrk Workbook
+     * @return Integer number of sheets
+     */
+    public static Integer getNumberOfSheets(Workbook wrk){
+        return wrk.getNumberOfSheets();
     }
 
     //TODO: Add something other than sample elements.

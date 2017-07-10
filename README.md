@@ -1,7 +1,5 @@
 RosterIngester
 
-TODO: Documentation, Setup, Testing
-
 ## Setup
 1. Copy the env file and setup the config.
  ```
@@ -28,7 +26,9 @@ proxyPort: "1234"
 and copy the sqljdbc_auth.dll to C:\Program Files\Java\jre_Version\bin
 
 ## Formal Testing
-Testing is done on three real Rosters.
+Unit tests are in RosterIngester/src/tests.
+
+Development Testing: three real Rosters in the (TODO) folder.
 (TODO)
 
 ## Production

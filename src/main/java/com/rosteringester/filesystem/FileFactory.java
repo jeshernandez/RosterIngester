@@ -9,7 +9,8 @@ public class FileFactory {
     static {
         map.put("DELIMITED", DelimitedText::new);
         map.put("TEST", TestFile::new);
-//        map.put("EXCEL", ExcelFile::new);
+//        map.put("EXCELHSSF", ExcelFile::new);//Old .xls files
+//        map.put("EXCELXSSF", ExcelXSSFFile::new);//New .xlsf files
     }
 
     // -----------------------------------------------------

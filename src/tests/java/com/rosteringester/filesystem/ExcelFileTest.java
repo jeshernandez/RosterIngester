@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by a119887 on 07/10/2017.
+ * Created by Michael Chrisco on 07/10/2017.
  */
 public class ExcelFileTest {
     @Test
@@ -14,6 +14,10 @@ public class ExcelFileTest {
 
     @Test
     public void writeXLSFile() throws Exception {
+    }
+
+    @Test
+    public void getNumberOfSheets() throws Exception {
     }
 
     @Test

@@ -17,6 +17,9 @@ public class FileFactoryTest {
         assertEquals(TestFile.class, testing.getInstance("test").getClass());
         assertEquals(TestFile.class, testing.getInstance("TEST").getClass());
 
+        assertEquals(ExcelXSSFFile.class, testing.getInstance("excel").getClass());
+        assertEquals(ExcelXSSFFile.class, testing.getInstance("EXCEL").getClass());
+
         assertNull(testing.getInstance("Nothing"));
     }
 

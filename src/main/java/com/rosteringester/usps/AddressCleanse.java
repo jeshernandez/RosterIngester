@@ -10,12 +10,18 @@ abstract class AddressCleanse {
         String removeSpecial = null;
 
         // TODO - me add regex to clean address.
-        removeSpecial = address.replace(".", "");
-
+        removeSpecial = address.replaceAll("[+.^:,!@#$%&*()+=]","");
         return removeSpecial;
 
     }
 
+
+    public String addressInSentence(String address) {
+
+        // If address starts with letter, not number.
+
+        return null;
+    }
 
 
 

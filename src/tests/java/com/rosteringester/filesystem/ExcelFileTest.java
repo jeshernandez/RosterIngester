@@ -2,6 +2,9 @@ package com.rosteringester.filesystem;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,6 +25,9 @@ public class ExcelFileTest {
 
     @Test
     public void readXLSXFile() throws Exception {
+        ExcelFile testing = new ExcelFile();
+        ArrayList<HashMap<String, String>> result = testing.readXLSXFile("src/main/resources/example.roster.xlsx");
+        assertEquals(new ArrayList<HashMap<String, String>>(), result);
     }
 
     @Test

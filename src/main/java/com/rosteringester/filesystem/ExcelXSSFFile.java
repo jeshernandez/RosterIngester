@@ -1,4 +1,5 @@
 package com.rosteringester.filesystem;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -29,6 +30,11 @@ public class ExcelXSSFFile extends FileSystem implements FileInterface {
 //
 //
         return new HashMap();
+    }
+    //TODO: Remove for FileInterface.
+    //Delimiter is not relevant to Excel files.
+    public String detectDelimiter(String fileName, String... delimiter) throws IOException {
+        return "";
     }
 
 

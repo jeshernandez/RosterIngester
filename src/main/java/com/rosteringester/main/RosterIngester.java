@@ -30,7 +30,7 @@ public class RosterIngester {
         DirectoryFiles directoryFiles = new DirectoryFiles();
         List<String> files = null;
         try {
-            files = directoryFiles.getFiles("/src/main/resources");
+            files = directoryFiles.getFiles("C:\\development\\RosterIngester\\src\\main\\resources");
         } catch (IOException e) {
             e.printStackTrace();
         }

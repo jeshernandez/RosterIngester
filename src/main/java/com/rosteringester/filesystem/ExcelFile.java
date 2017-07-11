@@ -7,13 +7,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -100,13 +104,22 @@ public class ExcelFile {
      * @param excelFileName
      * @throws IOException
      */
-    public static void readXLSXFile(String excelFileName) throws IOException {
+    public static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName) throws IOException {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
         XSSFWorkbook test = new XSSFWorkbook();
 
         XSSFSheet sheet = wb.getSheetAt(0);
+        //Get header HashMap
+        //TODO: Add this to its own method for easy consumption by the Algorithm.
+        ArrayList header = new ArrayList();
+
+        XSSFRow headerRow = sheet.getRow(0);
+
+
+//        System.out.println(sheet.getRow(0).toString());
         XSSFRow row;
         XSSFCell cell;
 
@@ -116,20 +129,29 @@ public class ExcelFile {
             row = (XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
             while (cells.hasNext()) {
+                HashMap<String, String> newCell = new HashMap<>();
                 cell = (XSSFCell) cells.next();
-
+                String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
+                String cellValue = "";
                 if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
-                    System.out.print(cell.getStringCellValue() + " ");
+                    cellValue = cell.getStringCellValue();
                 } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
-                    System.out.print(cell.getNumericCellValue() + " ");
+                    cellValue = Double.toString(cell.getNumericCellValue());
+//                    newCell.put(cellName, Double.toString(cell.getNumericCellValue()));
+//                    System.out.print(cell.getNumericCellValue() + " ");
                 } else {
-                    //U Can Handel Boolean, Formula, Errors
+                    //Nothing yet.
+                }
+                if(cellName != cellValue) {
+                    System.out.println(cellName + " " + cellValue);
+                    newCell.put(cellName, cellValue);
+                    result.add(newCell);
                 }
             }
             System.out.println();
         }
 
-
+        return result;
     }
 
     //TODO: Add something other than sample elements.

@@ -3,9 +3,9 @@ package com.rosteringester.usps;
 import com.google.api.client.http.HttpTransport;
 import com.smartystreets.api.ClientBuilder;
 import com.smartystreets.api.StaticCredentials;
-import com.smartystreets.api.us_street.Candidate;
-import com.smartystreets.api.us_street.Client;
-import com.smartystreets.api.us_street.Lookup;
+import com.smartystreets.api.exceptions.BatchFullException;
+import com.smartystreets.api.exceptions.SmartyException;
+import com.smartystreets.api.us_street.*;
 import org.yaml.snakeyaml.Yaml;
 
 
@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -23,7 +26,7 @@ import java.util.logging.Logger;
 /**
  * Created by jeshernandez on 06/29/2017.
  */
-public class SmartyStreets {
+public class SmartyStreets extends AddressCleanse {
 
     private final String authId;
     private final String authToken;
@@ -31,7 +34,8 @@ public class SmartyStreets {
     private final String proxyPort;
 
 
-    public SmartyStreets(){
+    // --------------------------------------------------------------
+    public SmartyStreets() {
         Yaml yaml = new Yaml();
         Map<String, String> config = (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream("env.yaml"));
         this.authId = config.get("smartyAuthId");
@@ -41,54 +45,88 @@ public class SmartyStreets {
 
     }
 
-    public void start(boolean isBehindProxy) {
 
+    // --------------------------------------------------------------
+    public void start(boolean isBehindProxy, String[] address,
+                      String[] city, String[] state) {
+
+        Client client;
+        if (isBehindProxy) {
+            client = new ClientBuilder(this.authId, this.authToken)
+                    .withProxy(Proxy.Type.HTTP, proxyServer, Integer.parseInt(proxyPort))
+                    .buildUsStreetApiClient();
+        } else {
+            client = new ClientBuilder(this.authId, this.authToken)
+                    .buildUsStreetApiClient();
+        }
+
+
+        Lookup lookup;
+
+        Batch batch = new Batch();
 
         try {
-            StaticCredentials credentials = new StaticCredentials(System.getenv(this.authId), System.getenv(this.authToken));
-            System.out.println("Step 0. Wire up the client with your keypair.");
 
-
-            Client client2;
-            if(isBehindProxy) {
-                client2 = new ClientBuilder(this.authId, this.authToken)
-                        .withProxy(Proxy.Type.HTTP, proxyServer, Integer.parseInt(proxyPort))
-                        .buildUsStreetApiClient();
-            } else {
-                client2 = new ClientBuilder(this.authId, this.authToken)
-                        .buildUsStreetApiClient();
-            }
-
-            System.out.println("Step 1. Make a lookup. (BTW, you can also send entire batches of lookups...)");
-            Lookup lookup = new Lookup();
-            lookup.setStreet("1310 EAST SHAW AVENUE");
-            lookup.setLastline("FRESNO CA ");
-            lookup.setMaxCandidates(10);
-
-            System.out.println("Step 2. Send the lookup.");
-            client2.send(lookup);
-
-            System.out.println("Step 3. Show the resulting candidate addresses:");
-            int index = 0;
-            for (Candidate candidate : lookup.getResult()) {
-                System.out.printf("- %d: %s, %s\n", index, candidate.getDeliveryLine1(), candidate.getLastLine());
-                index++;
-
-
-
+            for (int i = 0; i < address.length; i++) {
+                lookup = new Lookup();
+                lookup.setStreet(address[i]);
+                lookup.setCity(city[i]);
+                lookup.setState(state[i]);
+                lookup.setMaxCandidates(10);
+                batch.add(lookup);
 
             }
 
-        }
-        catch (IOException e) {
+            client.send(batch);
+
+            System.out.println("Batch size: " + batch.size());
+
+        } catch (BatchFullException ex) {
+            System.out.println("Oops! Batch was already full.");
+        } catch (SmartyException ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (Exception e1) {
-            e1.printStackTrace();
         }
-    }
+
+        Vector<Lookup> lookups = batch.getAllLookups();
+
+        for (int i = 0; i < batch.size(); i++) {
+            ArrayList<Candidate> candidates = lookups.get(i).getResult();
+
+            if (candidates.isEmpty()) {
+                System.out.println("Address " + i + " is invalid.\n");
+                continue;
+            }
+
+            System.out.println("Address " + i + " is valid. (There is at least one candidate)");
+
+            for (Candidate candidate : candidates) {
+                final Components components = candidate.getComponents();
+                final Metadata metadata = candidate.getMetadata();
+
+                System.out.println("\nCandidate " + candidate.getCandidateIndex() + ":");
+                System.out.println("Delivery line 1: " + candidate.getDeliveryLine1());
+                System.out.println("Last line:       " + candidate.getLastLine());
+                System.out.println("ZIP Code:        " + components.getZipCode() + "-" + components.getPlus4Code());
+                System.out.println("County:          " + metadata.getCountyName());
+                System.out.println("Latitude:        " + metadata.getLatitude());
+                System.out.println("Longitude:       " + metadata.getLongitude());
+            }
+            System.out.println();
+        }
+
+
+    } // End of start method
 
 
 
 
-} // End of class
+} // End of SmartyStreets Class
+
+
+
+
+
 

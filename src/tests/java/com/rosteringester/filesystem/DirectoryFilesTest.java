@@ -23,9 +23,9 @@ public class DirectoryFilesTest {
         results.add("env.yaml");
         results.add("example.env.yaml");
         List<String> subject =  tester.getFiles("src/main/resources");
-        assertEquals(5, subject.size());
-        assertTrue(subject.get(1).contains("example.csvRoster.txt"));
-        //When files do not exist
+        assertEquals(6, subject.size());
+        assertTrue(subject.get(1).contains("example.astRoster.txt"));
+//        //When files do not exist
         List<String> subjectError =  tester.getFiles("src/main/resources/wrong");
         assertEquals(0, subjectError.size());
     }

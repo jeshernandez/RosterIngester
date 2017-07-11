@@ -47,7 +47,15 @@ public class RosterIngester {
             //        List<Object, Object> fileRecords = r.getMappedRosterRecords();
             //        for(HashMap<String,String> record : fileRecords) {
             FileFactory getFile = new FileFactory();
-            FileInterface fi = getFile.getInstance("DELIMITED");
+            FileInterface fi = null;
+            if (file.contains(".xlsx")){
+                fi = getFile.getInstance("EXCEL");
+            }
+            else{
+                fi = getFile.getInstance("DELIMITED");
+            }
+
+
             System.out.println("START: " + file);
             String delimiter = null;
             try {
@@ -69,11 +77,19 @@ public class RosterIngester {
 //        }
         }
 
+        //Example pull of an excel file:
+        FileFactory getFile = new FileFactory();
+        FileInterface excelExample = getFile.getInstance("Excel");
+
         //TODO: 2. Save into Database. (logs/error reporting/field changes/etc...)
         //TODO: 3. A/C/D operations
 
         RosterHeaders r = new RosterHeaders();
-        r.getRosterHeaders();
+        try {
+            r.getRosterHeaders();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         debug = true;

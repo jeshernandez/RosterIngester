@@ -10,7 +10,7 @@ public interface FileInterface {
 
 
     void setFileName();
-    HashMap getHeaders(String fileName, String delimeter);
+    HashMap getHeaders(String fileName, String delimeter) throws IOException;
     String detectDelimiter(String fileName, String... delimiter) throws IOException;
 
 

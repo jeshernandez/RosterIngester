@@ -118,8 +118,6 @@ public class ExcelFile {
 
         XSSFRow headerRow = sheet.getRow(0);
 
-
-//        System.out.println(sheet.getRow(0).toString());
         XSSFRow row;
         XSSFCell cell;
 
@@ -128,8 +126,8 @@ public class ExcelFile {
         while (rows.hasNext()) {
             row = (XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
+            HashMap<String, String> newCell = new HashMap<>();
             while (cells.hasNext()) {
-                HashMap<String, String> newCell = new HashMap<>();
                 cell = (XSSFCell) cells.next();
                 String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
                 String cellValue = "";
@@ -137,21 +135,36 @@ public class ExcelFile {
                     cellValue = cell.getStringCellValue();
                 } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
                     cellValue = Double.toString(cell.getNumericCellValue());
-//                    newCell.put(cellName, Double.toString(cell.getNumericCellValue()));
-//                    System.out.print(cell.getNumericCellValue() + " ");
                 } else {
                     //Nothing yet.
                 }
-                if(cellName != cellValue) {
-                    System.out.println(cellName + " " + cellValue);
                     newCell.put(cellName, cellValue);
-                    result.add(newCell);
-                }
+//                    System.out.println(newCell);
             }
-            System.out.println();
+//            System.out.println(newCell);
+            result.add(newCell);
         }
-
+        //Removes the header.
+        result.remove(0);
         return result;
+    }
+
+    public static HashMap readXLSXFileHeaders(String excelFileName) throws IOException {
+        InputStream ExcelFileToRead = new FileInputStream(excelFileName);
+        XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+        XSSFSheet sheet = wb.getSheetAt(0);
+
+        int rowNum = sheet.getLastRowNum() + 1;
+        int colNum = sheet.getRow(0).getLastCellNum();
+        HashMap<Integer, String> colMapByName = new HashMap<>();
+        if (sheet.getRow(0).cellIterator().hasNext()) {
+            for (int j = 0; j < colNum; j++) {
+                System.out.println(sheet.getRow(0).getCell(j).toString());
+                  colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+            }
+        }
+        return colMapByName;
+
     }
 
     //TODO: Add something other than sample elements.

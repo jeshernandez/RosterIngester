@@ -11,10 +11,17 @@ import java.util.Map;
  */
 public class DbSqlServer extends DbCommonP {
     private String connectionUrl;
+    private final String msSQLServer;
+    private final String msSQLDb;
+
 
     public DbSqlServer(){
-        Map<String, String> map = setConfig("env.yaml");
-        this.setConnectionUrl(map);
+        Map<String, String> config = setConfig("servers.yaml");
+        this.setConnectionUrl(config);
+        this.msSQLServer = config.get("msSQLServer");
+        this.msSQLDb = config.get("msSQLDB");
+
+
     }
 
     /**
@@ -32,7 +39,7 @@ public class DbSqlServer extends DbCommonP {
     public void setConnectionUrl(Map<String, String> map){
         this.connectionUrl = "jdbc:sqlserver://" + map.get("url") +
                 ":" + String.valueOf(map.get("port")) +
-                ";IntegratedSecurity=true;databaseName=" + map.get("database") +
+                ";IntegratedSecurity=true;databaseName=" + map.get("msSQLServer") +
                 ";user=" + map.get("username") +
                 ";password=" + map.get("password");
     }
@@ -81,11 +88,18 @@ public class DbSqlServer extends DbCommonP {
         int columns = md.getColumnCount();
         List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
         while (rs.next()){
+
+
+
             Map<String, Object> row = new HashMap<String, Object>(columns);
             for(int i = 1; i <= columns; ++i){
                 row.put(md.getColumnName(i), rs.getObject(i));
             }
+
+
             rows.add(row);
+
+
         }
         return rows;
     }

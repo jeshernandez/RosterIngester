@@ -1,5 +1,7 @@
 package com.rosteringester.filesystem;
 
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,6 +23,11 @@ public class ExcelFileTest {
 
     @Test
     public void getNumberOfSheets() throws Exception {
+        Workbook testing = new XSSFWorkbook();
+        testing.createSheet("a");
+        testing.createSheet("b");
+        ExcelFile exl = new ExcelFile();
+        assertEquals((Integer)2, exl.getNumberOfSheets(testing));
     }
 
     @Test

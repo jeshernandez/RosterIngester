@@ -11,8 +11,7 @@ import java.util.StringTokenizer;
  * Created by jeshernandez on 06/16/2017.
  */
 public class DelimitedText extends FileSystem implements FileInterface {
-
-    private String[] delimiterChars = {"|", "*", ","};
+    private String[] delimiterChars = {"|", "*", ",", "\t"};
 
     HashMap<Integer, String> docHeaders = new HashMap<Integer, String>();
 

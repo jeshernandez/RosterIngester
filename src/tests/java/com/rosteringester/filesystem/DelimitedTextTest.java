@@ -65,6 +65,7 @@ public class DelimitedTextTest {
         File resourcesAstDirectory = new File("src/main/resources/example.astRoster.txt");
         File resourcesCSVDirectory = new File("src/main/resources/example.csvRoster.txt");
         File resourcesYAMLDirectory = new File("src/main/resources/example.env.yaml");
+        File resourcesTabDirectory = new File("src/main/resources/example.tabRoster.txt");
         
         DelimitedText subject = new DelimitedText();
         //When delimiter is given
@@ -73,6 +74,7 @@ public class DelimitedTextTest {
         assertEquals("|", subject.detectDelimiter(resourcesDirectory.getAbsolutePath()));
         assertEquals("*", subject.detectDelimiter(resourcesAstDirectory.getAbsolutePath()));
         assertEquals(",", subject.detectDelimiter(resourcesCSVDirectory.getAbsolutePath()));
+        assertEquals("\t" , subject.detectDelimiter(resourcesTabDirectory.getAbsolutePath()));
         assertEquals("", subject.detectDelimiter(resourcesYAMLDirectory.getAbsolutePath()));
     }
 

@@ -101,6 +101,8 @@ public class SmartyStreets extends AddressCleanse {
                 setInvalidAddress(true);
                 System.out.println("Address " + i + " is invalid.\n");
                 record[0] = "Invalid Address";
+                // TODO-me find Smarty Streets error codes.
+                standardAddyVector.addElement(record);
                 continue;
             }
 

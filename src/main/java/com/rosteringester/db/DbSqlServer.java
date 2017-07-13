@@ -55,10 +55,10 @@ public class DbSqlServer extends DbCommonP {
 
 
     // -----------------------------------------------
-    public List<Map<String, Object>> query(String SQL){
+    public List<Map<String, Object>> query(Connection conn, String SQL){
         List resultList = null;
         try {
-            Statement stmt = this.getDBConn().createStatement();
+            Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(SQL);
             resultList = this.resultSetToList(result);
             result.close();

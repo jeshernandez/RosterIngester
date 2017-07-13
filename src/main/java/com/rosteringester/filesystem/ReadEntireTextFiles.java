@@ -10,16 +10,16 @@ import java.io.IOException;
  */
 public class ReadEntireTextFiles {
 
-    public String getTextData() {
+    public String getTextData(String fileName) {
 
         StringBuilder sb = new StringBuilder();
-        String line = null;
+        String line;
         String query = null;
 
         try {
 
             BufferedReader bufferedReader = new BufferedReader(
-                    new FileReader("C:\\Users\\a212083\\IdeaProjects\\RosterIngester\\src\\main\\resources\\firstQuery.sql")
+                    new FileReader(fileName)
             );
 
 
@@ -29,6 +29,7 @@ public class ReadEntireTextFiles {
 
             }
 
+            bufferedReader.close();
             query = sb.toString();
 
         } catch (FileNotFoundException e) {

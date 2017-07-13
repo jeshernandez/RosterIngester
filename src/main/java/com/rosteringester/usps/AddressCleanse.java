@@ -18,9 +18,16 @@ abstract class AddressCleanse {
 
     public String addressInSentence(String address) {
 
+        String[] tempAddress = address.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+        String trimmedAddress = null;
+        if(tempAddress.length < 1) {
+            trimmedAddress = address;
+        } else {
+            trimmedAddress = tempAddress[1] + tempAddress[2];
+        }
         // If address starts with letter, not number.
 
-        return null;
+        return trimmedAddress;
     }
 
 

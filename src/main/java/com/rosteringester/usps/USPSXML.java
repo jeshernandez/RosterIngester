@@ -23,7 +23,7 @@ public String[] readXML(String xmlInput) {
 
     try {
 
-        System.out.println(xmlInput);
+        //System.out.println(xmlInput);
         //File fXmlFile = new File(xmlInput);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -56,10 +56,9 @@ public String[] readXML(String xmlInput) {
                     returnAddress[i] = eElement.getElementsByTagName("Description").item(0).getTextContent();
                     //System.out.println("ERRROR >>> " + des);
                 } else {
-                     System.out.println("Address : " + eElement.getElementsByTagName("Address2").item(0).getTextContent());
-                     System.out.println("City : " + eElement.getElementsByTagName("City").item(0).getTextContent());
-                     System.out.println("ZipCode : " + eElement.getElementsByTagName("Zip5").item(0).getTextContent());
-                     System.out.println("City : " + eElement.getElementsByTagName("City").item(0).getTextContent());
+//                     System.out.println("Address : " + eElement.getElementsByTagName("Address2").item(0).getTextContent());
+//                     System.out.println("City : " + eElement.getElementsByTagName("City").item(0).getTextContent());
+//                     System.out.println("ZipCode : " + eElement.getElementsByTagName("Zip5").item(0).getTextContent());
                     returnAddress[i] = eElement.getElementsByTagName("Address2").item(0).getTextContent();
 
                 }

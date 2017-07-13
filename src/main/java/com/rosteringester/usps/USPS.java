@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by jeshernandez on 7/10/17.
@@ -27,7 +28,17 @@ public class USPS extends AddressCleanse {
     private final String proxyPort;
     private final String uspsUser;
     private final String uspsPWD;
+    Vector<String[]> standardAddyVector;
 
+    public boolean isInvalidAddress() {
+        return invalidAddress;
+    }
+
+    public void setInvalidAddress(boolean invalidAddress) {
+        this.invalidAddress = invalidAddress;
+    }
+
+    private boolean invalidAddress;
 
     // --------------------------------------------------------------
     public USPS() {
@@ -42,27 +53,18 @@ public class USPS extends AddressCleanse {
 
 
     // --------------------------------------------------------------
-    public void start(boolean isBehindProxy, String[] address,
+    public Vector<String[]> start(boolean isBehindProxy, String[] address,
                              String[] city, String[] state) {
         String returnAddress[] = new String[5];
         int totalRecords = address.length;
         StringBuilder payload = new StringBuilder();
+
+        standardAddyVector = new Vector<String[]>();
+
         HttpClient client = null;
+        // bypass  proxy, if needed
+        client = setProxy(isBehindProxy);
 
-
-
-        if (isBehindProxy) {
-            System.out.println("Bypassing Proxy...");
-            HttpHost proxy = new HttpHost(this.proxyServer, Integer.parseInt(this.proxyPort));
-            Credentials credentials = new UsernamePasswordCredentials(System.getProperty("user.name"), this.uspsPWD);
-            AuthScope authScope = new AuthScope(this.proxyServer, Integer.parseInt(this.proxyPort));
-            CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(authScope, credentials);
-            client  = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
-
-        } else {
-            client  = HttpClientBuilder.create().build();
-        }
 
 
         System.out.println("Sending USPS...");
@@ -100,9 +102,12 @@ public class USPS extends AddressCleanse {
 
             System.out.println("Sending to XML...");
             new USPSXML().readXML(result);
-//            USPSXML xmlr = new USPSXML();
-//
-//            returnAddress = xmlr.readXML(result);
+            USPSXML xmlr = new USPSXML();
+
+            returnAddress = xmlr.readXML(result);
+
+            setInvalidAddress(false);
+            standardAddyVector.addElement(returnAddress);
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -111,8 +116,51 @@ public class USPS extends AddressCleanse {
         }
 
 
+        return standardAddyVector;
 
     } // End of start method
+
+
+
+
+    // --------------------------------------------------------------
+    public HttpClient setProxy(boolean isBehindProxy) {
+
+        HttpClient client = null;
+
+        if (isBehindProxy) {
+            System.out.println("Bypassing Proxy...");
+            HttpHost proxy = new HttpHost(this.proxyServer, Integer.parseInt(this.proxyPort));
+            Credentials credentials = new UsernamePasswordCredentials(System.getProperty("user.name"), this.uspsPWD);
+            AuthScope authScope = new AuthScope(this.proxyServer, Integer.parseInt(this.proxyPort));
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(authScope, credentials);
+            client  = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
+
+        } else {
+            client  = HttpClientBuilder.create().build();
+        }
+
+        return client;
+
+    }
+
+
+
+    // --------------------------------------------------------------
+    public Object getValueAt(int row, int col) {
+        if (standardAddyVector.isEmpty()) {
+            return null;
+        } else {
+            return ((Object[]) standardAddyVector.elementAt(row))[col];
+        }
+    }
+
+    // --------------------------------------------------------------
+    public int getRowCount() {
+        return standardAddyVector.size();
+
+    }
 
 
 

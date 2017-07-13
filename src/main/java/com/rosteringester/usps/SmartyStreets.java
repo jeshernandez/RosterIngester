@@ -1,8 +1,6 @@
 package com.rosteringester.usps;
 
-import com.google.api.client.http.HttpTransport;
 import com.smartystreets.api.ClientBuilder;
-import com.smartystreets.api.StaticCredentials;
 import com.smartystreets.api.exceptions.BatchFullException;
 import com.smartystreets.api.exceptions.SmartyException;
 import com.smartystreets.api.us_street.*;
@@ -10,17 +8,11 @@ import org.yaml.snakeyaml.Yaml;
 
 
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+
 
 
 /**
@@ -32,7 +24,17 @@ public class SmartyStreets extends AddressCleanse {
     private final String authToken;
     private final String proxyServer;
     private final String proxyPort;
+    Vector<String[]> standardAddyVector;
 
+    public boolean isInvalidAddress() {
+        return invalidAddress;
+    }
+
+    public void setInvalidAddress(boolean invalidAddress) {
+        this.invalidAddress = invalidAddress;
+    }
+
+    private boolean invalidAddress;
 
     // --------------------------------------------------------------
     public SmartyStreets() {
@@ -47,19 +49,13 @@ public class SmartyStreets extends AddressCleanse {
 
 
     // --------------------------------------------------------------
-    public void start(boolean isBehindProxy, String[] address,
+    public Vector<String[]> start(boolean isBehindProxy, String[] address,
                       String[] city, String[] state) {
+        standardAddyVector = new Vector<String[]>();
 
-        Client client;
-        if (isBehindProxy) {
-            client = new ClientBuilder(this.authId, this.authToken)
-                    .withProxy(Proxy.Type.HTTP, proxyServer, Integer.parseInt(proxyPort))
-                    .buildUsStreetApiClient();
-        } else {
-            client = new ClientBuilder(this.authId, this.authToken)
-                    .buildUsStreetApiClient();
-        }
-
+        Client client = null;
+        // bypass  proxy, if needed
+        client = setProxy(isBehindProxy);
 
         Lookup lookup;
 
@@ -73,7 +69,7 @@ public class SmartyStreets extends AddressCleanse {
                 // Clean the address
                 address[i] = this.cleanAddress(address[i]);
                 // Detect address in sentence (e.g. department name 123 main st)
-                address[i] = this.addressInSentence(address[i]);
+                //address[i] = this.addressInSentence(address[i]);
 
                 lookup.setStreet(address[i]);
                 lookup.setCity(city[i]);
@@ -97,34 +93,80 @@ public class SmartyStreets extends AddressCleanse {
         }
 
         Vector<Lookup> lookups = batch.getAllLookups();
-
+        String[] record = new String[4];
         for (int i = 0; i < batch.size(); i++) {
             ArrayList<Candidate> candidates = lookups.get(i).getResult();
 
             if (candidates.isEmpty()) {
+                setInvalidAddress(true);
                 System.out.println("Address " + i + " is invalid.\n");
+                record[0] = "Invalid Address";
                 continue;
             }
 
             System.out.println("Address " + i + " is valid. (There is at least one candidate)");
+            // 7 based on candidate values stored.
+
 
             for (Candidate candidate : candidates) {
                 final Components components = candidate.getComponents();
-                final Metadata metadata = candidate.getMetadata();
+                //final Metadata metadata = candidate.getMetadata();
+                setInvalidAddress(false);
+                //System.out.println("STANDARD: [[" + candidate.getDeliveryLine1().toUpperCase() + "]]");
+                record[0] = candidate.getDeliveryLine1().toUpperCase();
+                record[1] = components.getCityName().toUpperCase();
+                record[2] = components.getState().toUpperCase();
+                record[3] = components.getZipCode();
 
-                System.out.println("\nCandidate " + candidate.getCandidateIndex() + ":");
-                System.out.println("Delivery line 1: " + candidate.getDeliveryLine1());
-                System.out.println("Last line:       " + candidate.getLastLine());
-                System.out.println("ZIP Code:        " + components.getZipCode() + "-" + components.getPlus4Code());
-                System.out.println("County:          " + metadata.getCountyName());
-                System.out.println("Latitude:        " + metadata.getLatitude());
-                System.out.println("Longitude:       " + metadata.getLongitude());
+
+//                System.out.println("County:          " + metadata.getCountyName());
+//                System.out.println("Latitude:        " + metadata.getLatitude());
+//                System.out.println("Longitude:       " + metadata.getLongitude());
             }
+            standardAddyVector.addElement(record);
+
+
             System.out.println();
         }
 
+        return standardAddyVector;
 
     } // End of start method
+
+
+
+
+    // --------------------------------------------------------------
+    public Client setProxy(boolean isBehindProxy) {
+
+        Client client;
+        if (isBehindProxy) {
+            client = new ClientBuilder(this.authId, this.authToken)
+                    .withProxy(Proxy.Type.HTTP, proxyServer, Integer.parseInt(proxyPort))
+                    .buildUsStreetApiClient();
+        } else {
+            client = new ClientBuilder(this.authId, this.authToken)
+                    .buildUsStreetApiClient();
+        }
+
+        return client;
+    }
+
+
+    // --------------------------------------------------------------
+    public Object getValueAt(int row, int col) {
+        if (standardAddyVector.isEmpty()) {
+            return null;
+        } else {
+            return ((Object[]) standardAddyVector.elementAt(row))[col];
+        }
+    }
+
+    // --------------------------------------------------------------
+    public int getRowCount() {
+            return standardAddyVector.size();
+
+    }
 
 
 

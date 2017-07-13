@@ -1,8 +1,6 @@
 package com.rosteringester.db;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,50 +9,52 @@ import java.util.Map;
  */
 public class DbSqlServer extends DbCommonP {
     private String connectionUrl;
+    private final String msSQLServer;
+    private final String msSQLDb;
+    private final String msSQLPort;
+    private final String userName;
+    private final String userPWD;
+
 
     public DbSqlServer(){
-        Map<String, String> map = setConfig("env.yaml");
-        this.setConnectionUrl(map);
+        Map<String, String> config = setConfig("servers.yaml");
+        this.msSQLServer = config.get("msSQLServer");
+        this.msSQLDb = config.get("msSQLDB");
+        this.msSQLPort = config.get("msSQLPort");
+        this.userPWD = config.get("userPWD");
+        this.userName = config.get("userName");
+        setConnectionUrl();
+
     }
 
-    /**
-     * Getter for connectionUrl
-     * @return String connectionUrl
-     */
-    public String getConnectionUrl(){
-        return this.connectionUrl;
-    }
 
-    /**
-     * Setter for connectionUrl
-     * @param map mapped connection string
-     */
-    public void setConnectionUrl(Map<String, String> map){
-        this.connectionUrl = "jdbc:sqlserver://" + map.get("url") +
-                ":" + String.valueOf(map.get("port")) +
-                ";IntegratedSecurity=true;databaseName=" + map.get("database") +
-                ";user=" + map.get("username") +
-                ";password=" + map.get("password");
+    public void setConnectionUrl(){
+        this.connectionUrl = "jdbc:sqlserver://" + this.msSQLServer +
+                ":" + this.msSQLPort +
+                ";IntegratedSecurity=true;databaseName=" + this.msSQLDb +
+                ";user=" + this.userName +
+                ";password=" + this.userPWD;
     }
 
 
     public Connection getDBConn() {
         Connection conn = null;
         try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             conn = DriverManager.getConnection(this.connectionUrl);
         } catch (SQLException e1) {
             e1.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
         return conn;
 
     } // End of getDBConn method
 
-    /**
-     * Query method for SQL
-     * @param SQL String
-     * @return List
-     */
+
+
+    // -----------------------------------------------
     public List<Map<String, Object>> query(String SQL){
         List resultList = null;
         try {
@@ -68,26 +68,8 @@ public class DbSqlServer extends DbCommonP {
         return resultList;
     }
 
-    /**
-     * Convert the ResultSet to a List of Maps, where each Map represents a row with columnNames and columValues
-     * Example: Select TOP 2 for dbo.hello
-     * Result: [{hello=1},{hello2}]
-     * @param rs ResultSet
-     * @return List
-     * @throws SQLException SQLException
-     */
-    private List<Map<String, Object>> resultSetToList(ResultSet rs) throws SQLException {
-        ResultSetMetaData md = rs.getMetaData();
-        int columns = md.getColumnCount();
-        List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-        while (rs.next()){
-            Map<String, Object> row = new HashMap<String, Object>(columns);
-            for(int i = 1; i <= columns; ++i){
-                row.put(md.getColumnName(i), rs.getObject(i));
-            }
-            rows.add(row);
-        }
-        return rows;
-    }
 
-}
+
+
+
+} // End of DbSqlServer class

@@ -74,6 +74,7 @@ public class SmartyStreets extends AddressCleanse {
                 address[i] = this.cleanAddress(address[i]);
                 // Detect address in sentence (e.g. department name 123 main st)
                 address[i] = this.addressInSentence(address[i]);
+
                 lookup.setStreet(address[i]);
                 lookup.setCity(city[i]);
                 lookup.setState(state[i]);

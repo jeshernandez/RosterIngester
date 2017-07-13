@@ -1,8 +1,8 @@
 package com.rosteringester.db;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
+import java.util.Vector;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -11,23 +11,53 @@ import org.yaml.snakeyaml.Yaml;
  */
 abstract class DbCommonP {
 
-    public String getDriverClassName() {
-        return driverClassName;
-    }
 
+    Vector<String[]> dataVector;
 
-    // ----------------------------------------------
-    public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
-    }
-
-    private String driverClassName;
 
 
     // ----------------------------------------------
     public Map<String, String> setConfig(String configFile) {
         Yaml yaml = new Yaml();
         return (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream(configFile));
+    }
+
+
+
+
+
+    // -----------------------------------------
+    public Vector<String[]> resultSetToList(ResultSet rs) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
+        int columns = md.getColumnCount();
+
+        dataVector  = new Vector<String[]>();
+
+        while (rs.next()) {
+
+            String[] record = new String[columns];
+            for (int i = 0; i < columns; i++) {
+
+                record[i] = rs.getString(i + 1);
+                if(record[i] == null) {
+                    record[i] = "";
+                }
+            }
+
+            dataVector.addElement(record);
+
+        }
+        return dataVector;
+    }
+
+
+    // -----------------------------------------
+    public Object getValueAt(int row, int col) {
+        if (dataVector.isEmpty()) {
+            return null;
+        } else {
+            return ((Object[]) dataVector.elementAt(row))[col];
+        }
     }
 
 
@@ -46,6 +76,15 @@ abstract class DbCommonP {
 
 
     } // End of closeConnection
+
+
+
+    // ----------------------------------------------
+    public int getRowCount() {
+
+            return dataVector.size();
+
+    }
 
 
 

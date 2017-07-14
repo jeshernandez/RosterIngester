@@ -2,20 +2,37 @@ package com.rosteringester.usps;
 
 import com.rosteringester.db.DbDB2;
 import com.rosteringester.filesystem.ReadEntireTextFiles;
+import org.yaml.snakeyaml.Yaml;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Created by jeshernandez on 07/13/2017.
  */
 public class AddressEngine {
 
-    private final String directorypath = "\\\\frsp-oa-001\\DirectoryAccuracyIT\\GRIPS_QUERIES";
+    private String directoryPath;
 
+    public void Addressengine() {
+        Map<String, String> config = setConfig("env.yaml");
+        this.directoryPath = config.get("queryDirectory");
+    }
+
+
+
+    // ----------------------------------------------
+    public Map<String, String> setConfig(String configFile) {
+        Yaml yaml = new Yaml();
+        return (Map<String, String>) yaml.load(getClass().getClassLoader().getResourceAsStream(configFile));
+    }
+
+
+    // ----------------------------------------------
     public void start(String queryFile, String updateQuery) {
 
 
@@ -27,7 +44,7 @@ public class AddressEngine {
 
         // Get query File
         String query = new ReadEntireTextFiles()
-                .getTextData(directorypath + "\\" + queryFile);
+                .getTextData(this.directoryPath + "\\" + queryFile);
         // Send the query
         db.query(conn, query);
 
@@ -46,7 +63,7 @@ public class AddressEngine {
 
         // Get update query  File
         String updateFile = new ReadEntireTextFiles()
-                .getTextData(directorypath + "\\" + updateQuery);
+                .getTextData(this.directoryPath + "\\" + updateQuery);
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

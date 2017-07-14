@@ -22,7 +22,7 @@ import java.util.Vector;
 /**
  * Created by jeshernandez on 7/10/17.
  */
-public class USPS extends AddressCleanse {
+public class USPS extends AddressP {
 
     private final String proxyServer;
     private final String proxyPort;

@@ -1,17 +1,18 @@
 package com.rosteringester.main;
 
+<<<<<<< HEAD
 import com.rosteringester.algorithms.AlgoFactory;
 import com.rosteringester.db.DBRoster;
 import com.rosteringester.db.DbDB2;
+=======
+import com.rosteringester.db.dbModels.DBRoster;
+>>>>>>> mssql roster object
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.filesystem.FileRead;
-import com.rosteringester.discovery.DiscoveryFactory;
 import com.rosteringester.rosterheaders.RosterHeaders;
 import com.rosteringester.usps.USPS;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.*;

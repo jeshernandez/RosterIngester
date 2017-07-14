@@ -16,6 +16,7 @@ abstract class AddressP {
     private final String authToken;
     private final String proxyServer;
     private final String proxyPort;
+    private boolean validAddress;
 
     // --------------------------------------------------------------
     public AddressP() {
@@ -64,7 +65,7 @@ abstract class AddressP {
     }
 
 
-
+    // --------------------------------------------------------------
     public String cleanAddress(String address) {
         String removeSpecial = null;
 
@@ -76,7 +77,14 @@ abstract class AddressP {
 
 
 
+    // --------------------------------------------------------------
+    public boolean isValidAddress() {
+        return validAddress;
+    }
 
+    public void setValidAddress(boolean validAddress) {
+        this.validAddress = validAddress;
+    }
 
 
 

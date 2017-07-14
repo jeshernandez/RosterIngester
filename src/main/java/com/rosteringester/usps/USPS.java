@@ -30,15 +30,6 @@ public class USPS extends AddressP {
     private final String uspsPWD;
     Vector<String[]> standardAddyVector;
 
-    public boolean isInvalidAddress() {
-        return invalidAddress;
-    }
-
-    public void setInvalidAddress(boolean invalidAddress) {
-        this.invalidAddress = invalidAddress;
-    }
-
-    private boolean invalidAddress;
 
     // --------------------------------------------------------------
     public USPS() {
@@ -55,6 +46,9 @@ public class USPS extends AddressP {
     // --------------------------------------------------------------
     public Vector<String[]> start(boolean isBehindProxy, String[] address,
                              String[] city, String[] state) {
+
+        setValidAddress(false);
+
         String returnAddress[] = new String[5];
         int totalRecords = address.length;
         StringBuilder payload = new StringBuilder();
@@ -106,7 +100,10 @@ public class USPS extends AddressP {
 
             returnAddress = xmlr.readXML(result);
 
-            setInvalidAddress(false);
+
+            setValidAddress(true);
+
+
             standardAddyVector.addElement(returnAddress);
 
         } catch (UnsupportedEncodingException e) {

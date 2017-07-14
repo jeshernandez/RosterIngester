@@ -6,11 +6,8 @@ import com.smartystreets.api.us_street.*;
 import com.smartystreets.api.us_street.Client;
 import com.smartystreets.api.us_street.Lookup;
 
-
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Vector;
 
 
@@ -19,44 +16,7 @@ import java.util.Vector;
  * Created by jeshernandez on 06/29/2017.
  */
 public class SmartyStreets extends AddressP {
-    ArrayList<HashMap<String, String>> result;
-
-
-
-
-    public ArrayList<HashMap<String, String>>  readMe() {
-
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
-
-
-
-        return result;
-    }
-
-
-
-    // -----------------------------------------
-    public Object getValueAtTwo(int row, int col) {
-        if (result.isEmpty()) {
-            return null;
-        } else {
-            return ((Object) result.get(0).get("test"));
-        }
-    }
-
-
     Vector<String[]> standardAddyVector;
-
-
-    public boolean isInvalidAddress() {
-        return invalidAddress;
-    }
-
-    public void setInvalidAddress(boolean invalidAddress) {
-        this.invalidAddress = invalidAddress;
-    }
-
-    private boolean invalidAddress;
 
 
 
@@ -77,11 +37,9 @@ public class SmartyStreets extends AddressP {
 
             for (int i = 0; i < address.length; i++) {
                 lookup = new Lookup();
-
                 // Clean the address
                 address[i] = this.cleanAddress(address[i]);
-                // Detect address in sentence (e.g. department name 123 main st)
-                //address[i] = this.addressInSentence(address[i]);
+
 
                 lookup.setStreet(address[i]);
                 lookup.setCity(city[i]);
@@ -110,9 +68,8 @@ public class SmartyStreets extends AddressP {
             ArrayList<Candidate> candidates = lookups.get(i).getResult();
 
 
-
             if (candidates.isEmpty()) {
-                setInvalidAddress(true);
+                this.setValidAddress(false);
                 System.out.println("Address " + i + " is invalid.\n");
                 record[0] = "Invalid Address";
                 // TODO-me find Smarty Streets error codes.
@@ -128,7 +85,7 @@ public class SmartyStreets extends AddressP {
                 final Components components = candidate.getComponents();
 
                 //final Metadata metadata = candidate.getMetadata();
-                setInvalidAddress(false);
+                this.setValidAddress(true);
                 //System.out.println("STANDARD: [[" + candidate.getDeliveryLine1().toUpperCase() + "]]");
                 record[0] = candidate.getDeliveryLine1().toUpperCase();
                 record[1] = components.getCityName().toUpperCase();
@@ -149,8 +106,6 @@ public class SmartyStreets extends AddressP {
         return standardAddyVector;
 
     } // End of start method
-
-
 
 
 

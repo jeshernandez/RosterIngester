@@ -41,29 +41,39 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>6.1.0.jre8</version>
-        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.18</version>
+            <version>1.17</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <!-- https://mvnrepository.com/artifact/com.smartystreets.api/smartystreets-java-sdk -->
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
+            <groupId>com.smartystreets.api</groupId>
+            <artifactId>smartystreets-java-sdk</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/jdepend-maven-plugin -->
         <dependency>

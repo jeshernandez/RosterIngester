@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by drhippi on 7/7/17.
+ * Created by MichaelChrisco on 7/7/17.
  */
 public class DirectoryFilesTest {
     @Test

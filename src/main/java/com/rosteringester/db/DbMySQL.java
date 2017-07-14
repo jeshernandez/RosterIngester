@@ -10,12 +10,6 @@ import java.sql.SQLException;
 public class DbMySQL extends DbCommonP {
 
 
-    // ----------------------------------------
-    public void getDBName() {
-
-        System.out.println("MySQL Activating...");
-    } // End of getDBName
-
 
     // ----------------------------------------
     public Connection getDBConn() throws SQLException, ClassNotFoundException {

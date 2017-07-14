@@ -25,14 +25,6 @@ public class DBRoster {
 
     public Boolean isSavedFlag;
 
-    public List collect(List initArray){
-        System.out.println(initArray.toString());
-        return (List)initArray.stream().map( p -> {
-            System.out.println(p);
-            return new DBRoster(p);
-        }).collect(Collectors.toList());
-    }
-
     public DBRoster(Object... initArray) {
         this.isSavedFlag = Boolean.FALSE;
         if(initArray.length > 0) {

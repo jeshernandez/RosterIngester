@@ -1,12 +1,8 @@
 package com.rosteringester.main;
 
-<<<<<<< HEAD
 import com.rosteringester.algorithms.AlgoFactory;
-import com.rosteringester.db.DBRoster;
 import com.rosteringester.db.DbDB2;
-=======
 import com.rosteringester.db.dbModels.DBRoster;
->>>>>>> mssql roster object
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;

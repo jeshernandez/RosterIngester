@@ -25,13 +25,22 @@ public class DelimitedTextTest {
     @Test
     public void getHeaders() throws Exception {
         File resourcesDirectory = new File("src/main/resources/example.roster.txt");
+        File resourcesAstDirectory = new File("src/main/resources/example.astRoster.txt");
+        File resourcesCSVDirectory = new File("src/main/resources/example.csvRoster.txt");
+        File resourcesTabDirectory = new File("src/main/resources/example.tabRoster.txt");
+//        File resourcesDirectory = new File("C:\\DATA\\example1.astRoster.txt");
         DelimitedText testing = new DelimitedText();
         HashMap hash = new HashMap();
         hash.put(0, "A");
         hash.put(1, "B");
         hash.put(2, "C");
         HashMap subject = testing.getHeaders(resourcesDirectory.getAbsolutePath(), "|");
+        HashMap subject2 = testing.getHeaders(resourcesCSVDirectory.getAbsolutePath(), ",");
+        HashMap subject3 = testing.getHeaders(resourcesTabDirectory.getAbsolutePath(), "\t");
+//        HashMap subject2 = testing.getHeaders(resourcesAstDirectory.getAbsolutePath(), "*");
         assertEquals(hash, subject);
+        assertEquals(hash, subject2);
+        assertEquals(hash, subject3);
     }
 
 //    //Get single record for processing

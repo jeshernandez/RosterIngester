@@ -1,5 +1,7 @@
 package com.rosteringester.db;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
@@ -14,7 +16,7 @@ public class DbDB2 extends DbCommonP {
     private Connection conn;
 
 
-    public DbDB2() {
+    public DbDB2() throws IOException {
         Map<String, String> config = setConfig("servers.yaml");
         this.db2HostName = config.get("db2HostName");
         this.db2User = config.get("userName");

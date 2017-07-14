@@ -1,5 +1,7 @@
 package com.rosteringester.db;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,7 @@ public class DbSqlServer extends DbCommonP {
     private final String userPWD;
 
 
-    public DbSqlServer(){
+    public DbSqlServer() throws IOException {
         Map<String, String> config = setConfig("servers.yaml");
         this.msSQLServer = config.get("msSQLServer");
         this.msSQLDb = config.get("msSQLDB");

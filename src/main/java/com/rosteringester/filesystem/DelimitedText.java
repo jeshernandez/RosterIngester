@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -17,18 +18,12 @@ public class DelimitedText extends FileSystem implements FileInterface {
 
     // ----------------------------------------------------------------
     public HashMap getHeaders(String fileName, String delimeter) {
-
-        String[] headers = null;
-
         FileRead fr = new FileRead();
-        docHeaders = fr.getHeaders(fileName, delimeter);
-
-
-        return docHeaders;
+        return fr.getHeaders(fileName, delimeter);
     }
     //Consumes Roster Data WITHOUT changing the headers.
     //Fastest solution but uses the most memory.
-    public HashMap[] getRecords(String fileName, String delimiter) throws IOException{
+    public ArrayList getRecords(String fileName, String delimiter) throws IOException{
         HashMap headers = this.getHeaders(fileName, delimiter);
         System.out.println(headers);
 
@@ -39,6 +34,10 @@ public class DelimitedText extends FileSystem implements FileInterface {
         while((line=br.readLine())!=null){
             //TODO: Skip first line
             //Foreach new line, create a hashmap.
+            //TODO: Match on each of the regex delimiters.
+            if(delimiter == "*"){
+                delimiter = "\\*";
+            }
             String str[] = line.split(delimiter);
             for(int i=1;i<str.length;i++){
 //                StringTokenizer tok = new StringTokenizer(line, delimiter, false);
@@ -50,7 +49,7 @@ public class DelimitedText extends FileSystem implements FileInterface {
         }
         System.out.println(map);
 
-        return new HashMap[10];
+        return new ArrayList();
     }
 
     /**
@@ -69,6 +68,7 @@ public class DelimitedText extends FileSystem implements FileInterface {
         {
             if(text.contains(delimChar)) return delimChar;
         }
+        delimFile.close();
         //If we cant find delimiter, then return empty string.
         return "";
     }

@@ -18,7 +18,7 @@ public class AddressEngine {
 
     private String directoryPath;
 
-    public void Addressengine() {
+    public AddressEngine() {
         Map<String, String> config = setConfig("env.yaml");
         this.directoryPath = config.get("queryDirectory");
     }
@@ -33,7 +33,7 @@ public class AddressEngine {
 
 
     // ----------------------------------------------
-    public void start(String queryFile, String updateQuery) {
+    public void startStandard(String queryFile, String updateQuery) {
 
 
         DbDB2 db = new DbDB2();
@@ -97,14 +97,11 @@ public class AddressEngine {
                 e.printStackTrace();
             }
 
-
-
-
         }
 
 
 
-
+        // Close the connection if its open.
         try {
             if(!conn.isClosed()) {
                 System.out.println("Not closed, closing...");
@@ -115,9 +112,114 @@ public class AddressEngine {
             e.printStackTrace();
         }
 
+    } // End of startStandard Method
 
 
-    }
+
+
+    // ----------------------------------------------
+    public void startTextInAddress(String queryFile, String updateQuery) {
+
+
+        DbDB2 db = new DbDB2();
+
+        // Get DB2 Connection
+        Connection conn;
+        conn = db.getDBConn();
+
+        // Get query File
+        String query = new ReadEntireTextFiles()
+                .getTextData(this.directoryPath + "\\" + queryFile);
+        // Send the query
+        db.query(conn, query);
+
+
+        //Run Smarty first.
+        //TextInAddress s = new TextInAddress();
+
+        TextInAddress s = new TextInAddress();
+        // Run USPS Last
+        // Update query to only query those "Invalid Address" for USPS_ADDRESS
+        //USPS s = new USPS();
+
+        int rowCount = db.getRowCount();
+        System.out.println("Row counts: " + rowCount);
+
+
+
+        // Get update query  File
+        String updateFile = new ReadEntireTextFiles()
+                .getTextData(this.directoryPath + "\\" + updateQuery);
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+
+        for (int i = 0; i < rowCount; i++){
+
+            System.out.println("Processing: " + i + " , of " + rowCount);
+            System.out.println("Sending Address: " + db.getValueAt(i, 0).toString());
+            String[] address = {db.getValueAt(i, 0).toString()};
+            //String[] suite = {db.getValueAt(i, 1).toString()};
+
+            //String[] addressWSuite = {address[0] + " " + suite[0]};
+
+            String[] city = {db.getValueAt(i, 1).toString()};
+            String[] state = {db.getValueAt(i, 2).toString()};
+
+            // ---------------------------------------------------------
+            //                ADDRESS STANDARDIZATION
+            // ---------------------------------------------------------
+            s.startTextInAddress(true, address, city, state);
+            //s.start(true, address, city, state);
+
+
+            System.out.println("Record acount: " + s.getRowCount());
+            System.out.println("Value: " + s.getValueAt(0, 0).toString());
+            System.out.println("For... " + address[0].toUpperCase());
+            // Update the database.
+            if(s.isValidAddress() || s.getRowCount() > 0) {
+                try {
+                    System.out.println("Sending UPDATE USPS Address: " +
+                            s.getValueAt(0, 0).toString());
+                    PreparedStatement pstmt = conn.prepareStatement(updateFile);
+                    pstmt.setString(1,  s.getValueAt(0, 0).toString());
+                    String todaysDate = sdf.format(cal.getTime());
+                    pstmt.setString(2, todaysDate);
+                    pstmt.setString(3, System.getProperty("user.name").toUpperCase());
+                    pstmt.setString(4, address[0]);
+                    pstmt.setString(5, city[0]);
+                    pstmt.setString(6, state[0]);
+                    pstmt.addBatch();
+                    pstmt.executeBatch();
+                    pstmt.close();
+                    conn.commit();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+
+
+        } // end of for-loop
+
+
+
+        // Close the connection if its open.
+        try {
+            if(!conn.isClosed()) {
+                System.out.println("Connection Not closed, closing...");
+                conn.close();
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    } // End of startStandard Method
+
+
 
 
 

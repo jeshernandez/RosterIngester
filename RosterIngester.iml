@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -15,6 +15,20 @@
       <library>
         <CLASSES>
           <root url="jar://C:/DATA/Code/Java/commons-lang3-3.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/DATA/Code/Java/IBMDB2Drivers/64bit/db2jcc4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -69,14 +83,5 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:3.0.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: jdepend:jdepend:2.9.1" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/DATA/Code/Java/IBMDB2Drivers/64bit/db2jcc4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
   </component>
 </module>

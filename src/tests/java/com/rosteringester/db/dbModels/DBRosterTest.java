@@ -1,6 +1,11 @@
-package com.rosteringester.db;
+package com.rosteringester.db.dbModels;
 
+import com.rosteringester.db.dbModels.DBRoster;
 import org.junit.Test;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import static org.junit.Assert.*;
 

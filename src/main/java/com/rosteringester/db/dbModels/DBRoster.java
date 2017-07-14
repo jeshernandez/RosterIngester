@@ -1,6 +1,11 @@
-package com.rosteringester.db;
+package com.rosteringester.db.dbModels;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.rosteringester.db.DbSqlServer;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by MichaelChrisco on 7/5/17.

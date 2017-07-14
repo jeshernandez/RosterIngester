@@ -1,6 +1,8 @@
 package com.rosteringester.db;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Vector;
 
@@ -23,7 +25,14 @@ abstract class DbCommonP {
     }
 
 
+    // ----------------------------------------------------------------------------
+    public String getDateTime() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String todaysDate = sdf.format(cal.getTime());
 
+        return todaysDate;
+    }
 
 
     // -----------------------------------------

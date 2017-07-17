@@ -1,21 +1,12 @@
 package com.rosteringester.main;
 
-import com.rosteringester.algorithms.AlgoFactory;
-//import com.rosteringester.db.DBRoster;
-//import com.rosteringester.db.DbDB2;
-import com.rosteringester.db.DbDB2;
 import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.rosterheaders.RosterHeaders;
-import com.rosteringester.usps.USPS;
 import org.yaml.snakeyaml.Yaml;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.*;
 
 
@@ -26,8 +17,6 @@ public class RosterIngester {
     public static boolean debug = false;
     // TODO me - 07/04/2017 remove word from key and add to requiredFields
     // TODO me - 07/04/2017 find a way to remove highest score for iterator
-
-
 
 
     public static void main(String [] args) throws IOException {
@@ -74,7 +63,6 @@ public class RosterIngester {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //Vector<Integer, String>
 
             System.out.println("Auto-detected Delimiter: " + delimiter);
             HashMap headers = fi.getHeaders(file, delimiter);

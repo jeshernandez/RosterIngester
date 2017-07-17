@@ -40,11 +40,10 @@ public class DelimitedText extends FileSystem implements FileInterface {
             }
             String str[] = line.split(delimiter);
             for(int i=1;i<str.length;i++){
-//                StringTokenizer tok = new StringTokenizer(line, delimiter, false);
-//                map.put(headers)
-//                String arr[] = str[i].split(delimiter);
+                //StringTokenizer tok = new StringTokenizer(line, delimiter, false);
+                //String arr[] = str[i].split(delimiter);
 //                System.out.println(arr.toString());
-//                map.put(headers[i], arr[i]);
+               // map.put(headers, arr[i]);
             }
         }
         System.out.println(map);

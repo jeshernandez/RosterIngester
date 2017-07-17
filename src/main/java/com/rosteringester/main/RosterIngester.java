@@ -1,5 +1,8 @@
 package com.rosteringester.main;
 
+import com.rosteringester.algorithms.AlgoFactory;
+import com.rosteringester.db.DbDB2;
+import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
@@ -7,6 +10,7 @@ import com.rosteringester.filesystem.FileInterface;
 import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.*;
 
 
@@ -38,7 +42,8 @@ public class RosterIngester {
         //Once each file is finished, save each file to the database.
 
         //TODO: Replace placeholder with detection of last id in the DB:
-        Integer uuid = 0;
+        DbSqlServer msSQL = new DbSqlServer();
+        Connection msSqlConnection = msSQL.getDBConn();
         for (String file : files) {
             //        RosterHeaders r = new RosterHeaders();
             //        r.getRosterHeaders();
@@ -73,10 +78,9 @@ public class RosterIngester {
 //            System.
             //Save each record to the table.
             DBRoster rosterRecord = new DBRoster();
-            rosterRecord.id = uuid;
-            uuid++;
+            rosterRecord.create(msSqlConnection);
 //            rosterRecord.set(fileRecord);
-            rosterRecord.save();
+            //rosterRecord.create();
 
 
             System.out.println("Saved Record: " + rosterRecord.id);
@@ -90,7 +94,6 @@ public class RosterIngester {
 //        RosterHeaders r = new RosterHeaders();
 //        r.getRosterHeaders();
 
-//        debug = true;
 
         System.out.println("Roster Ingester is complete");
 //
@@ -100,46 +103,51 @@ public class RosterIngester {
 //        String[] state = {"CA"};
 //
 //        u.start(true, address, city, state);
+/*
+        List<Map<String, Object>> dataset;
 
-//        List<Map<String, Object>> dataset;
-//
-//        DbDB2 db = new DbDB2();
-//
-//        Connection conn = db.getDBConn();
-//        System.out.println("Submitting query...");
-//        dataset = db.query("SELECT DISTINCT \n" +
-//                        "UPPER(RTRIM(ROSTER.PRACTICE_ADDRESS)) AS PRACTICE_ADDRESS \n"
-//                      + ", UPPER(RTRIM(ROSTER.PRACTICE_SUITE)) AS PRACTICE_SUITE \n"
-//                      + ", UPPER(RTRIM(ROSTER.PRACTICE_CITY)) AS PRACTICE_CITY \n"
-//                      + ", UPPER(RTRIM(ROSTER.PRACTICE_STATE)) AS PRACTICE_STATE \n"
-//                      + "FROM A212083.ROSTERAUDIT AS ROSTER \n"
-//                        + "where (USPS_ADDRESS  LIKE 'Address%' \n"
-//                        + "or USPS_ADDRESS LIKE 'Multiple%' \n"
-//                        + "or USPS_ADDRESS LIKE 'Invalid%') \n"
-//                        + "and length(practice_address) > 2 \n"
-//                        + "and length(practice_state) > 1 \n"
-//                        + "and length(practice_city) > 2 \n"
-//                      + "WITH UR");
-//
-//        System.out.println("output: " + dataset.get(0).get("PRACTICE_ADDRESS"));
-//
-////        int index = 0;
-////        for (Map<String, Object> map : dataset) {
-////            for (Map.Entry<String, Object> entry : map.entrySet()) {
-////                String key = entry.getKey();
-////                Object value = entry.getValue();
-////                if(index >= 3) {
-////                    System.out.println("---------------------");
-////                    index=0;
-////                }
-////                System.out.println("Output: " + value);
-////            }
-////            index++;
-////        }
-//
-//
-//
-//        db.closeConnection(conn);
+        DbDB2 db = new DbDB2();
+
+        Connection conn = db.getDBConn();
+        System.out.println("Submitting query...");
+        dataset = db.query("SELECT DISTINCT \n" +
+                        "UPPER(RTRIM(ROSTER.PRACTICE_ADDRESS)) AS PRACTICE_ADDRESS \n"
+                      + ", UPPER(RTRIM(ROSTER.PRACTICE_SUITE)) AS PRACTICE_SUITE \n"
+                      + ", UPPER(RTRIM(ROSTER.PRACTICE_CITY)) AS PRACTICE_CITY \n"
+                      + ", UPPER(RTRIM(ROSTER.PRACTICE_STATE)) AS PRACTICE_STATE \n"
+                      + "FROM A212083.ROSTERAUDIT AS ROSTER \n"
+                        + "where (USPS_ADDRESS  LIKE 'Address%' \n"
+                        + "or USPS_ADDRESS LIKE 'Multiple%' \n"
+                        + "or USPS_ADDRESS LIKE 'Invalid%') \n"
+                        + "and length(practice_address) > 2 \n"
+                        + "and length(practice_state) > 1 \n"
+                        + "and length(practice_city) > 2 \n"
+                      + "WITH UR");
+
+        System.out.println("output: " + dataset.get(0).get("PRACTICE_ADDRESS"));
+
+//        int index = 0;
+//        for (Map<String, Object> map : dataset) {
+//            for (Map.Entry<String, Object> entry : map.entrySet()) {
+//                String key = entry.getKey();
+//                Object value = entry.getValue();
+//                if(index >= 3) {
+//                    System.out.println("---------------------");
+//                    index=0;
+//                }
+//                System.out.println("Output: " + value);
+//            }
+//            index++;
+//        }
+*/
+        //DbSqlServer msSQL = new DbSqlServer();
+        //Connection msSqlConnection = msSQL.getDBConn();
+        //DBRoster rosterRecord = new DBRoster();
+        //rosterRecord.create(msSqlConnection);
+        msSQL.closeConnection(msSqlConnection);
+
+
+        //db.closeConnection(conn);
 
 
     }

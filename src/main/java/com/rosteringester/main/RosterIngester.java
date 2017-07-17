@@ -2,6 +2,7 @@ package com.rosteringester.main;
 
 import com.rosteringester.algorithms.AlgoFactory;
 import com.rosteringester.db.DbDB2;
+import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
@@ -86,7 +87,7 @@ public class RosterIngester {
 //        String[] state = {"CA"};
 //
 //        u.start(true, address, city, state);
-
+/*
         List<Map<String, Object>> dataset;
 
         DbDB2 db = new DbDB2();
@@ -122,10 +123,15 @@ public class RosterIngester {
 //            }
 //            index++;
 //        }
+*/
+        DbSqlServer msSQL = new DbSqlServer();
+        Connection msSqlConnection = msSQL.getDBConn();
+        DBRoster rosterRecord = new DBRoster();
+        rosterRecord.create(msSqlConnection);
+        msSQL.closeConnection(msSqlConnection);
 
 
-
-        db.closeConnection(conn);
+        //db.closeConnection(conn);
 
 
     }

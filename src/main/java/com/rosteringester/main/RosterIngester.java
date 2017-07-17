@@ -1,17 +1,16 @@
 package com.rosteringester.main;
 
 import com.rosteringester.algorithms.AlgoFactory;
-import com.rosteringester.db.DBRoster;
+//import com.rosteringester.db.DBRoster;
 //import com.rosteringester.db.DbDB2;
+import com.rosteringester.db.DbDB2;
+import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.filesystem.FileRead;
-import com.rosteringester.discovery.DiscoveryFactory;
 import com.rosteringester.rosterheaders.RosterHeaders;
 import com.rosteringester.usps.USPS;
 import org.yaml.snakeyaml.Yaml;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

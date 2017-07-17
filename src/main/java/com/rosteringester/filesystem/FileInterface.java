@@ -1,5 +1,7 @@
 package com.rosteringester.filesystem;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -9,7 +11,9 @@ public interface FileInterface {
 
 
     void setFileName();
-    HashMap getHeaders(String fileName, String delimeter);
+    HashMap getHeaders(String fileName, String delimeter) throws IOException;
+    public ArrayList getRecords(String fileName, String delimiter) throws IOException;
+    String detectDelimiter(String fileName, String... delimiter) throws IOException;
 
 
 

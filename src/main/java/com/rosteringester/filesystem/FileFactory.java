@@ -1,28 +1,21 @@
 package com.rosteringester.filesystem;
 
+import java.util.*;
+import java.util.function.Supplier;
+
 /**
  * Created by jeshernandez on 06/16/2017.
  */
 public class FileFactory {
-
-    final static Map<String, Object> map = new HashMap<>();
-    static {
-        map.put("DELIMITED", DelimitedText::new);
-        map.put("TEST", TestFile::new);
-//        map.put("EXCELHSSF", ExcelFile::new);//Old .xls files
-//        map.put("EXCELXSSF", ExcelXSSFFile::new);//New .xlsf files
-    }
-
-    // -----------------------------------------------------
     public FileInterface getInstance(String fileType) {
 
         String cleanKeyword = fileType.toUpperCase();
-        FileInterface result = map.get(cleanKeyword);
-        if(result != null) {
-            return result;
-        }
-        throw new IllegalArgumentException("No such file " + cleanKeyword);
 
+        if(cleanKeyword.equals("DELIMITED")) return new DelimitedText();
+        if(cleanKeyword.equals("TEST")) return new TestFile();
+        if(cleanKeyword.equals("EXCEL")) return new ExcelXSSFFile();
+
+        return null;
     } // End of getInstance method
 
 } // End of FileFactory class

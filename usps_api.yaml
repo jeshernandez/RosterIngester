@@ -1,0 +1,3 @@
+name: usps_prod
+userid: 302AETNA4242
+payload_address: http://production.shippingapis.com/ShippingAPI.dll?API=Verify&XML=

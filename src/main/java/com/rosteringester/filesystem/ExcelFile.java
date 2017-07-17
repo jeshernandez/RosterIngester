@@ -7,13 +7,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -100,13 +104,20 @@ public class ExcelFile {
      * @param excelFileName
      * @throws IOException
      */
-    public static void readXLSXFile(String excelFileName) throws IOException {
+    public static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName) throws IOException {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
         XSSFWorkbook test = new XSSFWorkbook();
 
         XSSFSheet sheet = wb.getSheetAt(0);
+        //Get header HashMap
+        //TODO: Add this to its own method for easy consumption by the Algorithm.
+        ArrayList header = new ArrayList();
+
+        XSSFRow headerRow = sheet.getRow(0);
+
         XSSFRow row;
         XSSFCell cell;
 
@@ -115,20 +126,44 @@ public class ExcelFile {
         while (rows.hasNext()) {
             row = (XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
+            HashMap<String, String> newCell = new HashMap<>();
             while (cells.hasNext()) {
                 cell = (XSSFCell) cells.next();
-
+                String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
+                String cellValue = "";
                 if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
-                    System.out.print(cell.getStringCellValue() + " ");
+                    cellValue = cell.getStringCellValue();
                 } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
-                    System.out.print(cell.getNumericCellValue() + " ");
+                    cellValue = Double.toString(cell.getNumericCellValue());
                 } else {
-                    //U Can Handel Boolean, Formula, Errors
+                    //Nothing yet.
                 }
+                newCell.put(cellName, cellValue);
+//                    System.out.println(newCell);
             }
-            System.out.println();
+//            System.out.println(newCell);
+            result.add(newCell);
         }
+        //Removes the header.
+        result.remove(0);
+        return result;
+    }
 
+    public static HashMap readXLSXFileHeaders(String excelFileName) throws IOException {
+        InputStream ExcelFileToRead = new FileInputStream(excelFileName);
+        XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+        XSSFSheet sheet = wb.getSheetAt(0);
+
+        int rowNum = sheet.getLastRowNum() + 1;
+        int colNum = sheet.getRow(0).getLastCellNum();
+        HashMap<Integer, String> colMapByName = new HashMap<>();
+        if (sheet.getRow(0).cellIterator().hasNext()) {
+            for (int j = 0; j < colNum; j++) {
+                System.out.println(sheet.getRow(0).getCell(j).toString());
+                colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+            }
+        }
+        return colMapByName;
 
     }
 

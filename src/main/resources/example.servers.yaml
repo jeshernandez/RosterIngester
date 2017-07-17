@@ -1,0 +1,6 @@
+db2HostName:
+userName:
+userPWD:
+msSQLServer:
+msSQLDB:
+msSQLPort: "1234"

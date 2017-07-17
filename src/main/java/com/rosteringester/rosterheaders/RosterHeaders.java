@@ -5,6 +5,7 @@ import com.rosteringester.discovery.DiscoveryFactory;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class RosterHeaders {
     public static String[] requiredFields;
 
 
-    public static void getRosterHeaders() {
+    public static void getRosterHeaders() throws IOException {
         String filePath = "/Users/Jesse/roster_cm.dat";
         Double returnedScore = 0.0;
         AlgoFactory af = new AlgoFactory();

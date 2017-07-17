@@ -5,3 +5,4 @@ RemoteSystemsTempFiles
 /src/main/resources/env.yaml
 /out
 RosterIngester.iml
+/src/main/resources/servers.yaml

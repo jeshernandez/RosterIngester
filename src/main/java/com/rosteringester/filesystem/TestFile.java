@@ -1,5 +1,7 @@
 package com.rosteringester.filesystem;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,6 +25,14 @@ public class TestFile extends FileSystem implements FileInterface {
         docHeaders.put(8, "PRINT IN DIRECTORY");
 
         return docHeaders;
+    }
+
+    public String detectDelimiter(String fileName, String... delimiter) throws IOException {
+        return "|";
+    }
+
+    public ArrayList getRecords(String filename, String delimiter){
+        return new ArrayList();
     }
 
 }

@@ -32,8 +32,8 @@ public class DBRoster {
 
     public DBRoster create(Connection conn){
         //TODO: DB operation to save DB Roster
-        String query = "insert into rosters (npi, address, suite, city, zip, state)"
-         + " values (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "insert into [scarletDev].[dbo].[gripsroster_required] (npi, address, suite, city, zip, state)"
+         + " values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt (1, this.npi);
@@ -42,7 +42,7 @@ public class DBRoster {
             stmt.setString (4, this.city);
             stmt.setInt (5, this.zip);
             stmt.setString (6, this.state);
-        conn.commit();
+            stmt.executeUpdate();
             setSavedFlag(true);
         } catch (SQLException e) {
             e.printStackTrace();

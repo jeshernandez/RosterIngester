@@ -196,7 +196,7 @@ public class AddressEngine {
 
 
     // ----------------------------------------------
-    public void startTextInAddress(String queryFile, String updateQuery) {
+    public void startAddressInText(String queryFile, String updateQuery) {
 
 
         DbDB2 db = new DbDB2();
@@ -213,9 +213,9 @@ public class AddressEngine {
 
 
         //Run Smarty first.
-        //TextInAddress s = new TextInAddress();
+        //AddressInText s = new AddressInText();
 
-        TextInAddress s = new TextInAddress();
+        AddressInText s = new AddressInText();
         // Run USPS Last
         // Update query to only query those "Invalid Address" for USPS_ADDRESS
         //USPS s = new USPS();

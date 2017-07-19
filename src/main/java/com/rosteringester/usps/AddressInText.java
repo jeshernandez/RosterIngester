@@ -12,7 +12,7 @@ import java.util.Vector;
 /**
  * Created by jeshernandez on 07/14/2017.
  */
-public class TextInAddress extends AddressP {
+public class AddressInText extends AddressP {
     Vector<String[]> standardAddyVector;
 
 
@@ -121,4 +121,4 @@ public class TextInAddress extends AddressP {
 
 
 
-} // End of TextInAddress
+} // End of AddressInText

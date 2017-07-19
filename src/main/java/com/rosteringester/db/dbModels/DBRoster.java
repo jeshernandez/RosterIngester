@@ -1,9 +1,11 @@
 package com.rosteringester.db.dbModels;
 
 import com.rosteringester.db.DbSqlServer;
+import java.sql.Statement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.io.IOException;
  */
 public class DBRoster {
 
-    public int id;
+    private int id;
     private int npi;
     private String address;
     private String suite;
@@ -29,29 +31,44 @@ public class DBRoster {
 
     private Boolean isSavedFlag;
 
-    public DBRoster(Object... initArray) {
-        this.isSavedFlag = Boolean.FALSE;
+    public DBRoster() {
+        this.isSavedFlag = false;
     }
 
     public DBRoster create(Connection conn){
-        String query = "insert into [scarletDev].[dbo].[gripsroster_required] (npi, address, suite, city, zip, state)"
+        String query = "INSERT into [scarletDev].[dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
          + " values (?, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt (1, this.npi);
-            stmt.setString (2, this.address);
-            stmt.setString (3, this.suite);
-            stmt.setString (4, this.city);
-            stmt.setInt (5, this.zip);
-            stmt.setString (6, this.state);
+            PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, this.npi);
+            stmt.setString(2, this.address);
+            stmt.setString(3, this.suite);
+            stmt.setString(4, this.city);
+            stmt.setInt(5, this.zip);
+            stmt.setString(6, this.state);
             stmt.executeUpdate();
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    this.setId(generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Creating DBRoster failed, no ID obtained.");
+                }
+            }
             setSavedFlag(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        TODO: Select request to get the models ID from the DB.
 
         return this;
+    }
+
+    public void setId(Integer id){
+        this.id = id;
+    }
+
+    public Integer getId(){
+        return id;
     }
 
     public Boolean getSavedFlag() {

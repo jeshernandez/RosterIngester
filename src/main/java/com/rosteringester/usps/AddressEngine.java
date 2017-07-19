@@ -4,6 +4,7 @@ import com.rosteringester.db.DbDB2;
 import com.rosteringester.filesystem.ReadEntireTextFiles;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -35,7 +36,12 @@ public class AddressEngine {
     public void startUSPS(String queryFile, String updateQuery) {
 
 
-        DbDB2 db = new DbDB2();
+        DbDB2 db = null;
+        try {
+            db = new DbDB2();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Get DB2 Connection
         Connection conn;
@@ -114,7 +120,12 @@ public class AddressEngine {
     public void startStandard(String queryFile, String updateQuery) {
 
 
-        DbDB2 db = new DbDB2();
+        DbDB2 db = null;
+        try {
+            db = new DbDB2();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Get DB2 Connection
         Connection conn;
@@ -199,7 +210,12 @@ public class AddressEngine {
     public void startAddressInText(String queryFile, String updateQuery) {
 
 
-        DbDB2 db = new DbDB2();
+        DbDB2 db = null;
+        try {
+            db = new DbDB2();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Get DB2 Connection
         Connection conn;

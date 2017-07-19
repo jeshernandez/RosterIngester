@@ -23,7 +23,6 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.mojo:jdepend-maven-plugin:2.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.reporting:maven-reporting-api:2.2.1" level="project" />
@@ -60,7 +59,7 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:3.0.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: jdepend:jdepend:2.9.1" level="project" />
-    <orderEntry type="module-library">
+        <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:////frsp-oa-001/DirectoryAccuracyIT/SourceCodeExamples/Java/Libraries/IBMDB2Drivers/64bit/db2jcc4.jar!/" />

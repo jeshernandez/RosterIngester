@@ -1,17 +1,15 @@
 package com.rosteringester.main;
 
 import com.rosteringester.algorithms.AlgoFactory;
-import com.rosteringester.db.DBRoster;
 import com.rosteringester.db.DbDB2;
+import com.rosteringester.db.DbSqlServer;
+import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.filesystem.FileRead;
-import com.rosteringester.discovery.DiscoveryFactory;
 import com.rosteringester.rosterheaders.RosterHeaders;
 import com.rosteringester.usps.USPS;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.*;
@@ -89,7 +87,7 @@ public class RosterIngester {
 //        String[] state = {"CA"};
 //
 //        u.start(true, address, city, state);
-
+/*
         List<Map<String, Object>> dataset;
 
         DbDB2 db = new DbDB2();
@@ -125,10 +123,15 @@ public class RosterIngester {
 //            }
 //            index++;
 //        }
+*/
+        DbSqlServer msSQL = new DbSqlServer();
+        Connection msSqlConnection = msSQL.getDBConn();
+        DBRoster rosterRecord = new DBRoster();
+        rosterRecord.create(msSqlConnection);
+        msSQL.closeConnection(msSqlConnection);
 
 
-
-        db.closeConnection(conn);
+        //db.closeConnection(conn);
 
 
     }

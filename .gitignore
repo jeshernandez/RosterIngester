@@ -3,5 +3,6 @@
 .metadata
 RemoteSystemsTempFiles
 /src/main/resources/env.yaml
+/src/main/resources/servers.yaml
 /out
 RosterIngester.iml

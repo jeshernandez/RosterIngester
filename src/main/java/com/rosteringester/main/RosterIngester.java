@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.*;
 
+import static oracle.jrockit.jfr.events.Bits.intValue;
+
 
 /**
  * Created by jeshernandez on 6/14/17.
@@ -74,16 +76,33 @@ public class RosterIngester {
             System.out.println("Found headers: ");
             System.out.println(headers.values());
             //TODO: Get Records from
-            ArrayList records = fi.getRecords(file, delimiter);
-//            System.
+            ArrayList<HashMap> records = fi.getRecords(file, delimiter);
             //Save each record to the table.
             DBRoster rosterRecord = new DBRoster();
-            rosterRecord.create(msSqlConnection);
-//            rosterRecord.set(fileRecord);
-            //rosterRecord.create();
+            for (HashMap record : records){
+                System.out.println(record);
+                //TODO: Create map to NPI, Address, Suite, City, Zip, State
+                //From File to record.
 
+                //Set npi
+                // Excel may send this over as a Double String. We may need to add this to the validation and kick back process.
+                Double npi = new Double(record.get("npi").toString());
+                rosterRecord.setNpi(intValue(npi));
+                //Set address
+                rosterRecord.setAddress((record.get("address")).toString());
+                //Set suite
+                rosterRecord.setSuite("Suite");
+                //set city
+                rosterRecord.setCity("Fresno");
+                //set zip
+                rosterRecord.setZip(93722);
+                //set state
+                rosterRecord.setState("CA");
+//                rosterRecord.validate();
+                System.out.println("Saved Record: " + rosterRecord.getId());
+                rosterRecord.create(msSqlConnection);
+            }
 
-            System.out.println("Saved Record: " + rosterRecord.id);
             System.out.println("END: " + file + "\n");
 //        }
         }

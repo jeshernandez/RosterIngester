@@ -30,7 +30,7 @@ public class ReadEntireTextFiles {
             }
 
             bufferedReader.close();
-            query = sb.toString();
+            query = sb.toString().replace("+", " ");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

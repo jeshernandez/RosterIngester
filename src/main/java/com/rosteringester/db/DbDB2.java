@@ -11,7 +11,6 @@ public class DbDB2 extends DbCommonP {
     private final String db2HostName;
     private final String db2User;
     private final String db2PWD;
-    private Connection conn;
 
 
     public DbDB2() {
@@ -24,6 +23,8 @@ public class DbDB2 extends DbCommonP {
 
     // --------------------------------
     public Connection getDBConn() {
+
+        Connection conn = null;
 
         String URL = "jdbc:db2:"+ this.db2HostName;
 
@@ -45,7 +46,8 @@ public class DbDB2 extends DbCommonP {
 
 
     // --------------------------------
-    public List<Map<String, Object>> query(String SQL){
+    public List<Map<String, Object>> query(Connection conn, String SQL){
+
         List resultList = null;
         try {
             Statement stmt = conn.createStatement();

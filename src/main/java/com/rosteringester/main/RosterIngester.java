@@ -53,18 +53,7 @@ public class RosterIngester {
             //        for(HashMap<String,String> record : fileRecords) {
             FileFactory getFile = new FileFactory();
             FileInterface fi;
-            if(file.contains(".xlsx")){
-                fi = getFile.getInstance("EXCEL");
-            }
-            else if(file.contains(".xlsx")){
-                fi = getFile.getInstance("EXCEL");
-            }
-            else if(file.contains(".xls")){
-                fi = getFile.getInstance("DEPRECATEDEXCEL");
-            }
-            else{
-                fi = getFile.getInstance("DELIMITED");
-            }
+            fi = getFile.getInstanceFromFileName(file);
             System.out.println("START: " + file);
             String delimiter = null;
             try {

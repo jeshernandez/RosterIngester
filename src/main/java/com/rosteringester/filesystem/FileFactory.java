@@ -1,12 +1,14 @@
 package com.rosteringester.filesystem;
 
-import java.util.*;
-import java.util.function.Supplier;
-
 /**
  * Created by jeshernandez on 06/16/2017.
  */
 public class FileFactory {
+    /**
+     * Factory Method to get the File Model.
+     * @param fileType fileType Type of file in plain text.
+     * @return FileInterface Class instance.
+     */
     public FileInterface getInstance(String fileType) {
 
         String cleanKeyword = fileType.toUpperCase();
@@ -17,6 +19,19 @@ public class FileFactory {
         if(cleanKeyword.equals("DEPRECATEDEXCEL")) return new ExcelHSSFFile();
 
         return null;
-    } // End of getInstance method
+    }
 
-} // End of FileFactory class
+    /**
+     * Factory Method to get the File Model from the File Name.
+     * @param fileName absolute path to file in the form of file.<type>
+     * @return FileInterface Class instance.
+     */
+    public FileInterface getInstanceFromFileName(String fileName){
+        FileFactory getFile = new FileFactory();
+        String cleanFileName = fileName.toUpperCase();
+        if(cleanFileName.contains(".XLSX")) return getFile.getInstance("EXCEL");
+        if(cleanFileName.contains(".XLS")) return getFile.getInstance("DEPRECATEDEXCEL");
+        return getFile.getInstance("DELIMITED");
+    }
+
+}

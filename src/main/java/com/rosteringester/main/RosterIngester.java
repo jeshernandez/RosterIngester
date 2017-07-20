@@ -41,9 +41,7 @@ public class RosterIngester {
         //For each file, find fields that match with their headers and map them to the appropriate data structure.
         //We are going to blindly assume this is correct with the RosterHeaders Object.
         //TODO: Replace with RosterHeader Service Object
-        //Once each file is finished, save each file to the database.
 
-        //TODO: Replace placeholder with detection of last id in the DB:
         DbSqlServer msSQL = new DbSqlServer();
         Connection msSqlConnection = msSQL.getDBConn();
         for (String file : files) {
@@ -68,19 +66,12 @@ public class RosterIngester {
             for (HashMap record : records){
                 System.out.println(record);
                 //TODO: Create map to NPI, Address, Suite, City, Zip, State
-                //From File to record.
 
-                //Set npi
                 rosterRecord.setNpi(record.get("npi").toString());
-                //Set address
                 rosterRecord.setAddress((record.get("address")).toString());
-                //Set suite
                 rosterRecord.setSuite("Suite");
-                //set city
                 rosterRecord.setCity("Fresno");
-                //set zip
                 rosterRecord.setZip(93722);
-                //set state
                 rosterRecord.setState("CA");
 //                rosterRecord.validate();
 

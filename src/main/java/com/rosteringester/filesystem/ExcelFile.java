@@ -1,8 +1,5 @@
 package com.rosteringester.filesystem;
 
-/**
- * Created by Michael Chrisco on 07/10/2017.
- */
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,28 +7,29 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+/**
+ * Created by Michael Chrisco on 07/10/2017.
+ */
 public class ExcelFile {
     /**
      * Read deprecated xls Excel File.
      *
-     * @param excelFileName
+     * @param excelFileName Excel File name (absolute path)
      * @throws IOException
      */
-    public static ArrayList<HashMap<String, String>> readXLSFile(String excelFileName) throws IOException {
+    static ArrayList<HashMap<String, String>> readXLSFile(String excelFileName) throws IOException {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
@@ -59,9 +57,7 @@ public class ExcelFile {
                     //Nothing yet.
                 }
                 newCell.put(cellName, cellValue);
-//                    System.out.println(newCell);
             }
-//            System.out.println(newCell);
             result.add(newCell);
         }
         //Removes the header.
@@ -72,11 +68,11 @@ public class ExcelFile {
 
     /**
      *
-     * @param excelFileName
-     * @return
+     * @param excelFileName Excel File name (absolute path)
+     * @return HashMap
      * @throws IOException
      */
-    public static HashMap readXLSFileHeaders(String excelFileName) throws IOException {
+    static HashMap readXLSFileHeaders(String excelFileName) throws IOException {
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
         HSSFSheet sheet = wb.getSheetAt(0);
@@ -98,12 +94,12 @@ public class ExcelFile {
      * @param wrk Workbook
      * @return Integer number of sheets
      */
-    public static Integer getNumberOfSheets(Workbook wrk){
+    static Integer getNumberOfSheets(Workbook wrk){
         return wrk.getNumberOfSheets();
     }
 
     //TODO: Add something other than sample elements.
-    public static void writeXLSFile(String excelFileName) throws IOException {
+    static void writeXLSFile(String excelFileName) throws IOException {
 //
 //        String sheetName = "Sheet1";//default name of sheet
 //
@@ -136,7 +132,7 @@ public class ExcelFile {
      * @param excelFileName
      * @throws IOException
      */
-    public static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName) throws IOException {
+    static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName) throws IOException {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
@@ -178,7 +174,7 @@ public class ExcelFile {
      * @return
      * @throws IOException
      */
-    public static HashMap readXLSXFileHeaders(String excelFileName) throws IOException {
+    static HashMap readXLSXFileHeaders(String excelFileName) throws IOException {
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
         XSSFSheet sheet = wb.getSheetAt(0);
@@ -196,7 +192,7 @@ public class ExcelFile {
     }
 
     //TODO: Add something other than sample elements.
-    public static void writeXLSXFile(String excelFileName) throws IOException {
+    static void writeXLSXFile(String excelFileName) throws IOException {
 //
 //        String sheetName = "Sheet1";//name of sheet
 //

@@ -15,7 +15,6 @@ public class ExcelXSSFFile extends FileSystem implements FileInterface {
         return ExcelFile.readXLSXFileHeaders(fileName);
     }
 
-    //TODO: Remove for FileInterface.
     //Delimiter is not relevant to Excel files.
     public String detectDelimiter(String fileName, String... delimiter) throws IOException {
         return "";

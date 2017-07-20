@@ -24,7 +24,7 @@ public class RosterIngester {
     // TODO me - 07/04/2017 remove word from key and add to requiredFields
     // TODO me - 07/04/2017 find a way to remove highest score for iterator
 
-
+   //TODO: Michael - Add into its own Service Object. Remove from main method.
     public static void main(String [] args) throws IOException {
         //1. Pull files
         //TODO: Add into config class
@@ -47,10 +47,6 @@ public class RosterIngester {
         DbSqlServer msSQL = new DbSqlServer();
         Connection msSqlConnection = msSQL.getDBConn();
         for (String file : files) {
-            //        RosterHeaders r = new RosterHeaders();
-            //        r.getRosterHeaders();
-            //        List<Object, Object> fileRecords = r.getMappedRosterRecords();
-            //        for(HashMap<String,String> record : fileRecords) {
             FileFactory getFile = new FileFactory();
             FileInterface fi;
             fi = getFile.getInstanceFromFileName(file);
@@ -66,7 +62,6 @@ public class RosterIngester {
             HashMap headers = fi.getHeaders(file, delimiter);
             System.out.println("Found headers: ");
             System.out.println(headers.values());
-            //TODO: Get Records from
             ArrayList<HashMap> records = fi.getRecords(file, delimiter);
             //Save each record to the table.
             DBRoster rosterRecord = new DBRoster();
@@ -76,9 +71,7 @@ public class RosterIngester {
                 //From File to record.
 
                 //Set npi
-                // Excel may send this over as a Double String. We may need to add this to the validation and kick back process.
-                Double npi = new Double(record.get("npi").toString());
-                rosterRecord.setNpi(intValue(npi));
+                rosterRecord.setNpi(record.get("npi").toString());
                 //Set address
                 rosterRecord.setAddress((record.get("address")).toString());
                 //Set suite

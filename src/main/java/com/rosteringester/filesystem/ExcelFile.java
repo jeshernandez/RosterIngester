@@ -13,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -21,6 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Created by Michael Chrisco on 07/10/2017.
+ * Master Class that deals with unique Excel file forms.
  */
 public class ExcelFile {
     /**
@@ -30,6 +32,7 @@ public class ExcelFile {
      * @throws IOException
      */
     static ArrayList<HashMap<String, String>> readXLSFile(String excelFileName) throws IOException {
+        DataFormatter df = new DataFormatter();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
@@ -48,15 +51,7 @@ public class ExcelFile {
             while (cells.hasNext()) {
                 cell = (HSSFCell) cells.next();
                 String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-                String cellValue = "";
-                if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                    cellValue = cell.getStringCellValue();
-                } else if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
-                    cellValue = Double.toString(cell.getNumericCellValue());
-                } else {
-                    //Nothing yet.
-                }
-                newCell.put(cellName, cellValue);
+                newCell.put(cellName, (String) df.formatCellValue(cell));
             }
             result.add(newCell);
         }
@@ -133,6 +128,7 @@ public class ExcelFile {
      * @throws IOException
      */
     static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName) throws IOException {
+        DataFormatter df = new DataFormatter();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         InputStream ExcelFileToRead = new FileInputStream(excelFileName);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
@@ -151,15 +147,7 @@ public class ExcelFile {
             while (cells.hasNext()) {
                 cell = (XSSFCell) cells.next();
                 String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-                String cellValue = "";
-                if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
-                    cellValue = cell.getStringCellValue();
-                } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
-                    cellValue = Double.toString(cell.getNumericCellValue());
-                } else {
-                    //Nothing yet.
-                }
-                newCell.put(cellName, cellValue);
+                newCell.put(cellName, (String) df.formatCellValue(cell));
             }
             result.add(newCell);
         }
@@ -184,7 +172,7 @@ public class ExcelFile {
         HashMap<Integer, String> colMapByName = new HashMap<>();
         if (sheet.getRow(0).cellIterator().hasNext()) {
             for (int j = 0; j < colNum; j++) {
-                System.out.println(sheet.getRow(0).getCell(j).toString());
+//                System.out.println(sheet.getRow(0).getCell(j).toString());
                 colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
             }
         }

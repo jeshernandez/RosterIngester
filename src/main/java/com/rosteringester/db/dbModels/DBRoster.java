@@ -1,19 +1,11 @@
 package com.rosteringester.db.dbModels;
 
-import com.rosteringester.db.DbSqlServer;
-import java.sql.Statement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import static oracle.jrockit.jfr.events.Bits.intValue;
 
 /**
  * Created by MichaelChrisco on 7/5/17.
@@ -47,14 +39,9 @@ public class DBRoster {
             stmt.setInt(5, this.zip);
             stmt.setString(6, this.state);
             stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    this.setId(generatedKeys.getInt(1));
-                }
-                else {
-                    throw new SQLException("Creating DBRoster failed, no ID obtained.");
-                }
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            generatedKeys.next();
+            this.setId(generatedKeys.getInt(1));
             setSavedFlag(true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,6 +72,12 @@ public class DBRoster {
 
     public void setNpi(int npi) {
         this.npi = npi;
+    }
+    public void setNpi(String npi) {
+        this.npi = Integer.parseInt(npi);
+    }
+    public void setNpi(Double npi) {
+        this.npi = intValue(npi);
     }
 
     public String getAddress() {

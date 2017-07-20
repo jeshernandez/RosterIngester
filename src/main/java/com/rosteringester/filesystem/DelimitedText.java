@@ -1,12 +1,10 @@
 package com.rosteringester.filesystem;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 /**
  * Created by jeshernandez on 06/16/2017.
@@ -16,47 +14,57 @@ public class DelimitedText extends FileSystem implements FileInterface {
 
     HashMap<Integer, String> docHeaders = new HashMap<Integer, String>();
 
-    // ----------------------------------------------------------------
+    /**
+     * Retrieves the headers as a HashMap.
+     * @param fileName
+     * @param delimeter
+     * @return
+     */
     public HashMap getHeaders(String fileName, String delimeter) {
         FileRead fr = new FileRead();
         return fr.getHeaders(fileName, delimeter);
     }
-    //Consumes Roster Data WITHOUT changing the headers.
-    //Fastest solution but uses the most memory.
+
+    /**
+     * Consumes Roster Data.
+     * Fastest solution but uses the most memory.
+     * @param fileName
+     * @param delimiter
+     * @return
+     * @throws IOException
+     */
     public ArrayList getRecords(String fileName, String delimiter) throws IOException{
-        //Needto convert headers to
         HashMap headers = this.getHeaders(fileName, delimiter);
         System.out.println(headers);
+        ArrayList<HashMap> result = new ArrayList<>();
 
-        HashMap<String,String> map = new HashMap<String,String>();
 
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         String line =  null;
         while((line=br.readLine())!=null){
-            //TODO: Skip first line
             //Foreach new line, create a hashmap.
+            HashMap<String,String> map = new HashMap<String,String>();
+
             //TODO: Match on each of the regex delimiters.
             if(delimiter == "*"){
                 delimiter = "\\*";
             }
+            if(delimiter == "|"){
+                delimiter = "\\|";
+            }
+
             String str[] = line.split(delimiter);
-            System.out.println(str.toString());
-            StringTokenizer tok = new StringTokenizer(line, delimiter, false);
-            System.out.println(tok);
-            //TODO:
-            //Foreach header field, assign a value from the file.
-            //Return ArrayList of HashMaps in the form ArrayList<HashMap<String, Object>>
-
-//            for(int i=1;i<str.length;i++){
-                //StringTokenizer tok = new StringTokenizer(line, delimiter, false);
-//                String arr[] = str[i].split(delimiter);
-//                System.out.println(arr[i].toString());
-//               // map.put(headers, arr[i]);
-//            }
+            for(int i=0;i<str.length;i++){
+                Object o = headers.get(i);
+                map.put(o.toString().toLowerCase(), str[i]);
+            }
+            result.add(map);
         }
-        System.out.println(map);
 
-        return new ArrayList();
+        //Remove header line
+        result.remove(0);
+
+        return result;
     }
 
     /**

@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * Created by MichaelChrisco on 6/21/17.
+ * Microsoft SQL Server Driver Class.
+ * Can be used for single queries or within MVC DB Models.
  */
 public class DbSqlServer extends DbCommonP {
     private String connectionUrl;
@@ -17,7 +19,10 @@ public class DbSqlServer extends DbCommonP {
     private final String userName;
     private final String userPWD;
 
-
+    /**
+     * Constructor which sets the environment
+     * @throws IOException
+     */
     public DbSqlServer() throws IOException {
         Map<String, String> config = setConfig("servers.yaml");
         this.msSQLServer = config.get("msSQLServer");
@@ -26,7 +31,6 @@ public class DbSqlServer extends DbCommonP {
         this.userPWD = config.get("userPWD");
         this.userName = config.get("userName");
         setConnectionUrl();
-
     }
 
 

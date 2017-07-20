@@ -24,6 +24,7 @@ public class DelimitedText extends FileSystem implements FileInterface {
     //Consumes Roster Data WITHOUT changing the headers.
     //Fastest solution but uses the most memory.
     public ArrayList getRecords(String fileName, String delimiter) throws IOException{
+        //Needto convert headers to
         HashMap headers = this.getHeaders(fileName, delimiter);
         System.out.println(headers);
 
@@ -39,12 +40,19 @@ public class DelimitedText extends FileSystem implements FileInterface {
                 delimiter = "\\*";
             }
             String str[] = line.split(delimiter);
-            for(int i=1;i<str.length;i++){
+            System.out.println(str.toString());
+            StringTokenizer tok = new StringTokenizer(line, delimiter, false);
+            System.out.println(tok);
+            //TODO:
+            //Foreach header field, assign a value from the file.
+            //Return ArrayList of HashMaps in the form ArrayList<HashMap<String, Object>>
+
+//            for(int i=1;i<str.length;i++){
                 //StringTokenizer tok = new StringTokenizer(line, delimiter, false);
-                //String arr[] = str[i].split(delimiter);
-//                System.out.println(arr.toString());
-               // map.put(headers, arr[i]);
-            }
+//                String arr[] = str[i].split(delimiter);
+//                System.out.println(arr[i].toString());
+//               // map.put(headers, arr[i]);
+//            }
         }
         System.out.println(map);
 

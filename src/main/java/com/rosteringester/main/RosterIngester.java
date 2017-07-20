@@ -56,9 +56,11 @@ public class RosterIngester {
             if(file.contains(".xlsx")){
                 fi = getFile.getInstance("EXCEL");
             }
-            else if(file.contains(".xls")){
-                //TODO: Set up for old xls format
+            else if(file.contains(".xlsx")){
                 fi = getFile.getInstance("EXCEL");
+            }
+            else if(file.contains(".xls")){
+                fi = getFile.getInstance("DEPRECATEDEXCEL");
             }
             else{
                 fi = getFile.getInstance("DELIMITED");
@@ -99,8 +101,9 @@ public class RosterIngester {
                 //set state
                 rosterRecord.setState("CA");
 //                rosterRecord.validate();
-                System.out.println("Saved Record: " + rosterRecord.getId());
+
                 rosterRecord.create(msSqlConnection);
+                System.out.println("Saved Record: " + rosterRecord.getId());
             }
 
             System.out.println("END: " + file + "\n");
@@ -159,10 +162,6 @@ public class RosterIngester {
 //            index++;
 //        }
 */
-        //DbSqlServer msSQL = new DbSqlServer();
-        //Connection msSqlConnection = msSQL.getDBConn();
-        //DBRoster rosterRecord = new DBRoster();
-        //rosterRecord.create(msSqlConnection);
         msSQL.closeConnection(msSqlConnection);
 
 

@@ -14,6 +14,7 @@ public class FileFactory {
         if(cleanKeyword.equals("DELIMITED")) return new DelimitedText();
         if(cleanKeyword.equals("TEST")) return new TestFile();
         if(cleanKeyword.equals("EXCEL")) return new ExcelXSSFFile();
+        if(cleanKeyword.equals("DEPRECATEDEXCEL")) return new ExcelHSSFFile();
 
         return null;
     } // End of getInstance method

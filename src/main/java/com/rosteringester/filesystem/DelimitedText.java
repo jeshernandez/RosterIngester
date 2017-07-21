@@ -46,10 +46,10 @@ public class DelimitedText extends FileSystem implements FileInterface {
             HashMap<String,String> map = new HashMap<String,String>();
 
             //TODO: Match on each of the regex delimiters.
-            if(delimiter == "*"){
+            if(delimiter.equals("*")){
                 delimiter = "\\*";
             }
-            if(delimiter == "|"){
+            if(delimiter.equals("|")){
                 delimiter = "\\|";
             }
 

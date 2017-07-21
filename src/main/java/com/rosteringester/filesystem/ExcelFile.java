@@ -57,6 +57,8 @@ public class ExcelFile {
         }
         //Removes the header.
         result.remove(0);
+        ExcelFileToRead.close();
+        wb.close();
         return result;
 
     }
@@ -81,6 +83,8 @@ public class ExcelFile {
                 colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
             }
         }
+        ExcelFileToRead.close();
+        wb.close();
         return colMapByName;
     }
 
@@ -153,6 +157,8 @@ public class ExcelFile {
         }
         //Removes the header.
         result.remove(0);
+        ExcelFileToRead.close();
+        wb.close();
         return result;
     }
 
@@ -176,6 +182,8 @@ public class ExcelFile {
                 colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
             }
         }
+        ExcelFileToRead.close();
+        wb.close();
         return colMapByName;
     }
 

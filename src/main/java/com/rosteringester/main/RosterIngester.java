@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.*;
 
-import static oracle.jrockit.jfr.events.Bits.intValue;
-
-
 /**
  * Created by jeshernandez on 6/14/17.
  */
@@ -46,8 +43,7 @@ public class RosterIngester {
         Connection msSqlConnection = msSQL.getDBConn();
         for (String file : files) {
             FileFactory getFile = new FileFactory();
-            FileInterface fi;
-            fi = getFile.getInstanceFromFileName(file);
+            FileInterface fi = getFile.getInstanceFromFileName(file);
             System.out.println("START: " + file);
             String delimiter = null;
             try {

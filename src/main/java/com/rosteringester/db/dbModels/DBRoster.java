@@ -28,7 +28,7 @@ public class DBRoster {
     }
 
     public DBRoster create(Connection conn){
-        String query = "INSERT into [scarletDev].[dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
+        String query = "INSERT into [dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
          + " values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -54,7 +54,7 @@ public class DBRoster {
         this.id = id;
     }
 
-    public Integer getId(){
+    public int getId(){
         return id;
     }
 

@@ -40,6 +40,7 @@ public class DbSqlServer extends DbCommonP {
                 ";IntegratedSecurity=true;databaseName=" + this.msSQLDb +
                 ";user=" + this.userName +
                 ";password=" + this.userPWD;
+//        System.out.println(connectionUrl);
     }
 
 

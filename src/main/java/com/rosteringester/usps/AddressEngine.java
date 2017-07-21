@@ -35,13 +35,7 @@ public class AddressEngine {
 
     public void startUSPS(String queryFile, String updateQuery) {
 
-
-        DbDB2 db = null;
-        try {
-            db = new DbDB2();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DbDB2 db = new DbDB2();
 
         // Get DB2 Connection
         Connection conn;
@@ -120,12 +114,8 @@ public class AddressEngine {
     public void startStandard(String queryFile, String updateQuery) {
 
 
-        DbDB2 db = null;
-        try {
-            db = new DbDB2();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DbDB2 db = new DbDB2();
+
 
         // Get DB2 Connection
         Connection conn;
@@ -210,12 +200,7 @@ public class AddressEngine {
     public void startAddressInText(String queryFile, String updateQuery) {
 
 
-        DbDB2 db = null;
-        try {
-            db = new DbDB2();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DbDB2 db = new DbDB2();
 
         // Get DB2 Connection
         Connection conn;

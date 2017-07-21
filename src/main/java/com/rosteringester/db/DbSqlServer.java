@@ -23,7 +23,7 @@ public class DbSqlServer extends DbCommonP {
      * Constructor which sets the environment
      * @throws IOException
      */
-    public DbSqlServer() throws IOException {
+    public DbSqlServer() {
         Map<String, String> config = setConfig("servers.yaml");
         this.msSQLServer = config.get("msSQLServer");
         this.msSQLDb = config.get("msSQLDB");

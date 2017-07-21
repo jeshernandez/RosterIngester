@@ -15,7 +15,7 @@ public class DbDB2 extends DbCommonP {
     private final String db2PWD;
 
 
-    public DbDB2() throws IOException {
+    public DbDB2() {
         Map<String, String> config = setConfig("servers.yaml");
         this.db2HostName = config.get("db2HostName");
         this.db2User = config.get("userName");

@@ -7,13 +7,11 @@ import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.rosterheaders.RosterHeaders;
-import com.rosteringester.usps.USPS;
-
+import org.yaml.snakeyaml.Yaml;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.*;
-
 
 /**
  * Created by jeshernandez on 6/14/17.
@@ -23,52 +21,63 @@ public class RosterIngester {
     // TODO me - 07/04/2017 remove word from key and add to requiredFields
     // TODO me - 07/04/2017 find a way to remove highest score for iterator
 
+   //TODO: Michael - Add into its own Service Object. Remove from main method.
+    public static void main(String [] args) throws IOException {
+        //1. Pull files
+        //TODO: Add into config class
+        Yaml yaml = new Yaml();
+        Map<String,String> config = (Map<String,String>)yaml.load(new FileInputStream("src/main/resources/env.yaml"));
 
+        DirectoryFiles directoryFiles = new DirectoryFiles();
+        List<String> files = null;
+        try {
+            files = directoryFiles.getFiles(config.get("roster_directory"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //For each file, find fields that match with their headers and map them to the appropriate data structure.
+        //We are going to blindly assume this is correct with the RosterHeaders Object.
+        //TODO: Replace with RosterHeader Service Object
 
+        DbSqlServer msSQL = new DbSqlServer();
+        Connection msSqlConnection = msSQL.getDBConn();
+        for (String file : files) {
+            FileFactory getFile = new FileFactory();
+            FileInterface fi = getFile.getInstanceFromFileName(file);
+            System.out.println("START: " + file);
+            String delimiter = null;
+            try {
+                delimiter = fi.detectDelimiter(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-    public static void main(String [] args) {
-//        //1. Pull files
-//        DirectoryFiles directoryFiles = new DirectoryFiles();
-//        List<String> files = null;
-//        try {
-//            files = directoryFiles.getFiles("/src/main/resources");
-//        } catch (IOException e) {
-//            e.printStackTrace();
+            System.out.println("Auto-detected Delimiter: " + delimiter);
+            HashMap headers = fi.getHeaders(file, delimiter);
+            System.out.println("Found headers: ");
+            System.out.println(headers.values());
+            ArrayList<HashMap> records = fi.getRecords(file, delimiter);
+            //Save each record to the table.
+            DBRoster rosterRecord = new DBRoster();
+            for (HashMap record : records){
+                System.out.println(record);
+                //TODO: Create map to NPI, Address, Suite, City, Zip, State
+
+                rosterRecord.setNpi(record.get("npi").toString());
+                rosterRecord.setAddress((record.get("address")).toString());
+                rosterRecord.setSuite("Suite");
+                rosterRecord.setCity("Fresno");
+                rosterRecord.setZip(93722);
+                rosterRecord.setState("CA");
+//                rosterRecord.validate();
+
+                rosterRecord.create(msSqlConnection);
+                System.out.println("Saved Record: " + rosterRecord.getId());
+            }
+
+            System.out.println("END: " + file + "\n");
 //        }
-//        //For each file, find fields that match with their headers and map them to the appropriate data structure.
-//        //We are going to blindly assume this is correct with the RosterHeaders Object.
-//        //TODO: Replace with RosterHeader Service Object
-//        //Once each file is finished, save each file to the database.
-//
-//        //TODO: Replace placeholder with detection of last id in the DB:
-//        Integer uuid = 0;
-//        for (String file : files) {
-//            //        RosterHeaders r = new RosterHeaders();
-//            //        r.getRosterHeaders();
-//            //        List<Object, Object> fileRecords = r.getMappedRosterRecords();
-//            //        for(HashMap<String,String> record : fileRecords) {
-//            FileFactory getFile = new FileFactory();
-//            FileInterface fi = getFile.getInstance("DELIMITED");
-//            System.out.println("START: " + file);
-//            String delimiter = null;
-//            try {
-//                delimiter = fi.detectDelimiter(file);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println("Auto-detected Delimiter: " + delimiter);
-//            //TODO: Get Records from
-//            //fi.getRecords();
-//            //Save each record to the table.
-//            DBRoster rosterRecord = new DBRoster();
-//            rosterRecord.id = uuid;
-//            uuid++;
-////            rosterRecord.set(fileRecord);
-//            rosterRecord.save();
-//            System.out.println("Saved Record: " + rosterRecord.id);
-//            System.out.println("END: " + file + "\n");
-////        }
-//        }
+        }
 //
 //        //TODO: 2. Save into Database. (logs/error reporting/field changes/etc...)
 //        //TODO: 3. A/C/D operations
@@ -77,9 +86,7 @@ public class RosterIngester {
 //        r.getRosterHeaders();
 
 
-        debug = true;
-
-//        System.out.println("Roster Ingester is complete");
+        System.out.println("Roster Ingester is complete");
 //
 //        USPS u = new USPS();
 //        String[] address = {"1310 Shaw Avenue"};
@@ -124,10 +131,6 @@ public class RosterIngester {
 //            index++;
 //        }
 */
-        DbSqlServer msSQL = new DbSqlServer();
-        Connection msSqlConnection = msSQL.getDBConn();
-        DBRoster rosterRecord = new DBRoster();
-        rosterRecord.create(msSqlConnection);
         msSQL.closeConnection(msSqlConnection);
 
 

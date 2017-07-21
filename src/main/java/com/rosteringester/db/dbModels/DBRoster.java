@@ -1,14 +1,11 @@
 package com.rosteringester.db.dbModels;
 
-import com.rosteringester.db.DbSqlServer;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static oracle.jrockit.jfr.events.Bits.intValue;
 
 /**
  * Created by MichaelChrisco on 7/5/17.
@@ -16,7 +13,7 @@ import java.util.stream.Stream;
  */
 public class DBRoster {
 
-    public int id;
+    private int id;
     private int npi;
     private String address;
     private String suite;
@@ -26,30 +23,39 @@ public class DBRoster {
 
     private Boolean isSavedFlag;
 
-    public DBRoster(Object... initArray) {
-        this.isSavedFlag = Boolean.FALSE;
+    public DBRoster() {
+        this.isSavedFlag = false;
     }
 
     public DBRoster create(Connection conn){
-        //TODO: DB operation to save DB Roster
-        String query = "insert into [scarletDev].[dbo].[gripsroster_required] (npi, address, suite, city, zip, state)"
+        String query = "INSERT into [dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
          + " values (?, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt (1, this.npi);
-            stmt.setString (2, this.address);
-            stmt.setString (3, this.suite);
-            stmt.setString (4, this.city);
-            stmt.setInt (5, this.zip);
-            stmt.setString (6, this.state);
+            PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, this.npi);
+            stmt.setString(2, this.address);
+            stmt.setString(3, this.suite);
+            stmt.setString(4, this.city);
+            stmt.setInt(5, this.zip);
+            stmt.setString(6, this.state);
             stmt.executeUpdate();
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            generatedKeys.next();
+            this.setId(generatedKeys.getInt(1));
             setSavedFlag(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        TODO: Select request to get the models ID from the DB.
 
         return this;
+    }
+
+    public void setId(Integer id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public Boolean getSavedFlag() {
@@ -66,6 +72,12 @@ public class DBRoster {
 
     public void setNpi(int npi) {
         this.npi = npi;
+    }
+    public void setNpi(String npi) {
+        this.npi = Integer.parseInt(npi);
+    }
+    public void setNpi(Double npi) {
+        this.npi = intValue(npi);
     }
 
     public String getAddress() {

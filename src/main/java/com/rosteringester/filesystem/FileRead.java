@@ -15,7 +15,7 @@ public class FileRead extends FileSystem {
 
 
     // ---------------------------------------------------
-    public HashMap getHeaders(String fileName, String delimeter) {
+    public HashMap getHeaders(String fileName, String delimiter) {
 
         String[] headers = null;
 
@@ -26,8 +26,7 @@ public class FileRead extends FileSystem {
             FileInputStream fs = new FileInputStream(fileName);
             BufferedReader br = new BufferedReader(new InputStreamReader(fs));
 
-
-            headers = br.readLine().split(this.getCleanDelimeter(delimeter));
+            headers = br.readLine().split(this.getCleanDelimiter(delimiter));
 
 
             for (int i = 0; i < headers.length; i++) {

@@ -1,8 +1,7 @@
 package com.rosteringester.filesystem;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -30,6 +29,10 @@ public class TestFile extends FileSystem implements FileInterface {
 
     public String detectDelimiter(String fileName, String... delimiter) throws IOException {
         return "|";
+    }
+
+    public ArrayList getRecords(String filename, String delimiter){
+        return new ArrayList();
     }
 
 }

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 public abstract class FileSystem {
 
     private static String filePath;
-
+//    private HashMap<String, String> delimiterChars = {"|", "*", ",", "\t"};
 
     // -------------------------------------------------------------------
     // Get File path, set for program.
@@ -29,16 +30,22 @@ public abstract class FileSystem {
 
 
     // ---------------------------------------------------
-    public String getCleanDelimeter(String delimeter) {
-        String cleanDelimeter = null;
+    public String getCleanDelimiter(String delimiter) {
+        String cleanDelimiter = null;
 
-        if(delimeter.equals("|")) {
-            cleanDelimeter = "\\|";
+        if(delimiter.equals("|")) {
+            cleanDelimiter = "\\|";
+        }
+        else if (delimiter.equals("*")){
+            return "\\*";
+        }
+        else {
+            return delimiter;
         }
 
-        return cleanDelimeter;
+        return cleanDelimiter;
 
-    } // end of getCleanDelimeter
+    } // end of cleanDelimiter
 
 
     // ---------------------------------------------------

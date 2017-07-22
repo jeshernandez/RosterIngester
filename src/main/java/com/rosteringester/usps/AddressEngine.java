@@ -1,10 +1,9 @@
 package com.rosteringester.usps;
 
 import com.rosteringester.db.DbDB2;
-import com.rosteringester.filesystem.ReadEntireTextFiles;
+import com.rosteringester.fileread.ReadEntireTextFiles;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

@@ -9,7 +9,7 @@ import java.util.HashMap;
  * Documentation on library: https://poi.apache.org/spreadsheet/quick-guide.html
  * We may not need two separate classes but need to test.
  */
-public class ExcelXSSFFile extends FileSystem implements FileInterface {
+public class ExcelXSLXFile extends FileSystem implements FileInterface {
 
     public HashMap getHeaders(String fileName, String... delimeter)  {
         return ExcelFile.readXLSXFileHeaders(fileName);

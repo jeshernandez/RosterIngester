@@ -176,7 +176,7 @@ public class Roster {
 
 
 
-    // ------------------------------------------------
+    // ------------GETTER------------
     public String getFirstName() {
         return firstName;
     }

@@ -1,5 +1,8 @@
 package com.rosteringester.db.dbModels;
 
+import com.rosteringester.logs.LogQueryError;
+import com.rosteringester.logs.LogQueryErrorExceptionBuilder;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,8 +46,9 @@ public class DBRoster {
             generatedKeys.next();
             this.setId(generatedKeys.getInt(1));
             setSavedFlag(true);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            LogQueryError logQueryError = LogQueryError.ExceptionBuilder(ex, this).build();
+            logQueryError.create(conn);
         }
 
         return this;

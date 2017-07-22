@@ -20,22 +20,22 @@ public class RosterFactory {
 
             // Create expected roster Names
             medicareRoster = new Roster.Builder()
-                    .firstName("first_name")
-                    .lastName("last_name")
+                    .firstName("first name")
+                    .lastName("last name")
                     .role("role")
                     .specialty("specialty")
                     .npi("npi")
-                    .groupName("group_name")
+                    .groupName("group name")
                     .address("address")
                     .suite("suite")
                     .city("city")
                     .state("state")
                     .zip("zip")
-                    .servicePhone("service_phone")
-                    .officeHours("office_hours")
-                    .practiceAgeLimits("practice_age_limits")
-                    .acceptingNewPatients("accepting_patients")
-                    .providerType("accepting_patients")
+                    .servicePhone("service phone")
+                    .officeHours("office hours")
+                    .practiceAgeLimits("practice age limits")
+                    .acceptingNewPatients("accepting patients")
+                    .providerType("accepting patients")
                     .build();
 
         }
@@ -54,13 +54,16 @@ public class RosterFactory {
         if(discoveryType.toLowerCase().equals("medicare")) {
 
             // Create discoverylist
+            // ------------------------------------------
+            //     DO NOT USE CONFLINCTING KEYWORDS
+            // ------------------------------------------
             discovery = new Discovery.Builder()
-                    .firstName(Arrays.asList("first name", "provider name"))
-                    .lastName(Arrays.asList("last name"))
+                    .firstName(Arrays.asList("first", "provider name", "name"))
+                    .lastName(Arrays.asList("last"))
                     .role(Arrays.asList("role"))
                     .specialty(Arrays.asList("specialty"))
                     .npi(Arrays.asList("npi", "national provider identification"))
-                    .groupName(Arrays.asList("group", "group name"))
+                    .groupName(Arrays.asList("group", "medical group"))
                     .address(Arrays.asList("practice address", "service address", "address"))
                     .suite(Arrays.asList("suite", "second address"))
                     .city(Arrays.asList("city"))

@@ -2,15 +2,6 @@ package com.rosteringester.main;
 
 
 import com.rosteringester.discovery.DiscoverFields;
-import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.roster.Discovery;
-import com.rosteringester.roster.Roster;
-import com.rosteringester.roster.RosterFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 
 /**

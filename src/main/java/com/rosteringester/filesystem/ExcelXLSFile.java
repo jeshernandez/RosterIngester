@@ -11,12 +11,12 @@ import java.util.HashMap;
  */
 public class ExcelXLSFile extends FileSystem implements FileInterface {
 
-    public HashMap getHeaders(String fileName, String delimeter) throws IOException {
+    public HashMap getHeaders(String fileName, String... delimiter) {
         return ExcelFile.readXLSFileHeaders(fileName);
     }
 
     //Delimiter is not relevant to Excel files.
-    public String detectDelimiter(String fileName, String... delimiter) throws IOException {
+    public String detectDelimiter(String fileName, String... delimiter) {
         return "";
     }
 
@@ -26,7 +26,7 @@ public class ExcelXLSFile extends FileSystem implements FileInterface {
      * @return Excel ArrayList. Full file at the moment. Fastest and most memory intensive component.
      * @throws IOException
      */
-    public ArrayList getRecords(String fileName, String delimiter) throws IOException {
+    public ArrayList getRecords(String fileName, String delimiter)  {
         return ExcelFile.readXLSFile(fileName);
     }
 

@@ -10,10 +10,9 @@ import java.util.HashMap;
 public interface FileInterface {
 
 
-    void setFileName();
     HashMap getHeaders(String fileName, String... delimeter) ;
     public ArrayList getRecords(String fileName, String delimiter);
-    String detectDelimiter(String fileName, String... delimiter);
+
 
 
 

@@ -9,14 +9,14 @@ import java.util.HashMap;
  * Documentation on library: https://poi.apache.org/spreadsheet/quick-guide.html
  * We may not need two separate classes but need to test.
  */
-public class ExcelHSSFFile extends FileSystem implements FileInterface {
+public class ExcelXLSFile extends FileSystem implements FileInterface {
 
-    public HashMap getHeaders(String fileName, String delimeter) throws IOException {
+    public HashMap getHeaders(String fileName, String... delimiter) {
         return ExcelFile.readXLSFileHeaders(fileName);
     }
 
     //Delimiter is not relevant to Excel files.
-    public String detectDelimiter(String fileName, String... delimiter) throws IOException {
+    public String detectDelimiter(String fileName, String... delimiter) {
         return "";
     }
 
@@ -26,7 +26,7 @@ public class ExcelHSSFFile extends FileSystem implements FileInterface {
      * @return Excel ArrayList. Full file at the moment. Fastest and most memory intensive component.
      * @throws IOException
      */
-    public ArrayList getRecords(String fileName, String delimiter) throws IOException {
+    public ArrayList getRecords(String fileName, String delimiter)  {
         return ExcelFile.readXLSFile(fileName);
     }
 

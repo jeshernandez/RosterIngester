@@ -1,5 +1,8 @@
 package com.rosteringester.db.dbModels;
 
+import com.rosteringester.logs.LogQueryError;
+import com.rosteringester.logs.LogQueryErrorExceptionBuilder;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +31,7 @@ public class DBRoster {
     }
 
     public DBRoster create(Connection conn){
-        String query = "INSERT into [dbo].[grips_roster_requiredd] (npi, address, suite, city, zip, state)"
+        String query = "INSERT into [dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
          + " values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -44,7 +47,8 @@ public class DBRoster {
             this.setId(generatedKeys.getInt(1));
             setSavedFlag(true);
         } catch (SQLException ex) {
-            new DBLogQueryError().setFromSQLException(ex,this).create(conn);
+            LogQueryError logQueryError = LogQueryError.ExceptionBuilder(ex, this).build();
+            logQueryError.create(conn);
         }
 
         return this;

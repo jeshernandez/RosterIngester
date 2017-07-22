@@ -5,4 +5,3 @@ RemoteSystemsTempFiles
 /src/main/resources/env.yaml
 /src/main/resources/servers.yaml
 /out
-/src/main/resrouces/log4j2.properties

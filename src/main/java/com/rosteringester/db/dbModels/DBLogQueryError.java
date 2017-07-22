@@ -47,19 +47,19 @@ public class DBLogQueryError {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
-    public void setStrClass(String str_class) {
+    private void setStrClass(String str_class) {
         this.str_class = str_class;
     }
 
-    public void setErrorId(int error_id) {
+    private void setErrorId(int error_id) {
         this.error_id = error_id;
     }
 
-    public void setDescription(String description) {
+    private void setDescription(String description) {
         this.description = description;
     }
 
@@ -79,7 +79,7 @@ public class DBLogQueryError {
         return state;
     }
 
-    public void setState(String state) {
+    private void setState(String state) {
         this.state = state;
     }
 
@@ -87,7 +87,23 @@ public class DBLogQueryError {
         return isSavedFlag;
     }
 
-    public void setSavedFlag(Boolean savedFlag) {
+    private void setSavedFlag(Boolean savedFlag) {
         isSavedFlag = savedFlag;
+    }
+
+    public DBLogQueryError setFromSQLException(SQLException ex, Object packageClass){
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+
+                    e.printStackTrace(System.err);
+                    setState(((SQLException)e).getSQLState());
+                    setErrorId(((SQLException)e).getErrorCode());
+                    setStrClass(packageClass.getClass().toString());
+                    setDescription(e.getMessage());
+                    setLevel("ERROR");
+                }
+            }
+
+            return this;
     }
 }

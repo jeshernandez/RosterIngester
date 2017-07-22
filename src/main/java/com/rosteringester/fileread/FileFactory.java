@@ -47,7 +47,7 @@ public class FileFactory extends DirectoryFiles {
             setGetNames(new XLSXFile().getHeaders(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
-            new XLSFile();
+            setGetNames(new XLSFile().getHeaders(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
             new DelimitedFile();
@@ -63,7 +63,7 @@ public class FileFactory extends DirectoryFiles {
 
 
 
-    public HashMap<Integer, String> getGetNames() {
+    public HashMap<Integer, String> getHeaders() {
         return getNames;
     }
 

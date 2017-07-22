@@ -1,12 +1,16 @@
 package com.rosteringester.main;
 
 
+import com.rosteringester.discovery.DiscoverFields;
+import com.rosteringester.filesystem.FileInterface;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -22,18 +26,10 @@ public class RosterIngester {
 
     public static void main(String [] args) {
 
-
-        RosterFactory rf = new RosterFactory();
-        // Get medicare standard roster fields
-        Roster roster = rf.createRoster("medicare");
-        Discovery discovery = rf.createDiscovery("medicare");
+        DiscoverFields df = new DiscoverFields();
+        df.findField();
 
 
-        System.out.println("Get standard first name: " + roster.getFirstName());
-        List<String> firstName = discovery.getFirstName();
-
-
-        firstName.forEach(System.out::println);
 
 
     } // End of Main

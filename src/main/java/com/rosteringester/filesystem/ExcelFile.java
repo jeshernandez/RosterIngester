@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -31,34 +32,41 @@ public class ExcelFile {
      * @param excelFileName Excel File name (absolute path)
      * @throws IOException
      */
-    static ArrayList<HashMap<String, String>> readXLSFile(String excelFileName) throws IOException {
+    static ArrayList<HashMap<String, String>> readXLSFile(String excelFileName)  {
         DataFormatter df = new DataFormatter();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
-        InputStream ExcelFileToRead = new FileInputStream(excelFileName);
-        HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
 
-        HSSFSheet sheet = wb.getSheetAt(0);
+        try {
+            InputStream ExcelFileToRead = new FileInputStream(excelFileName);
+            HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
+            HSSFSheet sheet = wb.getSheetAt(0);
 
-        HSSFRow row;
-        HSSFCell cell;
+            HSSFRow row;
+            HSSFCell cell;
 
-        Iterator rows = sheet.rowIterator();
-
-        while (rows.hasNext()) {
-            row = (HSSFRow) rows.next();
-            Iterator cells = row.cellIterator();
-            HashMap<String, String> newCell = new HashMap<>();
-            while (cells.hasNext()) {
-                cell = (HSSFCell) cells.next();
-                String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-                newCell.put(cellName, (String) df.formatCellValue(cell));
+            Iterator rows = sheet.rowIterator();
+            while (rows.hasNext()) {
+                row = (HSSFRow) rows.next();
+                Iterator cells = row.cellIterator();
+                HashMap<String, String> newCell = new HashMap<>();
+                while (cells.hasNext()) {
+                    cell = (HSSFCell) cells.next();
+                    String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
+                    newCell.put(cellName, (String) df.formatCellValue(cell));
+                }
+                result.add(newCell);
             }
-            result.add(newCell);
+            //Removes the header.
+            result.remove(0);
+            ExcelFileToRead.close();
+            wb.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        //Removes the header.
-        result.remove(0);
-        ExcelFileToRead.close();
-        wb.close();
+
+
+
         return result;
 
     }
@@ -69,22 +77,29 @@ public class ExcelFile {
      * @return HashMap
      * @throws IOException
      */
-    static HashMap readXLSFileHeaders(String excelFileName) throws IOException {
-        InputStream ExcelFileToRead = new FileInputStream(excelFileName);
-        HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
-        HSSFSheet sheet = wb.getSheetAt(0);
+    static HashMap readXLSFileHeaders(String excelFileName)  {
+        HashMap<Integer, String> colMapByName = null;
 
-        int rowNum = sheet.getLastRowNum() + 1;
-        int colNum = sheet.getRow(0).getLastCellNum();
-        HashMap<Integer, String> colMapByName = new HashMap<>();
-        if (sheet.getRow(0).cellIterator().hasNext()) {
-            for (int j = 0; j < colNum; j++) {
-                System.out.println(sheet.getRow(0).getCell(j).toString());
-                colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+        try {
+            InputStream ExcelFileToRead = new FileInputStream(excelFileName);
+            HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
+            HSSFSheet sheet = wb.getSheetAt(0);
+
+            int rowNum = sheet.getLastRowNum() + 1;
+            int colNum = sheet.getRow(0).getLastCellNum();
+            colMapByName = new HashMap<>();
+            if (sheet.getRow(0).cellIterator().hasNext()) {
+                for (int j = 0; j < colNum; j++) {
+                    System.out.println(sheet.getRow(0).getCell(j).toString());
+                    colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+                }
             }
+            ExcelFileToRead.close();
+            wb.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        ExcelFileToRead.close();
-        wb.close();
+
         return colMapByName;
     }
 
@@ -98,7 +113,7 @@ public class ExcelFile {
     }
 
     //TODO: Add something other than sample elements.
-    static void writeXLSFile(String excelFileName) throws IOException {
+    static void writeXLSFile(String excelFileName)  {
 //
 //        String sheetName = "Sheet1";//default name of sheet
 //
@@ -131,34 +146,40 @@ public class ExcelFile {
      * @param excelFileName
      * @throws IOException
      */
-    static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName) throws IOException {
+    static ArrayList<HashMap<String, String>> readXLSXFile(String excelFileName)  {
         DataFormatter df = new DataFormatter();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
-        InputStream ExcelFileToRead = new FileInputStream(excelFileName);
-        XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
-        XSSFSheet sheet = wb.getSheetAt(0);
+        try {
+            InputStream ExcelFileToRead = new FileInputStream(excelFileName);
+            XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
-        XSSFRow row;
-        XSSFCell cell;
+            XSSFSheet sheet = wb.getSheetAt(0);
 
-        Iterator rows = sheet.rowIterator();
+            XSSFRow row;
+            XSSFCell cell;
 
-        while (rows.hasNext()) {
-            row = (XSSFRow) rows.next();
-            Iterator cells = row.cellIterator();
-            HashMap<String, String> newCell = new HashMap<>();
-            while (cells.hasNext()) {
-                cell = (XSSFCell) cells.next();
-                String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-                newCell.put(cellName, (String) df.formatCellValue(cell));
+            Iterator rows = sheet.rowIterator();
+
+            while (rows.hasNext()) {
+                row = (XSSFRow) rows.next();
+                Iterator cells = row.cellIterator();
+                HashMap<String, String> newCell = new HashMap<>();
+                while (cells.hasNext()) {
+                    cell = (XSSFCell) cells.next();
+                    String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
+                    newCell.put(cellName, (String) df.formatCellValue(cell));
+                }
+                result.add(newCell);
             }
-            result.add(newCell);
+            //Removes the header.
+            result.remove(0);
+            ExcelFileToRead.close();
+            wb.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        //Removes the header.
-        result.remove(0);
-        ExcelFileToRead.close();
-        wb.close();
+
         return result;
     }
 
@@ -168,27 +189,34 @@ public class ExcelFile {
      * @return
      * @throws IOException
      */
-    static HashMap readXLSXFileHeaders(String excelFileName) throws IOException {
-        InputStream ExcelFileToRead = new FileInputStream(excelFileName);
-        XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
-        XSSFSheet sheet = wb.getSheetAt(0);
+    static HashMap readXLSXFileHeaders(String excelFileName)  {
 
-        int rowNum = sheet.getLastRowNum() + 1;
-        int colNum = sheet.getRow(0).getLastCellNum();
-        HashMap<Integer, String> colMapByName = new HashMap<>();
-        if (sheet.getRow(0).cellIterator().hasNext()) {
-            for (int j = 0; j < colNum; j++) {
+        HashMap<Integer, String> colMapByName = null;
+
+        try {
+            InputStream ExcelFileToRead = new FileInputStream(excelFileName);
+            XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+            XSSFSheet sheet = wb.getSheetAt(0);
+
+            int rowNum = sheet.getLastRowNum() + 1;
+            int colNum = sheet.getRow(0).getLastCellNum();
+            colMapByName = new HashMap<>();
+            if (sheet.getRow(0).cellIterator().hasNext()) {
+                for (int j = 0; j < colNum; j++) {
 //                System.out.println(sheet.getRow(0).getCell(j).toString());
-                colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+                    colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+                }
             }
+            ExcelFileToRead.close();
+            wb.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        ExcelFileToRead.close();
-        wb.close();
         return colMapByName;
     }
 
     //TODO: Add something other than sample elements.
-    static void writeXLSXFile(String excelFileName) throws IOException {
+    static void writeXLSXFile(String excelFileName)  {
 //
 //        String sheetName = "Sheet1";//name of sheet
 //

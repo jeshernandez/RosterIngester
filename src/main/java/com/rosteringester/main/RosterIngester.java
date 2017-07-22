@@ -7,6 +7,7 @@ import com.rosteringester.roster.RosterFactory;
 import java.util.List;
 import java.util.Map;
 
+import com.rosteringester.discovery.DiscoverFields;
 /**
  * Created by jeshernandez on 6/14/17.
  */
@@ -28,7 +29,6 @@ public class RosterIngester {
         List<String> firstName = discovery.getFirstName();
 
 
-        firstName.forEach(System.out::println);
 
 
     } // End of Main

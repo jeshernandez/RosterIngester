@@ -7,9 +7,9 @@ import java.util.Arrays;
  */
 public class RosterFactory {
 
-    // TODO me - Use SQL table headers instead of creating standard header here.
-    // TODO me - Try to dynamically use ms sql discovery list. Issue, no off-line support.
-    // TODO me -    * no-offline support, maybe excel import of field names?
+    // TODO jes - Use SQL table headers instead of creating standard header here.
+    // TODO jes - Try to dynamically use ms sql discovery list. Issue, no off-line support.
+    // TODO jes -    * no-offline support, maybe excel import of field names?
 
 
     // ------------------------------------------

@@ -2,6 +2,7 @@ package com.rosteringester.algorithms;
 
 import com.rosteringester.main.RosterIngester;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -38,11 +39,11 @@ public class AlgoFactory {
 
 
 
-    public static Double getBestScore(String algoNames, String staticValue,
+    public static Double getBestScore(String algoNames, String standardName,
                                       String[] discoveryList) {
         String cleanAlgoName = algoNames.toUpperCase();
         double finalDistance = 0.0;
-        String cleanField = staticValue;
+        String cleanField = standardName;
         cleanField = cleanField.toUpperCase();
         int index = 0;
 
@@ -75,10 +76,10 @@ public class AlgoFactory {
 
                     for (int i = 0; i < discoveryList.length; i++) {
                         double tempDistance = 0.0;
-                        //System.out.println("Clean: " + cleanField + ": Discover: " + discoveryList[i].toString());
+                        System.out.println("Clean: " + cleanField + ": Discover: " + discoveryList[i].toString());
                         tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
-                        //System.out.println("Getting inside value: " + tempDistance);
+                        System.out.println("Getting inside value: " + tempDistance);
                         if(!cleanField.contains(discoveryList[i].toString())) {
                             if(tempDistance > finalDistance) {
                                 finalDistance = tempDistance;
@@ -90,7 +91,7 @@ public class AlgoFactory {
 
                     } // end for-loop
 
-                    //System.out.println("Your best score>>>>>>>" + finalDistance);
+                    System.out.println("Your best score>>>>>>>" + finalDistance);
                     return finalDistance;
                 } // end-if
             }
@@ -122,6 +123,7 @@ public class AlgoFactory {
 
 
     } // End of getBestScore
+
 
 
 

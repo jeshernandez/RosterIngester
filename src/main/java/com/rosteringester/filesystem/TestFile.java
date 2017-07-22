@@ -13,7 +13,7 @@ public class TestFile extends FileSystem implements FileInterface {
     HashMap<Integer, String> docHeaders = new HashMap<Integer, String>();
 
     // ----------------------------------------------------------------
-    public HashMap getHeaders(String fileName, String delimeter) {
+    public HashMap getHeaders(String fileName, String... delimeter) {
 
         docHeaders.put(1, "OFFICE PHONE");
         docHeaders.put(2, "PRIMARY ADDRESS");
@@ -27,7 +27,7 @@ public class TestFile extends FileSystem implements FileInterface {
         return docHeaders;
     }
 
-    public String detectDelimiter(String fileName, String... delimiter) throws IOException {
+    public String detectDelimiter(String fileName, String... delimiter) {
         return "|";
     }
 

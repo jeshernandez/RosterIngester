@@ -3,8 +3,6 @@ package com.rosteringester.discovery;
 import com.rosteringester.filesystem.DirectoryFiles;
 import com.rosteringester.filesystem.FileFactory;
 import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.roster.Discovery;
-import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
 
 import java.io.IOException;

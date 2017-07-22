@@ -1,16 +1,17 @@
 package com.rosteringester.discovery;
 
-import com.rosteringester.filesystem.DirectoryFiles;
-import com.rosteringester.filesystem.FileFactory;
-import com.rosteringester.filesystem.FileInterface;
-import com.rosteringester.roster.RosterFactory;
+import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.fileread.FileFactory;
+
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class DiscoverFields {
 
+    Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
 
     public void findField() {
 
@@ -19,33 +20,16 @@ public class DiscoverFields {
 
         try {
             files = directoryFiles.getFiles("C:\\DATA\\rosters");
+            LOGGER.info("FileName: " + files.get(0).toString());
+            FileFactory getFile = new FileFactory(files.get(0).toString());
+
+            HashMap<Integer, String> headers;
+            headers = getFile.getHeaders();
+            System.out.println("Size of headers: " + headers.size());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        files.forEach(l-> {
-            System.out.println("FileName: " + l);
-            FileFactory getFile = new FileFactory();
-            FileInterface fi = null;
-
-            fi = getFile.getInstanceFromFileName(l);
-            HashMap<Integer, String> headers;
-
-                headers = fi.getHeaders(l.toString());
-                String[] dirtyFields = new String[headers.size()];
-
-                RosterFactory r = new RosterFactory();
-                r.createRoster("medicare");
-                r.createDiscovery("medicare");
-
-
-                System.out.println("Fields: " + headers.size());
-                System.out.println("First fields: " + headers.get(0).toString());
-
-
-        });
-
 
 
 

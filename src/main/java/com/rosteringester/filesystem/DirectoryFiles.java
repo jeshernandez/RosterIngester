@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by drhippi on 7/7/17.
+ * Created by MichaelChrisco on 7/7/17.
  */
 public class DirectoryFiles {
     //TODO: Setter/Getter?

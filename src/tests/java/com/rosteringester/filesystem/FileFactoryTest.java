@@ -17,11 +17,11 @@ public class FileFactoryTest {
         assertEquals(TestFile.class, testing.getInstance("test").getClass());
         assertEquals(TestFile.class, testing.getInstance("TEST").getClass());
 
-        assertEquals(ExcelXSSFFile.class, testing.getInstance("excel").getClass());
-        assertEquals(ExcelXSSFFile.class, testing.getInstance("EXCEL").getClass());
+        assertEquals(ExcelXSLXFile.class, testing.getInstance("excel").getClass());
+        assertEquals(ExcelXSLXFile.class, testing.getInstance("EXCEL").getClass());
 
-        assertEquals(ExcelHSSFFile.class, testing.getInstance("deprecatedexcel").getClass());
-        assertEquals(ExcelHSSFFile.class, testing.getInstance("DEPRECATEDEXCEL").getClass());
+        assertEquals(ExcelXLSFile.class, testing.getInstance("deprecatedexcel").getClass());
+        assertEquals(ExcelXLSFile.class, testing.getInstance("DEPRECATEDEXCEL").getClass());
 
         assertNull(testing.getInstance("Nothing"));
     }
@@ -31,11 +31,11 @@ public class FileFactoryTest {
         assertEquals(DelimitedText.class, testing.getInstanceFromFileName("test.txt").getClass());
         assertEquals(DelimitedText.class, testing.getInstanceFromFileName("test.TxT").getClass());
 
-        assertEquals(ExcelXSSFFile.class, testing.getInstanceFromFileName("test.xlsx").getClass());
-        assertEquals(ExcelXSSFFile.class, testing.getInstanceFromFileName("test.XlSX").getClass());
+        assertEquals(ExcelXSLXFile.class, testing.getInstanceFromFileName("test.xlsx").getClass());
+        assertEquals(ExcelXSLXFile.class, testing.getInstanceFromFileName("test.XlSX").getClass());
 
-        assertEquals(ExcelHSSFFile.class, testing.getInstanceFromFileName("test.xls").getClass());
-        assertEquals(ExcelHSSFFile.class, testing.getInstanceFromFileName("test.XlS").getClass());
+        assertEquals(ExcelXLSFile.class, testing.getInstanceFromFileName("test.xls").getClass());
+        assertEquals(ExcelXLSFile.class, testing.getInstanceFromFileName("test.XlS").getClass());
 
     }
 

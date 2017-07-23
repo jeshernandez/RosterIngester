@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class DelimitedFile extends Delimited {
 
     private FileType fileType; // Will be used when moving the file to archive.
-    private String delimeter;
+    private String delimiter;
 
 
 
@@ -89,11 +89,11 @@ public class DelimitedFile extends Delimited {
 
     // ---------------------------------------------------
     public String getDelimeter() {
-        return delimeter;
+        return delimiter;
     }
 
     public void setDelimeter(String delimeter) {
-        this.delimeter = delimeter;
+        this.delimiter = delimiter;
     }
 
 

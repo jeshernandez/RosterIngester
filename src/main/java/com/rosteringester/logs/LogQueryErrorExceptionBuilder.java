@@ -16,7 +16,6 @@ public class LogQueryErrorExceptionBuilder {
     public LogQueryErrorExceptionBuilder(SQLException ex, Object packageClass){
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
-                e.printStackTrace(System.err);
                 this.state = ((SQLException)e).getSQLState();
                 this.errorID = ((SQLException)e).getErrorCode();
                 this.strClass = packageClass.getClass().toString();

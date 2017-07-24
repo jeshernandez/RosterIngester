@@ -35,7 +35,7 @@ public class RosterFactory {
                     .officeHours("office hours")
                     .practiceAgeLimits("practice age limits")
                     .acceptingNewPatients("accepting patients")
-                    .providerType("accepting patients")
+                    .providerType("provider type")
                     .build();
 
         }
@@ -58,20 +58,20 @@ public class RosterFactory {
             //     DO NOT USE CONFLINCTING KEYWORDS
             // ------------------------------------------
             discovery = new Discovery.Builder()
-                    .firstName(Arrays.asList("first", "provider name", "name"))
-                    .lastName(Arrays.asList("last"))
-                    .role(Arrays.asList("role"))
-                    .specialty(Arrays.asList("specialty"))
-                    .npi(Arrays.asList("npi", "national provider identification"))
+                    .firstName(Arrays.asList("provider first name", "first name", "provider name"))
+                    .lastName(Arrays.asList("provider last name", "provider last", "last name"))
+                    .role(Arrays.asList("role", "provider role"))
+                    .specialty(Arrays.asList("specialty", "primary specialty"))
+                    .npi(Arrays.asList("npi", "provider npi number", "provider npi", "national provider identification"))
                     .groupName(Arrays.asList("group", "medical group"))
-                    .address(Arrays.asList("practice address", "service address", "address"))
-                    .suite(Arrays.asList("suite", "second address"))
-                    .city(Arrays.asList("city"))
-                    .state(Arrays.asList("state"))
-                    .zip(Arrays.asList("zip code", "postal code", "zipcode", "zip"))
-                    .servicePhone(Arrays.asList("service phone", "practice phone", "phone"))
+                    .address(Arrays.asList("practice address", "service address", "address one", "address"))
+                    .suite(Arrays.asList("practice suite", "suite", "second address", "address two"))
+                    .city(Arrays.asList("city", "practice city"))
+                    .state(Arrays.asList("state", "practice state"))
+                    .zip(Arrays.asList("practice zip", "zip code", "postal code", "zipcode", "practice zip"))
+                    .servicePhone(Arrays.asList("service phone","location phone", "practice phone", "phone number"))
                     .officeHours(Arrays.asList("office hours", "hours of operation", "hours"))
-                    .practiceAgeLimits(Arrays.asList("practice age limits", "age limits"))
+                    .practiceAgeLimits(Arrays.asList("age limits"))
                     .acceptingNewPatients(Arrays.asList("accepting new patients", "new patients"))
                     .providerType(Arrays.asList("provider type", "type"))
                     .build();

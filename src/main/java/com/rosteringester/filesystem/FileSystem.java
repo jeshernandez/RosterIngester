@@ -1,21 +1,11 @@
 package com.rosteringester.filesystem;
 
-import org.apache.commons.lang.ObjectUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * Created by jeshernandez on 06/16/2017.
  */
 public abstract class FileSystem {
 
     private static String filePath;
-//    private HashMap<String, String> delimiterChars = {"|", "*", ",", "\t"};
 
     // -------------------------------------------------------------------
     // Get File path, set for program.
@@ -28,24 +18,16 @@ public abstract class FileSystem {
     }
 
 
-
-    // ---------------------------------------------------
+    /**
+     * Cleans a delimiter by adding \\ to regexable delimiter chars |*
+     * @param delimiter String char
+     * @return <delimiter> or \\<delimiter>
+     */
     public String getCleanDelimiter(String delimiter) {
-        String cleanDelimiter = null;
-
-        if(delimiter.equals("|")) {
-            cleanDelimiter = "\\|";
-        }
-        else if (delimiter.equals("*")){
-            return "\\*";
-        }
-        else {
-            return delimiter;
-        }
-
-        return cleanDelimiter;
-
-    } // end of cleanDelimiter
+        if(delimiter.equals("|")) return "\\|";
+        if (delimiter.equals("*")) return "\\*";
+        return delimiter;
+    }
 
 
     // ---------------------------------------------------

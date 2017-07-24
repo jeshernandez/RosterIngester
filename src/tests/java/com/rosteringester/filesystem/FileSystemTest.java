@@ -1,13 +1,6 @@
 package com.rosteringester.filesystem;
 
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
@@ -24,10 +17,18 @@ public class FileSystemTest {
 
     @Test
     public void getCleanDelimeter() throws Exception {
+        mockFileSystem subject = new mockFileSystem();
+        assertEquals("\\|", subject.getCleanDelimiter("|"));
+        assertEquals("\\*", subject.getCleanDelimiter("*"));
+        assertEquals(" ", subject.getCleanDelimiter(" "));
     }
 
     @Test
     public void getAlgoReady() throws Exception {
     }
+
+}
+
+class mockFileSystem extends FileSystem{
 
 }

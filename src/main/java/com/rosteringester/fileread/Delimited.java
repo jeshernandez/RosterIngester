@@ -28,23 +28,16 @@ abstract class Delimited implements FileReader {
         return header;
     }
 
-    // ---------------------------------------------------
+    /**
+     * Cleans a delimiter by adding \\ to regexable delimiter chars |*
+     * @param delimiter String char
+     * @return <delimiter> or \\<delimiter>
+     */
     public String getCleanDelimiter(String delimiter) {
-        String cleanDelimiter = null;
-
-        if(delimiter.equals("|")) {
-            cleanDelimiter = "\\|";
-        }
-        else if (delimiter.equals("*")){
-            return "\\*";
-        }
-        else {
-            return delimiter;
-        }
-
-        return cleanDelimiter;
-
-    } // end of cleanDelimiter
+        if(delimiter.equals("|")) return "\\|";
+        if(delimiter.equals("*")) return "\\*";
+        return delimiter;
+    }
 
 
 } // End of Delimited class

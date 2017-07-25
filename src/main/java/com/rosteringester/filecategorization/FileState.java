@@ -19,7 +19,7 @@ public class FileState extends CreateFileDirectory implements State {
     public Boolean handle(String fileName){
         try {
             String slicedFileName = (new File(fileName)).getName();
-            String sendPath = CreateFileDirectory.createDirectory(folderName);
+            String sendPath = createDirectory(folderName);
             Files.move(Paths.get(fileName), Paths.get(sendPath + slicedFileName));
             log.info("FalloutState: moved " + fileName + " to " + sendPath + slicedFileName);
         } catch (IOException e) {

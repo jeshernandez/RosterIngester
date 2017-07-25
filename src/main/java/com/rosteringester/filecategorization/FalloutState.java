@@ -18,11 +18,12 @@ import java.util.logging.Logger;
  */
 public class FalloutState extends CreateFileDirectory implements State  {
     Logger log = Logger.getLogger(FileState.class.getName());
+    private String folderName = "error";
 
     public Boolean handle(String fileName){
         try {
             String slicedFileName = (new File(fileName)).getName();
-            String sendPath = CreateFileDirectory.createDirectory("error");
+            String sendPath = CreateFileDirectory.createDirectory(folderName);
             Files.move(Paths.get(fileName), Paths.get(sendPath + slicedFileName));
             log.info("FalloutState: moved " + fileName + " to " + sendPath + slicedFileName);
         } catch (IOException e) {

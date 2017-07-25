@@ -17,18 +17,18 @@ public class FileContextTest {
     @Test
     public void handle() throws Exception {
         //When the file context is fallout.
-        FalloutState state = Mockito.mock(FalloutState.class);
-        Mockito.when(state.handle("error.txt")).thenReturn(true);
+        FalloutState errorState = Mockito.mock(FalloutState.class);
+        Mockito.when(errorState.handle("error.txt")).thenReturn(true);
         FileContext subject = new FileContext();
         subject.setFileName("error.txt").categorize();
         assertEquals(-1, subject.getCategorization());
         assertEquals("class com.rosteringester.filecategorization.FalloutState", subject.state.getClass().toString());
 
-        //Mocking FalloutState will remove the ability to move files in the test while allowing
+        //Mocking States will remove the ability to move files in the test while allowing
         //a test for the expected behavior of the class.
-        subject.state = state;
+        subject.state = errorState;
         subject.handle();
-        verify(state, atMost(1)).handle("error.txt");
+        verify(errorState, atMost(1)).handle("error.txt");
 
         //When the file context is a consumable file
         FileState state2 = Mockito.mock(FileState.class);
@@ -37,8 +37,9 @@ public class FileContextTest {
         subject.setFileName("aetna.txt").categorize();
         assertEquals(1, subject.getCategorization());
         assertEquals("class com.rosteringester.filecategorization.FileState", subject.state.getClass().toString());
+        subject.state = state2;
         subject.handle();
-        verify(state, atMost(1)).handle("aetna.txt");
+        verify(state2, atMost(1)).handle("aetna.txt");
         //TODO: Test coventry and both
     }
 

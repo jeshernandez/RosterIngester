@@ -1,16 +1,16 @@
-package com.rosteringester.fileread;
+package com.rosteringester.filecategorization;
 
 import java.util.stream.Stream;
 
 /**
  * Created by Michael Chrisco on 07/24/2017.
- * Categorizes files based on their file name.
+ * Strategy (algorithm) categorizes files based on their file name.
  */
 public class CategorizeFileStrategy {
     private final String fileName;
     private int categorization;
 
-    CategorizeFileStrategy(String fileName){
+    public CategorizeFileStrategy(String fileName){
         this.fileName = cleanFileName(fileName);
         this.categorization = categorize();
     }

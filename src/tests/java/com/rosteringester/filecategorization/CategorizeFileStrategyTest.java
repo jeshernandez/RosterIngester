@@ -1,8 +1,8 @@
-package com.rosteringester.fileread;
+package com.rosteringester.filecategorization;
 
+import com.rosteringester.filecategorization.CategorizeFileStrategy;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 /**

@@ -1,9 +1,10 @@
 RosterIngester
 
 ## Setup
-1. Copy the env file and setup the config.
- ```
+1. Copy the env file and setup the config files. The env file presets the roster directory. The server file presets the MSSQL, Oracle, DB2 and other connections.
+ ```bash
  cp resources/example.env.yaml resources/env.yaml
+ cp resources/example.servers.yaml resources/servers.yaml
  ```
 
 ### Setup DB

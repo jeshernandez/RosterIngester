@@ -5,10 +5,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Michael Chrisco on 07/25/2017.
@@ -23,6 +26,18 @@ public class XLSXWriter implements ExcelWriter {
 
     public void setRecords(ArrayList records) {
         this.records = records;
+    }
+
+    public void setRecordsHeaders(HashMap<HashMap> headers){
+        ArrayList headerkeys = new ArrayList(headers.keySet());
+        this.records.add(headerkeys);
+    }
+
+    public void setRecords(HashMap<HashMap> records){
+        for (HashMap entry : records.entrySet()) {
+            ArrayList valuekeys = new ArrayList(entry.values());
+            this.records.add(valuekeys);
+        }
     }
 
     public Boolean createExcelFile() {

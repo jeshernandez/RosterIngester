@@ -1,5 +1,6 @@
 package com.rosteringester.fileread;
 
+import com.rosteringester.main.RosterIngester;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -35,8 +36,9 @@ public class XLSFile extends Excel implements FileReader {
             colMapByName = new HashMap<>();
             if (sheet.getRow(0).cellIterator().hasNext()) {
                 for (int j = 0; j < colNum; j++) {
-                    System.out.println(sheet.getRow(0).getCell(j).toString());
-                    colMapByName.put(j, sheet.getRow(0).getCell(j).toString());
+                   if(RosterIngester.debug) System.out.println(sheet.getRow(0).getCell(j).toString());
+                    String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
+                    colMapByName.put(j, header);
                 }
             }
             ExcelFileToRead.close();

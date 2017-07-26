@@ -6,7 +6,7 @@ import java.sql.*;
  * Created by Michael Chrisco on 07/26/2017.
  * Logs file fallout.
  */
-public class LogFileError {
+public class LogFile {
     private int id;
     private String filename;
     private String status;
@@ -17,12 +17,12 @@ public class LogFileError {
 
     private Boolean isSavedFlag;
 
-    public LogFileError(){
+    public LogFile(){
         isSavedFlag = false;
     }
 
-    public LogFileError create(Connection conn){
-        String query = "INSERT into [dbo].[grips_file_log] (filename, status, description, date_updated, created_by)"
+    public LogFile create(Connection conn){
+        String query = "INSERT into [dbo].[grips_log_file] (filename, status, description, date_updated, created_by)"
                 + " values (?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);

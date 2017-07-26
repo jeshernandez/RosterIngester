@@ -11,7 +11,6 @@ import java.util.logging.Logger;
  */
 abstract class Discover {
 
-
     private double threshold;
     Logger LOGGER = Logger.getLogger(Discover.class.getName());
 

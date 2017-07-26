@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class DiscoverMedicare extends Discover {
 
+
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
     private String directoryFolder = "C:\\DATA\\rosters";
     private int firstNameLoc = -1;

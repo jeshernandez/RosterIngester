@@ -47,6 +47,7 @@ public class DBRoster {
             this.setId(generatedKeys.getInt(1));
             setSavedFlag(true);
         } catch (SQLException ex) {
+            ex.printStackTrace(System.err);
             LogQueryError logQueryError = LogQueryError.ExceptionBuilder(ex, this).build();
             logQueryError.create(conn);
         }

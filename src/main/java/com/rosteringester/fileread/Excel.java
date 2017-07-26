@@ -35,8 +35,9 @@ abstract class Excel implements FileReader {
         header = header.replaceAll("#", " number");
         header = header.replaceAll("1", " one");
         header = header.replaceAll("2", " two");
+        header = header.replaceAll("3", " three");
         header = header.replaceAll("[-+$^:,!@%&*()+]","");
-        header = header.replace("_", " ");
+        header = header.replaceAll("_", " ");
         header = header.toLowerCase();
         return header;
     }

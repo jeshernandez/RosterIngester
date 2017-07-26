@@ -11,9 +11,12 @@ public class Discovery {
 
     private List<String> firstName; // Medicare Required
     private List<String> lastName; // Medicare Required
+    private List<String> middleName; // Medicare Required
     private List<String> role; // Medicare Required
     private List<String> specialty; // Medicare Required
     private List<String> npi; // Medicare Required
+    private List<String> tin; // Medicare Required
+    private List<String> degree; // Medicare Required
     private List<String> groupName; // Medicare Required
     private List<String> address; // Medicare Required
     private List<String> suite; // Medicare Required
@@ -23,8 +26,9 @@ public class Discovery {
     private List<String> servicePhone; // Medicare Required
     private List<String> officeHours; // Medicare Required
     private List<String> practiceAgeLimits; // Medicare Required
+    private List<String> directoryPrint; // Medicare Required
     private List<String> acceptingNewPatients; // Medicare Required
-    private List<String> providerType; // Medicare Required
+    private List<String> email; // Medicare Required
     Logger log = Logger.getLogger(Discovery.class.getName());
 
     // ---------------------------------
@@ -32,9 +36,12 @@ public class Discovery {
 
         private List<String> firstName;
         private List<String> lastName;
+        private List<String> middleName;
         private List<String> role;
         private List<String> specialty;
         private List<String> npi;
+        private List<String> tin;
+        private List<String> degree;
         private List<String> groupName;
         private List<String> address;
         private List<String> suite;
@@ -44,8 +51,9 @@ public class Discovery {
         private List<String> servicePhone;
         private List<String> officeHours;
         private List<String> practiceAgeLimits;
+        private List<String> directoryPrint;
         private List<String> acceptingNewPatients;
-        private List<String> providerType;
+        private List<String> email;
 
 
         public Builder firstName(List<String> firstName) {
@@ -55,6 +63,11 @@ public class Discovery {
 
         public Builder lastName(List<String> lastName) {
             this.lastName = lastName;
+            return this;
+        }
+
+        public Builder middleName(List<String> middleName) {
+            this.middleName = middleName;
             return this;
         }
 
@@ -70,6 +83,16 @@ public class Discovery {
 
         public Builder npi(List<String> npi) {
             this.npi = npi;
+            return this;
+        }
+
+        public Builder tin(List<String> tin) {
+            this.tin = tin;
+            return this;
+        }
+
+        public Builder degree(List<String> degree) {
+            this.degree = degree;
             return this;
         }
 
@@ -118,13 +141,18 @@ public class Discovery {
             return this;
         }
 
+        public Builder directoryPrint(List<String> directoryPrint) {
+            this.directoryPrint = directoryPrint;
+            return this;
+        }
+
         public Builder acceptingNewPatients(List<String> acceptingNewPatients) {
             this.acceptingNewPatients = acceptingNewPatients;
             return this;
         }
 
-        public Builder providerType(List<String> providerType) {
-            this.providerType = providerType;
+        public Builder email(List<String> email) {
+            this.email = email;
             return this;
         }
 
@@ -140,9 +168,12 @@ public class Discovery {
     private Discovery(Builder builder) {
         firstName = builder.firstName;
         lastName = builder.lastName;
+        middleName = builder.middleName;
         role = builder.role;
         specialty = builder.specialty;
         npi = builder.npi;
+        tin = builder.tin;
+        degree = builder.degree;
         groupName = builder.groupName;
         address = builder.address;
         suite = builder.suite;
@@ -152,8 +183,9 @@ public class Discovery {
         servicePhone = builder.servicePhone;
         officeHours = builder.officeHours;
         practiceAgeLimits = builder.practiceAgeLimits;
+        directoryPrint = builder.directoryPrint;
         acceptingNewPatients = builder.acceptingNewPatients;
-        providerType = builder.providerType;
+        email = builder.email;
 
         log.info("Discovery Builder Complete.");
     }
@@ -167,7 +199,9 @@ public class Discovery {
     public List<String> getLastName() {
         return lastName;
     }
-
+    public List<String> getMiddleName() {
+        return middleName;
+    }
     public List<String> getRole() {
         return role;
     }
@@ -178,6 +212,14 @@ public class Discovery {
 
     public List<String> getNpi() {
         return npi;
+    }
+
+    public List<String> getTin() {
+        return tin;
+    }
+
+    public List<String> getDegree() {
+        return degree;
     }
 
     public List<String> getGroupName() {
@@ -216,13 +258,17 @@ public class Discovery {
         return practiceAgeLimits;
     }
 
+    public List<String> getDirectoryPrint() {
+        return directoryPrint;
+    }
+
     public List<String> getAcceptingNewPatients() {
         return acceptingNewPatients;
     }
 
-    public List<String> getProviderType() {
-        return providerType;
-    }
 
+    public List<String> getEmail() {
+        return email;
+    }
 
 } // End of Discovery class

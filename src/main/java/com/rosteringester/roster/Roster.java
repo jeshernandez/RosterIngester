@@ -9,9 +9,12 @@ public class Roster {
 
     private String firstName; // Medicare Required
     private String lastName; // Medicare Required
+    private String middleName; // Medicare Required
     private String role; // Medicare Required
     private String specialty; // Medicare Required
     private String npi; // Medicare Required
+    private String tin; // Medicare Required
+    private String degree; // Medicare Required
     private String groupName; // Medicare Required
     private String address; // Medicare Required
     private String suite; // Medicare Required
@@ -21,17 +24,20 @@ public class Roster {
     private String servicePhone; // Medicare Required
     private String officeHours; // Medicare Required
     private String practiceAgeLimits; // Medicare Required
+    private String directoryPrint; // Medicare Required
     private String acceptingNewPatients; // Medicare Required
-    private String providerType; // Medicare Required
     Logger log = Logger.getLogger(Roster.class.getName());
 
 
     public static class Builder {
         private String firstName;
         private String lastName;
+        private String middleName;
         private String role;
         private String specialty;
         private String npi;
+        private String tin;
+        private String degree;
         private String groupName;
         private String address;
         private String suite;
@@ -41,8 +47,9 @@ public class Roster {
         private String servicePhone;
         private String officeHours;
         private String practiceAgeLimits;
+        private String directoryPrint;
         private String acceptingNewPatients;
-        private String providerType;
+
 
         public Builder firstName(String firstName)
         {
@@ -53,6 +60,12 @@ public class Roster {
         public Builder lastName(String lastName)
         {
             this.lastName = lastName;
+            return this;
+        }
+
+        public Builder middleName(String lastName)
+        {
+            this.middleName = middleName;
             return this;
         }
 
@@ -71,6 +84,18 @@ public class Roster {
         public Builder npi(String npi)
         {
             this.npi = npi;
+            return this;
+        }
+
+        public Builder tin(String tin)
+        {
+            this.tin = tin;
+            return this;
+        }
+
+        public Builder degree(String tin)
+        {
+            this.tin = tin;
             return this;
         }
 
@@ -129,15 +154,15 @@ public class Roster {
             return this;
         }
 
-        public Builder acceptingNewPatients(String acceptingNewPatients)
+        public Builder directoryPrint(String directoryPrint)
         {
-            this.acceptingNewPatients = acceptingNewPatients;
+            this.directoryPrint = directoryPrint;
             return this;
         }
 
-        public Builder providerType(String providerType)
+        public Builder acceptingNewPatients(String acceptingNewPatients)
         {
-            this.providerType = providerType;
+            this.acceptingNewPatients = acceptingNewPatients;
             return this;
         }
 
@@ -155,9 +180,12 @@ public class Roster {
     private Roster(Builder b) {
         this.firstName = b.firstName;
         this.lastName = b.lastName;
+        this.middleName = b.middleName;
         this.role = b.role;
         this.specialty = b.specialty;
         this.npi = b.npi;
+        this.tin = b.tin;
+        this.degree = b.degree;
         this.groupName = b.groupName;
         this.address = b.address;
         this.suite = b.suite;
@@ -167,8 +195,8 @@ public class Roster {
         this.servicePhone = b.servicePhone;
         this.officeHours = b.officeHours;
         this.practiceAgeLimits = b.practiceAgeLimits;
+        this.directoryPrint = b.directoryPrint;
         this.acceptingNewPatients = b.acceptingNewPatients;
-        this.providerType = b.providerType;
 
         log.info("Roster Builder Complete.");
     }
@@ -185,6 +213,10 @@ public class Roster {
         return lastName;
     }
 
+    public String getMiddleName() {
+        return middleName;
+    }
+
     public String getRole() {
         return role;
     }
@@ -195,6 +227,14 @@ public class Roster {
 
     public String getNpi() {
         return npi;
+    }
+
+    public String getTin() {
+        return tin;
+    }
+
+    public String getDegree() {
+        return degree;
     }
 
     public String getGroupName() {
@@ -233,13 +273,14 @@ public class Roster {
         return practiceAgeLimits;
     }
 
+    public String getDirectoryPrint() {
+        return directoryPrint;
+    }
+
     public String getAcceptingNewPatients() {
         return acceptingNewPatients;
     }
 
-    public String getProviderType() {
-        return providerType;
-    }
 
 
 

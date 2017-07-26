@@ -4,3 +4,8 @@ userPWD:
 msSQLServer:
 msSQLDB:
 msSQLPort: "1234"
+cpdUserName:
+cpdUserPWD:
+cdpSQLServer:
+cpdSQLDB:
+cpdSQLPort: "1234"

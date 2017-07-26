@@ -30,6 +30,9 @@ public class DbOracle extends DbCommonP{
         setConnectionUrl();
     }
 
+    /**
+     * Sets the connection URL from preset values in the constructor.
+     */
     public void setConnectionUrl(){
         this.connectionUrl = "jdbc:oracle:oci:@" + this.SQLServer + ":" + this.SQLPort + ":orcl";
     }
@@ -38,7 +41,7 @@ public class DbOracle extends DbCommonP{
         Connection conn = null;
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:oci:@myhost:1521:orcl", this.orUserName, this.orUserPWD);
+            conn = DriverManager.getConnection(this.connectionUrl, this.orUserName, this.orUserPWD);
         } catch (SQLException e1) {
             e1.printStackTrace();
         } catch (ClassNotFoundException e) {

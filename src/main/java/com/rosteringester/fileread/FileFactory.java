@@ -3,6 +3,7 @@ package com.rosteringester.fileread;
 
 import org.apache.commons.io.FilenameUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ public class FileFactory extends DirectoryFiles {
 
 
     private HashMap<Integer, String> getNames;
+    private ArrayList<HashMap<String, String>> records;
 
 //    // -------------------------------------------
 //    private void setFileName(String fileName) {
@@ -45,12 +47,16 @@ public class FileFactory extends DirectoryFiles {
         if(fileExt.toUpperCase().equals(FileReader.types.XLSX.toString())) {
             LOGGER.info("Sending xlsx file...");
             setGetNames(new XLSXFile().getHeaders(fileName));
+            setRecords(XLSXFile.readFile(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
             setGetNames(new XLSFile().getHeaders(fileName));
+            setRecords(XLSFile.readXLSFile(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
-            setGetNames(new DelimitedFile().getHeaders(fileName));
+            DelimitedFile delim = new DelimitedFile();
+            setGetNames(delim.getHeaders(fileName));
+            setRecords(delim.readDelimitedFile(fileName));
         } else {
             LOGGER.info("Do not know how to handle this file type...");
             // TODO - Jes throw exception and log
@@ -66,10 +72,13 @@ public class FileFactory extends DirectoryFiles {
     public HashMap<Integer, String> getHeaders() {
         return getNames;
     }
+    public ArrayList<HashMap<String, String>> getRecords() { return records; }
 
     public void setGetNames(HashMap<Integer, String> getNames) {
         this.getNames = getNames;
     }
+    public void setRecords(ArrayList<HashMap<String, String>> records) { this.records = records; }
+
 
 
 

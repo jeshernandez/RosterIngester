@@ -1,6 +1,7 @@
 package com.rosteringester.fileread;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.FileReader;
 
@@ -123,6 +124,56 @@ public class DelimitedFile extends Delimited {
         }
         //If we cant find delimiter, then return empty string.
         return "";
+    }
+
+    /**
+     * Consumes Roster Data.
+     * Fastest solution but uses the most memory.
+     * @param fileName
+     * @return result ArrayList containing Hashmaps
+     * @throws IOException
+     */
+    public ArrayList<HashMap<String, String>> readDelimitedFile(String fileName){
+        HashMap headers = this.getHeaders(fileName);
+        System.out.println(headers);
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line =  null;
+        try {
+            while((line=br.readLine())!=null){
+                //Foreach new line, create a hashmap.
+                HashMap<String,String> map = new HashMap<String,String>();
+
+                //TODO: Match on each of the regex delimiters.
+                if(delimiter.equals("*")){
+                    delimiter = "\\*";
+                }
+                if(delimiter.equals("|")){
+                    delimiter = "\\|";
+                }
+
+                String str[] = line.split(delimiter);
+                for(int i=0;i<str.length;i++){
+                    Object o = headers.get(i);
+                    map.put(o.toString().toLowerCase(), str[i]);
+                }
+                result.add(map);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Remove header line
+        result.remove(0);
+
+        return result;
     }
 
 

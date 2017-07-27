@@ -25,6 +25,10 @@ public class RosterIngester {
                 new FileFactory("C:\\DATA\\rosters\\aetRoster.txt");
         headers =  ff.getHeaders();
         System.out.println(headers);
+        ArrayList<HashMap<String, String>> records;
+        records = ff.getRecords();
+        System.out.println(records);
+//        ArrayList records = ff.readDelimitedFile();
 //        DirectoryFileCategorization directory = new DirectoryFileCategorization();
 //        List files = directory.categorizeDirectoryFiles();
 //

@@ -1,8 +1,12 @@
 package com.rosteringester.filecategorization;
 
+import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.logs.LogFile;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +43,8 @@ public class DirectoryFileCategorization {
      * @return List of File names without fallout.
      */
     public List categorizeDirectoryFiles(){
+        DbSqlServer sqlServer = new DbSqlServer();
+        Connection conn = sqlServer.getDBConn();
         List<String> files = null;
         ArrayList<String> withoutFallout = new ArrayList<>();
         try {
@@ -49,12 +55,30 @@ public class DirectoryFileCategorization {
 
         for(String file : files){
             context.setFileName(file).categorize().handle();
+            LogFile logFile = new LogFile();
+            logFile.setFilename(file);
           if(!context.isFallout()){
               System.out.println(context.getCategorization());
               withoutFallout.add(file);
               fileCategories.put(file, context.getCategorization());
+              logFile.setStatus("Categorization Successful");
+              logFile.setDescription("Success: File has been categorized.");
           }
+          else{
+              logFile.setStatus("Categorization Fallout");
+              logFile.setDescription("ERROR: File does not have Aetna and/or Coventry in the file name. File rename needed.");
+
+          }
+            logFile.setCreated_by(System.getProperty("user.name"));
+            logFile.create(conn);
         }
+
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return withoutFallout;
     }
 

@@ -2,6 +2,7 @@ package com.rosteringester.main;
 
 import com.rosteringester.filecategorization.DirectoryFileCategorization;
 import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.fileread.FileFactory;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
@@ -19,22 +20,27 @@ public class RosterIngester {
     // TODO me - 07/04/2017 find a way to remove highest score for iterator
 
     public static void main(String [] args) {
-        DirectoryFileCategorization directory = new DirectoryFileCategorization();
-        List files = directory.categorizeDirectoryFiles();
-
-        //Get file Categories. Will be used later.
-        HashMap<String, Integer> fileCategories = directory.getFileCategories();
-//        System.out.println(fileCategories.toString());
-        DirectoryFiles directoryFiles = new DirectoryFiles();
-
-        RosterFactory rf = new RosterFactory();
-        // Get medicare standard roster fields
-        Roster roster = rf.createRoster("medicare");
-        Discovery discovery = rf.createDiscovery("medicare");
-
-
-        System.out.println("Get standard first name: " + roster.getFirstName());
-        List<String> firstName = discovery.getFirstName();
+        HashMap<Integer, String> headers;
+        FileFactory ff =
+                new FileFactory("C:\\DATA\\rosters\\aetRoster.txt");
+        headers =  ff.getHeaders();
+        System.out.println(headers);
+//        DirectoryFileCategorization directory = new DirectoryFileCategorization();
+//        List files = directory.categorizeDirectoryFiles();
+//
+//        //Get file Categories. Will be used later.
+//        HashMap<String, Integer> fileCategories = directory.getFileCategories();
+////        System.out.println(fileCategories.toString());
+//        DirectoryFiles directoryFiles = new DirectoryFiles();
+//
+//        RosterFactory rf = new RosterFactory();
+//        // Get medicare standard roster fields
+//        Roster roster = rf.createRoster("medicare");
+//        Discovery discovery = rf.createDiscovery("medicare");
+//
+//
+//        System.out.println("Get standard first name: " + roster.getFirstName());
+//        List<String> firstName = discovery.getFirstName();
 
 
 

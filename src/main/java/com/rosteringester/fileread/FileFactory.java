@@ -50,7 +50,7 @@ public class FileFactory extends DirectoryFiles {
             setGetNames(new XLSFile().getHeaders(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
-            new DelimitedFile();
+            setGetNames(new DelimitedFile().getHeaders(fileName));
         } else {
             LOGGER.info("Do not know how to handle this file type...");
             // TODO - Jes throw exception and log

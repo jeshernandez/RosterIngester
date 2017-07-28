@@ -47,16 +47,16 @@ public class FileFactory extends DirectoryFiles {
         if(fileExt.toUpperCase().equals(FileReader.types.XLSX.toString())) {
             LOGGER.info("Sending xlsx file...");
             setGetNames(new XLSXFile().getHeaders(fileName));
-            setRecords(XLSXFile.readFile(fileName));
+            setRecords(XLSXFile.getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
             setGetNames(new XLSFile().getHeaders(fileName));
-            setRecords(XLSFile.readXLSFile(fileName));
+            setRecords(XLSFile.getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
             DelimitedFile delim = new DelimitedFile();
             setGetNames(delim.getHeaders(fileName));
-            setRecords(delim.readDelimitedFile(fileName));
+            setRecords(delim.getRecords(fileName));
         } else {
             LOGGER.info("Do not know how to handle this file type...");
             // TODO - Jes throw exception and log

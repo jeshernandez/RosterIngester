@@ -133,7 +133,7 @@ public class DelimitedFile extends Delimited {
      * @return result ArrayList containing Hashmaps
      * @throws IOException
      */
-    public ArrayList<HashMap<String, String>> readDelimitedFile(String fileName){
+    public ArrayList<HashMap<String, String>> getRecords(String fileName){
         HashMap headers = this.getHeaders(fileName);
         System.out.println(headers);
         ArrayList<HashMap<String, String>> result = new ArrayList<>();

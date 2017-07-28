@@ -151,15 +151,7 @@ public class DelimitedFile extends Delimited {
                 //Foreach new line, create a hashmap.
                 HashMap<String,String> map = new HashMap<String,String>();
 
-                //TODO: Match on each of the regex delimiters.
-                if(delimiter.equals("*")){
-                    delimiter = "\\*";
-                }
-                if(delimiter.equals("|")){
-                    delimiter = "\\|";
-                }
-
-                String str[] = line.split(delimiter);
+                String str[] = line.split(getCleanDelimiter(delimiter));
                 for(int i=0;i<str.length;i++){
                     Object o = headers.get(i);
                     map.put(o.toString().toLowerCase(), str[i]);

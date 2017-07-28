@@ -5,56 +5,40 @@ package com.rosteringester.filesanitation;
  */
 public class RecordSanitation extends Sanitation{
     /**
-     * Sanitizes general special characters.
-     * @param str un-sanitized string
-     * @return sanitized string
-     */
-    static String sanitizeSpecialChars(String str){
-        return sanitizeString(str).replaceAll("[-+$^:,!@#%&*()+]","")
-                                  .replace("[", "")
-                                  .replace("]", "")
-                                  .replace("{", "")
-                                  .replace("}", "");
-    }
-
-    /**
-     * Sanitizes Date strings.
+     * Sanitizes Date strings. NOTE: This is slightly different in the regex to the sanitizeSpecialChars method.
      * @param str un-sanitized string
      * @return sanitized string
      */
     static String sanitizeDates(String str){
-
-        return str.trim();
+        String sanStr = sanitizeString(str.replaceAll("[+$^,!@#%&*()+]",""));
+        return sanitizeBrackets(sanStr);
     }
 
     /**
-     * Sanitizes general phone numbers. Numerical
+     * Sanitizes general phone numbers into a Numerical String
      * @param str un-sanitized string
      * @return sanitized string
      */
     static String sanitizePhoneNumbers(String str){
-
-        return str;
+        return sanitizeNumerical(str);
     }
 
     /**
-     * Sanitizes suites. Numerical
+     * Sanitizes suites.
      * @param str un-sanitized string
      * @return sanitized string
      */
     static String sanitizeSuites(String str){
-
-        return str;
+        return sanitizeSpecialChars(str);
     }
 
     /**
-     * Sanitizes zip codes
+     * Sanitizes zip codes into numerical string value.
      * @param str un-sanitized string
      * @return
      */
     static String sanitizeZipCodes(String str){
-
-        return str;
+        return sanitizeNumerical(str);
     }
 
     /**
@@ -64,5 +48,14 @@ public class RecordSanitation extends Sanitation{
      */
     static String sanitizeSpecialities(String str){
         return sanitizeSpecialChars(str);
+    }
+
+    /**
+     * Sanitize TIN numbers.
+     * @param str
+     * @return
+     */
+    static String sanitizeTin(String str){
+        return sanitizeNumerical(str);
     }
 }

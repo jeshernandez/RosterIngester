@@ -10,11 +10,15 @@ import static org.junit.Assert.*;
 public class RecordSanitationTest {
     @Test
     public void sanitizeDates() throws Exception {
-        String testableChars = "01/03/2000";
+        String testableChars = "01/03/2000 +$^!@#%&*()+";
         assertEquals("01/03/2000", RecordSanitation.sanitizeDates(testableChars));
+        assertEquals("01/03/2000 +$^!@#%&*()+", testableChars);
 
         String testableChars2 = "01/{03}/2000";
         assertEquals("01/03/2000", RecordSanitation.sanitizeDates(testableChars2));
+
+        String testableChars3 = "01-{03}-2000 00:00:00";
+        assertEquals("01-03-2000 00:00:00", RecordSanitation.sanitizeDates(testableChars3));
     }
 
     @Test

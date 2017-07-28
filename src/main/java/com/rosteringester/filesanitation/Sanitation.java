@@ -14,8 +14,29 @@ abstract class Sanitation {
         return str.trim();
     }
 
-    //tins too
+    /**
+     * Sanitizes general special characters.
+     * @param str un-sanitized string
+     * @return sanitized string
+     */
+    public static String sanitizeSpecialChars(String str){
+        String sanstr = sanitizeString(str.replaceAll("[-+$^:,!@#%&*()+]",""));
+        return sanitizeBrackets(sanstr);
+    }
+
+    public static String sanitizeBrackets(String str){
+        return str.replace("[", "")
+                  .replace("]", "")
+                  .replace("{", "")
+                  .replace("}", "");
+    }
+
+    /**
+     * Thin interface to the sanitizeSpecialChars method.
+     * @param str un-sanitized string
+     * @return sanitized string
+     */
     public static String sanitizeNumerical(String str){
-        return str;
+        return sanitizeSpecialChars(str);
     }
 }

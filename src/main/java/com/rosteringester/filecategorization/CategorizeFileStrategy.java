@@ -1,5 +1,7 @@
 package com.rosteringester.filecategorization;
 
+import com.rosteringester.filesanitation.FileSanitation;
+
 import java.util.stream.Stream;
 
 /**
@@ -11,14 +13,8 @@ public class CategorizeFileStrategy {
     private int categorization;
 
     public CategorizeFileStrategy(String fileName){
-        this.fileName = cleanFileName(fileName);
+        this.fileName = FileSanitation.sanitizeFileName(fileName);
         this.categorization = categorize();
-    }
-
-    private String cleanFileName(String fileName) {
-        fileName = fileName.replaceAll("[-+$^:,!@#%&*()+]","");
-        fileName = fileName.replace(" ", "_");
-        return fileName.toLowerCase();
     }
 
     private int categorize(){

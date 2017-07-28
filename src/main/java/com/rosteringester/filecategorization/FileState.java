@@ -14,14 +14,14 @@ import java.util.logging.Logger;
  */
 public class FileState extends CreateFileDirectory implements State {
     Logger log = Logger.getLogger(FileState.class.getName());
-    private String folderName = "error";
+    private String folderName = "success";
 
     public Boolean handle(String fileName){
         try {
             String slicedFileName = (new File(fileName)).getName();
             String sendPath = createDirectory(folderName);
             Files.move(Paths.get(fileName), Paths.get(sendPath + slicedFileName));
-            log.info("FalloutState: moved " + fileName + " to " + sendPath + slicedFileName);
+            log.info("FileState: moved " + fileName + " to " + sendPath + slicedFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

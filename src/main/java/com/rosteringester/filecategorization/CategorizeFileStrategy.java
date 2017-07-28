@@ -32,13 +32,12 @@ public class CategorizeFileStrategy {
         return (Stream.of("aetna", "aet").anyMatch(x -> fileName.contains(x)));
     }
 
-     private Boolean isCoventry(){
+    private Boolean isCoventry(){
          return (Stream.of("coventry", "cov").anyMatch(x -> fileName.contains(x)));
      }
 
     private Boolean isBoth(){
-        if(isAetna() && isCoventry()) return true;
-        return (this.fileName.contains("both"));
+        return ((isAetna() && isCoventry()) || this.fileName.contains("both"));
     }
 
     public int getCategorization() {

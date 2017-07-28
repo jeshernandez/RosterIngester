@@ -16,8 +16,8 @@ public class FileSanitationTest {
 
     @Test
     public void sanitizeHeaders() throws Exception {
-        String testableChars = "First_name $ # ";
-        assertEquals("first name number", FileSanitation.sanitizeHeaders(testableChars));
+        String testableChars = "First_name $ # 1 2 3 ";
+        assertEquals("first name number one two three", FileSanitation.sanitizeHeaders(testableChars));
     }
 
 }

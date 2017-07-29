@@ -1,11 +1,15 @@
 package com.rosteringester.main;
 
+import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.filecategorization.DirectoryFileCategorization;
 import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.logs.LogAnomaly;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +23,15 @@ public class RosterIngester {
     // TODO me - 07/04/2017 find a way to remove highest score for iterator
 
     public static void main(String [] args) {
+        DbSqlServer db = new DbSqlServer();
+        Connection conn = db.getDBConn();
+        LogAnomaly logAnomaly = LogAnomaly.Builder().build();
+        logAnomaly.create(conn);
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         DirectoryFileCategorization directory = new DirectoryFileCategorization();
         List files = directory.categorizeDirectoryFiles();
 

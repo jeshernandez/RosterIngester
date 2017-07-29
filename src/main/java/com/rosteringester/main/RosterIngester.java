@@ -1,8 +1,10 @@
 package com.rosteringester.main;
 
 import com.rosteringester.db.DbSqlServer;
+import com.rosteringester.db.dbModels.DBRoster;
 import com.rosteringester.filecategorization.DirectoryFileCategorization;
 import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.filesanitation.RosterValidation;
 import com.rosteringester.logs.LogAnomaly;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
@@ -25,29 +27,35 @@ public class RosterIngester {
     public static void main(String [] args) {
         DbSqlServer db = new DbSqlServer();
         Connection conn = db.getDBConn();
-        LogAnomaly logAnomaly = LogAnomaly.Builder().build();
-        logAnomaly.create(conn);
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DirectoryFileCategorization directory = new DirectoryFileCategorization();
-        List files = directory.categorizeDirectoryFiles();
+        RosterValidation rostval = new RosterValidation();
+        DBRoster rost = new DBRoster();
+        rostval.validateDBRoster(rost,conn);
 
-        //Get file Categories. Will be used later.
-        HashMap<String, Integer> fileCategories = directory.getFileCategories();
-//        System.out.println(fileCategories.toString());
-        DirectoryFiles directoryFiles = new DirectoryFiles();
-
-        RosterFactory rf = new RosterFactory();
-        // Get medicare standard roster fields
-        Roster roster = rf.createRoster("medicare");
-        Discovery discovery = rf.createDiscovery("medicare");
-
-
-        System.out.println("Get standard first name: " + roster.getFirstName());
-        List<String> firstName = discovery.getFirstName();
+//        DbSqlServer db = new DbSqlServer();
+//        Connection conn = db.getDBConn();
+//        LogAnomaly logAnomaly = LogAnomaly.Builder().build();
+//        logAnomaly.create(conn);
+//        try {
+//            conn.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        DirectoryFileCategorization directory = new DirectoryFileCategorization();
+//        List files = directory.categorizeDirectoryFiles();
+//
+//        //Get file Categories. Will be used later.
+//        HashMap<String, Integer> fileCategories = directory.getFileCategories();
+////        System.out.println(fileCategories.toString());
+//        DirectoryFiles directoryFiles = new DirectoryFiles();
+//
+//        RosterFactory rf = new RosterFactory();
+//        // Get medicare standard roster fields
+//        Roster roster = rf.createRoster("medicare");
+//        Discovery discovery = rf.createDiscovery("medicare");
+//
+//
+//        System.out.println("Get standard first name: " + roster.getFirstName());
+//        List<String> firstName = discovery.getFirstName();
 
 
 

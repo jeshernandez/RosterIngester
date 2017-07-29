@@ -23,6 +23,10 @@ package com.rosteringester.filesanitation;
  * THE SOFTWARE.
  */
 
+import com.rosteringester.logs.LogAnomaly;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -103,12 +107,19 @@ public class Validator<T> {
      * @return object that was validated
      * @throws IllegalStateException when any validation step results with failure
      */
-    public T get() throws IllegalStateException {
+    public T get(String strClass, Connection conn) throws IllegalStateException {
         if (exceptions.isEmpty()) {
             return t;
         }
-        IllegalStateException e = new IllegalStateException();
-        exceptions.forEach(e::addSuppressed);
-        throw e;
+
+        IllegalStateException ex = new IllegalStateException();
+        for (Throwable e : exceptions) {
+            LogAnomaly logAnomaly = LogAnomaly.Builder().withstrClass(strClass)
+                                                        .withDescription(e.getMessage())
+                    .build();
+            logAnomaly.create(conn);
+        }
+        exceptions.forEach(ex::addSuppressed);
+        throw ex;
     }
 }

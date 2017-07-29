@@ -31,7 +31,7 @@ public class DBRoster {
     }
 
     public DBRoster create(Connection conn){
-        String query = "INSERT into [dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
+        String query = "INSERT into [grips].[dbo].[grips_roster_required] (npi, address, suite, city, zip, state)"
          + " values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);

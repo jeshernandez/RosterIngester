@@ -2,6 +2,7 @@ package com.rosteringester.filesanitation;
 
 import com.rosteringester.db.dbModels.DBRoster;
 
+import java.sql.Connection;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -19,7 +20,7 @@ public class RosterValidation {
      * Each field will need to be populated.
      * @param roster
      */
-    public void validateDBRoster(DBRoster roster) {
+    public void validateDBRoster(DBRoster roster, Connection conn) {
         //TODO: Anomaly Builder here.
         log.info(Validator.of(roster).validate(DBRoster::getAddress, Objects::nonNull, "address is null")
                 .validate(DBRoster::getSuite, Objects::nonNull, "suite is null")
@@ -27,6 +28,6 @@ public class RosterValidation {
                 .validate(DBRoster::getZip, Objects::nonNull, "zip is null")
                 .validate(DBRoster::getNpi, Objects::nonNull, "npi is null")
                 .validate(DBRoster::getState, Objects::nonNull, "state is null")
-                .get().toString());
+                .get(this.getClass().toString(), conn).toString());
     }
 }

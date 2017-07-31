@@ -8,30 +8,34 @@ import java.sql.SQLException;
 /**
  * Created by Michael Chrisco on 07/26/2017.
  */
-public class LogAnamoly {
+public class LogAnomaly {
     private int id;
     private String strClass;
     private int error_id;
     private String description;
-    private String anamoly;
-    private String anamoly_correction;
+    private String anomaly;
+    private String anomaly_correction;
 
     private Boolean isSavedFlag;
 
-    public LogAnamoly(){
+    public LogAnomaly(LogAnomalyBuilder builder){
+        this.strClass = builder.getStrClass();
+        this.error_id = builder.getErrorID();
+        this.description = builder.getDescription();
+        this.anomaly = builder.getAnomaly();
+        this.anomaly_correction = builder.getAnomalyCorrection();
         this.isSavedFlag = false;
     }
 
-    public LogAnamoly create(Connection conn){
-        String query = "INSERT into [dbo].[grips_log_anamoly] (class, error_id, description, anamoly, anamoly_correction)"
-                + " values (?, ?, ?, ?, ?)";
+    public LogAnomaly create(Connection conn){
+        String query = "INSERT into [logs].[dbo].[grips_log_anomaly] (class, error_id, description, anomaly, anomaly_correction) values (?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setString(1, this.strClass);
             stmt.setInt(2, this.error_id);
             stmt.setString(3, this.description);
-            stmt.setString(4, this.anamoly);
-            stmt.setString(5, this.anamoly_correction);
+            stmt.setString(4, this.anomaly);
+            stmt.setString(5, this.anomaly_correction);
             stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             generatedKeys.next();
@@ -70,23 +74,27 @@ public class LogAnamoly {
         this.description = description;
     }
 
-    public String getAnamoly() {
-        return anamoly;
+    public String getAnomaly() {
+        return anomaly;
     }
 
-    public void setAnamoly(String anamoly) {
-        this.anamoly = anamoly;
+    public void setAnomaly(String anamoly) {
+        this.anomaly = anomaly;
     }
 
-    public String getAnamoly_correction() {
-        return anamoly_correction;
+    public String getAnomaly_correction() {
+        return anomaly_correction;
     }
 
-    public void setAnamoly_correction(String anamoly_correction) {
-        this.anamoly_correction = anamoly_correction;
+    public void setAnomaly_correction(String anomaly_correction) {
+        this.anomaly_correction = anomaly_correction;
     }
 
     public int getId() {
         return id;
+    }
+
+    public static LogAnomalyBuilder Builder(){
+        return new LogAnomalyBuilder();
     }
 }

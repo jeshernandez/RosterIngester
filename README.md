@@ -13,7 +13,7 @@ and copy the sqljdbc_auth.dll to C:\Program Files\Java\jre_Version\bin
 ## Formal Testing
 Unit tests are in RosterIngester/src/tests.
 
-Development Testing: three real Rosters in the (TODO) folder.
+Development Testing: Pull all Rosters into C:\DATA\rosters
 (TODO)
 
 ## Production

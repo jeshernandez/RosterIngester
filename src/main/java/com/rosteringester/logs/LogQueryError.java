@@ -33,7 +33,7 @@ public final class LogQueryError {
     }
 
     public LogQueryError create(Connection conn){
-        String query = "INSERT into [dbo].[grips_log_error] (class, error_id, description, level)"
+        String query = "INSERT into [logs].[dbo].[grips_log_error] (class, error_id, description, level)"
          + " values (?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);

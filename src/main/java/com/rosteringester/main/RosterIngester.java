@@ -2,6 +2,7 @@ package com.rosteringester.main;
 
 import com.rosteringester.filecategorization.DirectoryFileCategorization;
 import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.fileread.FileFactory;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
@@ -35,10 +36,6 @@ public class RosterIngester {
 
         System.out.println("Get standard first name: " + roster.getFirstName());
         List<String> firstName = discovery.getFirstName();
-
-
-
-
     } // End of Main
 
 } // End of RosterIngester

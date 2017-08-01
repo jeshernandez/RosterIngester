@@ -67,7 +67,6 @@ public class DirectoryFileCategorization {
           else{
               logFile.setStatus("Categorization Fallout");
               logFile.setDescription("ERROR: File does not have Aetna and/or Coventry in the file name. File rename needed.");
-
           }
             logFile.setCreated_by(System.getProperty("user.name"));
             logFile.create(conn);

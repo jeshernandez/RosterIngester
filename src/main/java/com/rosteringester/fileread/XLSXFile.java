@@ -60,7 +60,7 @@ public class XLSXFile extends Excel implements FileReader {
 
 
     // ----------------------------------------------------------
-    static ArrayList<HashMap<String, String>> readFile(String excelFileName)  {
+    static ArrayList<HashMap<String, String>> getRecords(String excelFileName)  {
         DataFormatter df = new DataFormatter();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 

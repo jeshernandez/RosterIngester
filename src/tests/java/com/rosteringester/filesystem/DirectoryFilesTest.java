@@ -12,8 +12,8 @@ import static org.junit.Assert.*;
  * Created by MichaelChrisco on 7/7/17.
  */
 public class DirectoryFilesTest {
-    @Test
-    public void getFiles() throws Exception {
+//    @Test
+//    public void getFiles() throws Exception {
 //        DirectoryFiles tester = Mockito.mock(DirectoryFiles.class, Mockito.CALLS_REAL_METHODS);
 //        //When files exist
 //        List<String> results = new ArrayList<String>();
@@ -28,6 +28,6 @@ public class DirectoryFilesTest {
 ////        //When files do not exist
 //        List<String> subjectError =  tester.getFiles("src/main/resources/wrong");
 //        assertEquals(0, subjectError.size());
-    }
+//    }
 
 }

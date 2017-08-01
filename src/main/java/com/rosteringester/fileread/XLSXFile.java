@@ -40,8 +40,6 @@ public class XLSXFile extends Excel implements FileReader {
                     for (int j = 0; j < colNum; j++) {
                         String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
 
-                        System.out.println(header);
-
                         rosterHeaders.put(j,header);
                     }
                 }

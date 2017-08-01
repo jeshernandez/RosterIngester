@@ -1,31 +1,29 @@
 package com.rosteringester.fileread;
 
 
+import com.rosteringester.filesanitation.FileSanitation;
 
 /**
  * Created by jeshernandez on 07/22/2017.
  */
 abstract class Delimited implements FileReader {
 
-
-
-
+    /**
+     *
+     * @param fileName
+     * @return
+     */
     public String cleanFileName(String fileName) {
-
-        fileName = fileName.replaceAll("[-+$^:,!@#%&*()+]","");
-        fileName = fileName.replace(" ", "_");
-        return fileName;
+        return FileSanitation.sanitizeFileName(fileName);
     }
 
+    /**
+     *
+     * @param keyword
+     * @return
+     */
     public String cleanHeaders(String keyword) {
-
-        String header = keyword;
-
-        header = header.replaceAll("#", " number");
-        header = header.replaceAll("[-+$^:,!@%&*()+]","");
-        header = header.replace("_", " ");
-        header = header.toLowerCase();
-        return header;
+        return FileSanitation.sanitizeHeaders(keyword);
     }
 
     /**

@@ -22,7 +22,7 @@ public class LogFile {
     }
 
     public LogFile create(Connection conn){
-        String query = "INSERT into [dbo].[grips_log_file] (filename, status, description, date_updated, created_by)"
+        String query = "INSERT into [logs].[dbo].[grips_log_file] (filename, status, description, date_updated, created_by)"
                 + " values (?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);

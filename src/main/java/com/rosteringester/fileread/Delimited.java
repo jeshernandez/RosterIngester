@@ -1,50 +1,41 @@
 package com.rosteringester.fileread;
 
 
+import com.rosteringester.filesanitation.FileSanitation;
 
 /**
  * Created by jeshernandez on 07/22/2017.
  */
 abstract class Delimited implements FileReader {
 
-
-
-
+    /**
+     *
+     * @param fileName
+     * @return
+     */
     public String cleanFileName(String fileName) {
-
-        fileName = fileName.replaceAll("[-+$^:,!@#%&*()+]","");
-        fileName = fileName.replace(" ", "_");
-        return fileName;
+        return FileSanitation.sanitizeFileName(fileName);
     }
 
+    /**
+     *
+     * @param keyword
+     * @return
+     */
     public String cleanHeaders(String keyword) {
-
-        String header = keyword;
-
-        header = header.replaceAll("#", " number");
-        header = header.replaceAll("[-+$^:,!@%&*()+]","");
-        header = header.replace("_", " ");
-        header = header.toLowerCase();
-        return header;
+        return FileSanitation.sanitizeHeaders(keyword);
     }
 
-    // ---------------------------------------------------
+    /**
+     * Cleans a delimiter by adding \\ to regexable delimiter chars |*
+     * @param delimiter String char
+     * @return <delimiter> or \\<delimiter>
+     */
     public String getCleanDelimiter(String delimiter) {
-        String cleanDelimiter = null;
-
-        if(delimiter.equals("|")) {
-            cleanDelimiter = "\\|";
-        }
-        else if (delimiter.equals("*")){
-            return "\\*";
-        }
-        else {
-            return delimiter;
-        }
-
-        return cleanDelimiter;
-
-    } // end of cleanDelimiter
+        if(delimiter.equals("|")) return "\\|";
+        if(delimiter.equals("*")) return "\\*";
+        return delimiter;
+    }
 
 
 } // End of Delimited class

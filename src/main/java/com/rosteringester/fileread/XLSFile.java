@@ -54,7 +54,7 @@ public class XLSFile extends Excel implements FileReader {
 
 
     // ----------------------------------------------------------
-    static ArrayList<HashMap<String, String>> readXLSFile(String excelFileName)  {
+    static ArrayList<HashMap<String, String>> getRecords(String excelFileName)  {
         DataFormatter df = new DataFormatter();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 

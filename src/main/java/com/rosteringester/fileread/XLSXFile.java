@@ -95,6 +95,7 @@ public class XLSXFile extends Excel implements FileReader {
             wb.close();
         } catch (IOException e) {
             e.printStackTrace();
+
         }
 
         return result;

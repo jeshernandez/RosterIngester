@@ -48,8 +48,8 @@ public class DiscoverMedicare extends Discover {
 
         try {
             files = directoryFiles.getFiles(directoryFolder);
-            LOGGER.info("FileName: " + files.get(0).toString());
             FileFactory getFile = new FileFactory(files.get(0).toString());
+            LOGGER.info("FileName: " + files.get(0).toString());
 
             // Get dirty headers
             HashMap<Integer, String> headers;

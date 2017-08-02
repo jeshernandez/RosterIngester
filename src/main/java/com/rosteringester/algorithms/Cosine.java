@@ -52,7 +52,7 @@ public class Cosine implements AlgoInterface {
         }
 
         scoreValue = dotProduct / Math.sqrt(magnitudeA * magnitudeB);
-        //System.out.println("Printing inside: " + scoreValue + ", String: " + discovery);
+        //System.out.println("Printing inside: " + scoreValue + ", String: " + roster);
 
         //return cosine similarity
         return scoreValue;

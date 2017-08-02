@@ -22,9 +22,12 @@ public class RosterFactory {
             medicareRoster = new Roster.Builder()
                     .firstName("first name")
                     .lastName("last name")
+                    .middleName("middle name")
                     .role("role")
                     .specialty("specialty")
                     .npi("npi")
+                    .npi("tin")
+                    .degree("degree")
                     .groupName("group name")
                     .address("address")
                     .suite("suite")
@@ -33,9 +36,9 @@ public class RosterFactory {
                     .zip("zip")
                     .servicePhone("service phone")
                     .officeHours("office hours")
-                    .practiceAgeLimits("practice age limits")
+                    //.practiceAgeLimits("practice age limits")
+                    .directoryPrint("directory print")
                     .acceptingNewPatients("accepting patients")
-                    .providerType("accepting patients")
                     .build();
 
         }
@@ -58,22 +61,30 @@ public class RosterFactory {
             //     DO NOT USE CONFLINCTING KEYWORDS
             // ------------------------------------------
             discovery = new Discovery.Builder()
-                    .firstName(Arrays.asList("first", "provider name", "name"))
-                    .lastName(Arrays.asList("last"))
-                    .role(Arrays.asList("role"))
-                    .specialty(Arrays.asList("specialty"))
-                    .npi(Arrays.asList("npi", "national provider identification"))
+                    .firstName(Arrays.asList("provider first name", "first name", "provider name",
+                            "fname"))
+                    .lastName(Arrays.asList("provider last name", "provider last", "last name",
+                            "lname"))
+                    .middleName(Arrays.asList("provider middle name", "middle", "middle name", "mname"))
+                    .role(Arrays.asList("role", "provider role", "pcp"))
+                    .specialty(Arrays.asList("specialty", "primary specialty", "specialty one", "specialty  one"))
+                    .npi(Arrays.asList("practionernpi", "npi", "provider npi number", "provider npi","individual npi"))
+                    .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
+                            "individual tin", "taxid"))
+                    .degree(Arrays.asList("degree"))
                     .groupName(Arrays.asList("group", "medical group"))
-                    .address(Arrays.asList("practice address", "service address", "address"))
-                    .suite(Arrays.asList("suite", "second address"))
-                    .city(Arrays.asList("city"))
-                    .state(Arrays.asList("state"))
-                    .zip(Arrays.asList("zip code", "postal code", "zipcode", "zip"))
-                    .servicePhone(Arrays.asList("service phone", "practice phone", "phone"))
-                    .officeHours(Arrays.asList("office hours", "hours of operation", "hours"))
-                    .practiceAgeLimits(Arrays.asList("practice age limits", "age limits"))
-                    .acceptingNewPatients(Arrays.asList("accepting new patients", "new patients"))
-                    .providerType(Arrays.asList("provider type", "type"))
+                    .address(Arrays.asList("add one", "practice address", "service address", "address one", "address"
+                            , "addr1"))
+                    .suite(Arrays.asList("office  two", "practice suite", "suite", "second address"
+                            , "address two", "addr2"))
+                    .city(Arrays.asList("office city", "city", "practice city" ,"city one", "primary city"))
+                    .state(Arrays.asList("office state", "state", "practice state", "state one", "st one", "primary state"))
+                    .zip(Arrays.asList("practice zip", "zip code", "postal code", "zipcode", "practice zip", "zip one", "zipcode one"))
+                    .servicePhone(Arrays.asList("primary phone", "service phone","location phone", "practice phone", "phone number"))
+                    .officeHours(Arrays.asList("hours"))
+                    .directoryPrint(Arrays.asList("directory", "directory print", "print directory"))
+                    //.practiceAgeLimits(Arrays.asList("age limits"))
+                    .acceptingNewPatients(Arrays.asList("accepting new patients", "new patients", "accepting"))
                     .build();
 
         }

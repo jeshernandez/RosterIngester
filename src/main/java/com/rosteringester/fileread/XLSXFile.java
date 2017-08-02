@@ -1,5 +1,6 @@
 package com.rosteringester.fileread;
 
+import com.rosteringester.main.RosterIngester;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -39,6 +40,8 @@ public class XLSXFile extends Excel implements FileReader {
                 if (sheet.getRow(0).cellIterator().hasNext()) {
                     for (int j = 0; j < colNum; j++) {
                         String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
+
+                        if(RosterIngester.debug) System.out.println(header);
 
                         rosterHeaders.put(j,header);
                     }

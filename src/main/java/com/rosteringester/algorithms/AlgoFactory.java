@@ -38,13 +38,13 @@ public class AlgoFactory {
     } // End of getScore method
 
 
-
+    // ------------------------------------------------------------------------
     public static Double getBestScore(String algoNames, String standardName,
                                       String[] discoveryList) {
         String cleanAlgoName = algoNames.toUpperCase();
         double finalDistance = 0.0;
         String cleanField = standardName;
-        cleanField = cleanField.toUpperCase();
+        cleanField = cleanField.toLowerCase();
         int index = 0;
 
             if(cleanAlgoName.equals("L")) {
@@ -53,19 +53,27 @@ public class AlgoFactory {
 
                 for (int i = 0; i < discoveryList.length; i++) {
                     double tempDistance = 0.0;
+                    if(RosterIngester.debug) System.out.println("Clean: " + cleanField + ": Discover: "
+                            + discoveryList[i].toString());
                     tempDistance = l.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
-                    if(!cleanField.contains(discoveryList[i].toString())) {
-                        if(tempDistance > finalDistance) {
-                            finalDistance = tempDistance;
-                            index = i;
-                        }
-                    } else {
-                        finalDistance = 1.0;
+                    if(tempDistance > finalDistance) {
+                        if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
+                                + ", in discovery of: " + discoveryList[i].toString());
+                        finalDistance = tempDistance;
+                        index = i;
                     }
 
+//                    if(!cleanField.contains(discoveryList[i].toString())) {
+//                        // Paste back in here
+//                    } else {
+//                        finalDistance = 1.0;
+//                    }
+
                 } // end for-loop
+                if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
+
 
                 return finalDistance;
             }
@@ -76,22 +84,30 @@ public class AlgoFactory {
 
                     for (int i = 0; i < discoveryList.length; i++) {
                         double tempDistance = 0.0;
-                        System.out.println("Clean: " + cleanField + ": Discover: " + discoveryList[i].toString());
+                        if(RosterIngester.debug) System.out.println("Clean: " + cleanField + ": Discover: "
+                                + discoveryList[i].toString());
                         tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
-                        System.out.println("Getting inside value: " + tempDistance);
-                        if(!cleanField.contains(discoveryList[i].toString())) {
+                        if(RosterIngester.debug) System.out.println("Getting inside value: " + tempDistance);
+
+                        // Size of string distorts distance algorithm
+                        if(standardName.length()>20) {
+                            if(cleanField.contains(discoveryList[i].toString())) {
+                                finalDistance = 1.0;
+                            }
+                        } else {
                             if(tempDistance > finalDistance) {
+                                if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
+                                        + ", in discovery of: " + discoveryList[i].toString());
                                 finalDistance = tempDistance;
                                 index = i;
                             }
-                        } else {
-                            finalDistance = 1.0;
                         }
+
 
                     } // end for-loop
 
-                    System.out.println("Your best score>>>>>>>" + finalDistance);
+                    if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
                     return finalDistance;
                 } // end-if
             }
@@ -104,14 +120,14 @@ public class AlgoFactory {
                     tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
-                    if(!cleanField.contains(discoveryList[i].toString())) {
-                        if(tempDistance < finalDistance) {
-                            finalDistance = tempDistance;
-                            index = i;
-                        }
-                    } else {
-                        finalDistance = 1.0;
-                    }
+//                    if(!cleanField.contains(discoveryList[i].toString())) {
+//                        if(tempDistance < finalDistance) {
+//                            finalDistance = tempDistance;
+//                            index = i;
+//                        }
+//                    } else {
+//                        finalDistance = 1.0;
+//                    }
 
                 } // end for-loop
 

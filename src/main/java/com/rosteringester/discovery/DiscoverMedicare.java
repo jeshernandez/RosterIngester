@@ -72,8 +72,9 @@ public class DiscoverMedicare extends Discover {
                     headers, "j");
             System.out.println("FirstName Field: " + headers.get(firstNameLoc));
 
-            headers.replace(firstNameLoc, getStandardDBHeaders(roster.getFirstName()));
-            System.out.println("AFTER FirstName Field: " + headers.get(firstNameLoc));
+            // ------CLEAN UP ---
+            //headers.replace(firstNameLoc, getStandardDBHeaders(roster.getFirstName()));
+            //System.out.println("AFTER FirstName Field: " + headers.get(firstNameLoc));
 
             // Get LastName
             lastNameLoc = getIndexLocation(discovery.getLastName().stream().toArray(String[]::new),
@@ -161,6 +162,8 @@ public class DiscoverMedicare extends Discover {
             acceptingLoc = getIndexLocation(discovery.getAcceptingNewPatients().stream().toArray(String[]::new),
                     headers, "j");
             System.out.println("Accepting Field: " + headers.get(acceptingLoc));
+
+
 
 
 

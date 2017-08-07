@@ -1,12 +1,17 @@
 package com.rosteringester.fileread;
 
 import com.rosteringester.main.RosterIngester;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +39,10 @@ public class XLSXFile extends Excel implements FileReader {
             try {
                 InputStream ExcelFileToRead = new FileInputStream(FileName);
                 XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+
                 XSSFSheet sheet = wb.getSheetAt(0);
+                sheet.setDisplayGridlines(false);
+
 
                 int colNum = sheet.getRow(0).getLastCellNum();
                 if (sheet.getRow(0).cellIterator().hasNext()) {
@@ -72,11 +80,18 @@ public class XLSXFile extends Excel implements FileReader {
             XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
             XSSFSheet sheet = wb.getSheetAt(0);
-
+            sheet.setDisplayGridlines(false);
             XSSFRow row;
             XSSFCell cell;
 
             Iterator rows = sheet.rowIterator();
+
+            Font font = wb.createFont();
+            font.setFontHeightInPoints((short)12);
+            font.setFontName("Courier New");
+
+            CellStyle style = wb.createCellStyle();
+            style.setFont(font);
 
             while (rows.hasNext()) {
                 row = (XSSFRow) rows.next();
@@ -84,6 +99,7 @@ public class XLSXFile extends Excel implements FileReader {
                 HashMap<String, String> newCell = new HashMap<>();
                 while (cells.hasNext()) {
                     cell = (XSSFCell) cells.next();
+                    cell.setCellStyle(style);
                     String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
                     newCell.put(cellName, (String) df.formatCellValue(cell));
                 }

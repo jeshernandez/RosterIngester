@@ -32,12 +32,15 @@ abstract class Excel implements FileReader {
 
         String header = keyword;
 
+        if(header.toLowerCase().equals("practice name")) header = "group name";
+
         header = header.replaceAll("#", " number");
         header = header.replaceAll("1", " one");
         header = header.replaceAll("2", " two");
         header = header.replaceAll("3", " three");
         header = header.replaceAll("[-+$^:,!@%&*()+]","");
         header = header.replaceAll("_", " ");
+        header = header.replaceAll("/", " ");
         header = header.toLowerCase();
         return header;
     }

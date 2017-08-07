@@ -47,7 +47,9 @@ public class FileFactory extends DirectoryFiles {
         if(fileExt.toUpperCase().equals(FileReader.types.XLSX.toString())) {
             LOGGER.info("Sending xlsx file...");
             setGetNames(new XLSXFile().getHeaders(fileName));
-            setRecords(XLSXFile.getRecords(fileName));
+            // TODO me - NY_Mount Sinai School of Medicine of NYU on Behalf of Faculty Practice Associates_011717_Aetna.xlsx failing
+            // TODO - for setRecords, would have to be fixed.
+            //setRecords(XLSXFile.getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
             setGetNames(new XLSFile().getHeaders(fileName));

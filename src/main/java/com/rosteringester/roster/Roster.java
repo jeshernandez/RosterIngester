@@ -93,9 +93,9 @@ public class Roster {
             return this;
         }
 
-        public Builder degree(String tin)
+        public Builder degree(String degree)
         {
-            this.tin = tin;
+            this.degree = degree;
             return this;
         }
 

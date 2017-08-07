@@ -91,7 +91,10 @@ public class AlgoFactory {
                         if(RosterIngester.debug) System.out.println("Getting inside value: " + tempDistance);
 
                         // Size of string distorts distance algorithm
-                        if(standardName.length()>20) {
+                        // July2017 - corrected issue with zip code not captured by algo due to zip size (3).
+                        // 08052017 - corrected issue with accepting new patient and tin discovery
+
+                        if(standardName.length()>20 && !discoveryList[i].toString().equals("tin")) {
                             if(cleanField.contains(discoveryList[i].toString())) {
                                 finalDistance = 1.0;
                             }

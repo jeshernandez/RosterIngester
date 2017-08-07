@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Created by Michael Chrisco on 07/25/2017.
+ *  Updated by JesHernandez on 08/03/2017 - added datetime
  */
 public class DirectoryFileCategorization {
     private FileContext context;
@@ -62,13 +63,14 @@ public class DirectoryFileCategorization {
               withoutFallout.add(file);
               fileCategories.put(file, context.getCategorization());
               logFile.setStatus("Categorization Successful");
+
               logFile.setDescription("Success: File has been categorized.");
           }
           else{
               logFile.setStatus("Categorization Fallout");
               logFile.setDescription("ERROR: File does not have Aetna and/or Coventry in the file name. File rename needed.");
           }
-            logFile.setCreated_by(System.getProperty("user.name"));
+            logFile.setCreatedBy(System.getProperty("user.name"));
             logFile.create(conn);
         }
 
@@ -84,4 +86,8 @@ public class DirectoryFileCategorization {
     public HashMap<String, Integer> getFileCategories(){
       return fileCategories;
     }
-}
+
+
+
+
+} // En dof class

@@ -1,23 +1,21 @@
 package com.rosteringester.fileread;
 
 import com.rosteringester.main.RosterIngester;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -71,10 +69,12 @@ public class XLSXFile extends Excel implements FileReader {
 
 
     // ----------------------------------------------------------
-    static ArrayList<HashMap<String, String>> getRecords(String excelFileName)  {
+    static Vector<String[]> getRecords(String excelFileName)  {
+        System.out.println("File name: " + excelFileName);
         DataFormatter df = new DataFormatter();
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        //ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
+        Vector<String[]> result = new Vector<String[]>();
         try {
             InputStream ExcelFileToRead = new FileInputStream(excelFileName);
             XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
@@ -86,24 +86,49 @@ public class XLSXFile extends Excel implements FileReader {
 
             Iterator rows = sheet.rowIterator();
 
-            Font font = wb.createFont();
-            font.setFontHeightInPoints((short)12);
-            font.setFontName("Courier New");
+//            Font font = wb.createFont();
+//            font.setFontHeightInPoints((short)12);
+//            font.setFontName("Courier New");
+//
+//            CellStyle style = wb.createCellStyle();
+//            style.setFont(font);
 
-            CellStyle style = wb.createCellStyle();
-            style.setFont(font);
+            int rowCount = 0;
+            String cellName;
+
+            int getTotalRecords = sheet.getPhysicalNumberOfRows();
+
+            System.out.println("[ EXCEL ]Total records: " + getTotalRecords);
+
 
             while (rows.hasNext()) {
                 row = (XSSFRow) rows.next();
+
                 Iterator cells = row.cellIterator();
                 HashMap<String, String> newCell = new HashMap<>();
+                String[] record = new String[getTotalRecords];
                 while (cells.hasNext()) {
-                    cell = (XSSFCell) cells.next();
-                    cell.setCellStyle(style);
-                    String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-                    newCell.put(cellName, (String) df.formatCellValue(cell));
-                }
-                result.add(newCell);
+
+                        cell = (XSSFCell) cells.next();
+
+                        CellType type = cell.getCellTypeEnum();
+                        if (type == CellType.STRING) {
+                            record[rowCount] = cell.getRichStringCellValue().toString();
+                            if(RosterIngester.debug) System.out.println("Converted [STRING]: " + record[rowCount]);
+                        } else if (type == CellType.NUMERIC) {
+                            record[rowCount] = Integer.toString((int)cell.getNumericCellValue(), 0);
+                            if(RosterIngester.debug)  System.out.println("Converted [NUMERIC]: " + record[rowCount]);
+                        } else if (type == CellType.BOOLEAN) {
+                            record[rowCount] = String.valueOf(cell.getBooleanCellValue()).toString();
+                            if(RosterIngester.debug) System.out.println("Converted [BOOLEAN]: " + record[rowCount]);
+                        } else if (type == CellType.BLANK) {
+                            record[rowCount] = null;
+                        }
+
+                    } // End while-loop
+
+                result.addElement(record);
+                rowCount++;
             }
             //Removes the header.
             result.remove(0);

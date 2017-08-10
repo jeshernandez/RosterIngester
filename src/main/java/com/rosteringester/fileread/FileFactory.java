@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -15,8 +16,8 @@ public class FileFactory extends DirectoryFiles {
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
 
 
-    private HashMap<Integer, String> getNames;
-    private ArrayList<HashMap<String, String>> records;
+    private HashMap<Integer, String> getHeaders;
+    private Vector<String[]> records;
 
 //    // -------------------------------------------
 //    private void setFileName(String fileName) {
@@ -46,19 +47,19 @@ public class FileFactory extends DirectoryFiles {
 
         if(fileExt.toUpperCase().equals(FileReader.types.XLSX.toString())) {
             LOGGER.info("Sending xlsx file...");
-            setGetNames(new XLSXFile().getHeaders(fileName));
             // TODO me - NY_Mount Sinai School of Medicine of NYU on Behalf of Faculty Practice Associates_011717_Aetna.xlsx failing
             // TODO - for setRecords, would have to be fixed.
-            //setRecords(XLSXFile.getRecords(fileName));
+            setHeaders(new XLSXFile().getHeaders(fileName)); //
+            setRecords(XLSXFile.getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
-            setGetNames(new XLSFile().getHeaders(fileName));
-            setRecords(XLSFile.getRecords(fileName));
+            setHeaders(new XLSFile().getHeaders(fileName));
+            //setRecords(XLSFile.getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
             DelimitedFile delim = new DelimitedFile();
-            setGetNames(delim.getHeaders(fileName));
-            setRecords(delim.getRecords(fileName));
+            setHeaders(delim.getHeaders(fileName));
+            //setRecords(delim.getRecords(fileName));
         } else {
             LOGGER.info("Do not know how to handle this file type...");
             // TODO - Jes throw exception and log
@@ -72,14 +73,14 @@ public class FileFactory extends DirectoryFiles {
 
 
     public HashMap<Integer, String> getHeaders() {
-        return getNames;
+        return getHeaders;
     }
-    public ArrayList<HashMap<String, String>> getRecords() { return records; }
+    public Vector<String[]>  getRecords() { return records; }
 
-    public void setGetNames(HashMap<Integer, String> getNames) {
-        this.getNames = getNames;
+    public void setHeaders(HashMap<Integer, String> getNames) {
+        this.getHeaders = getNames;
     }
-    public void setRecords(ArrayList<HashMap<String, String>> records) { this.records = records; }
+    public void setRecords(Vector<String[]>  records) { this.records = records; }
 
 
 

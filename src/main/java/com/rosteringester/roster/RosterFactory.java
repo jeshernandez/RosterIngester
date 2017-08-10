@@ -75,13 +75,13 @@ public class RosterFactory {
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
                     .degree(Arrays.asList("degree"))
-                    .groupName(Arrays.asList("clinic name", "group", "medical group", "group name", "office name", "physical group name", "practice name"))
+                    .groupName(Arrays.asList("clinic name", "group", "group name", "office name", "physical group name", "practice name"))
                     .address(Arrays.asList("prac street", "physicial address", "office address one", "office address", "add one",
                             "practice address", "service address","address one", "address", "addr1", "prim add"))
                     .suite(Arrays.asList("office  two", "practice suite", "suite", "second address"
-                            , "address two", "addr2", "address  two", "service address two"))
+                            , "address two", "addr2", "address  two"))
                     .city(Arrays.asList("office city", "city", "practice city" ,"city one", "primary city", "service city"))
-                    .state(Arrays.asList("office state", "state", "practice state", "state one", "st one", "primary state", "st", "service state"))
+                    .state(Arrays.asList("office state", "state", "practice state", "state one", "st one", "primary state", "service state"))
                     .zip(Arrays.asList("zip", "zip code", "postal code", "zipcode", "practice zip", "zip one", "zipcode one", "office zip",
                             "primary practice zip", "service zip"))
                     .servicePhone(Arrays.asList("main phone", "primary phone", "service phone","location phone", "practice phone",

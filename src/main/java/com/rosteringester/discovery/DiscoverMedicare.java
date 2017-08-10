@@ -10,13 +10,14 @@ import com.rosteringester.roster.RosterFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 public class DiscoverMedicare extends Discover {
 
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
     private String directoryFolder = "C:\\DATA\\rosters";
-
+    Vector<String[]> record;
 
 
     private int firstNameLoc = -1;
@@ -40,6 +41,7 @@ public class DiscoverMedicare extends Discover {
 
     private int totalFields = 18;
     private boolean[] fieldcount = new boolean[totalFields];
+    private HashMap<Integer,String> fieldNames;
 
     // ---------------------------------------
     public void findField() {
@@ -52,14 +54,35 @@ public class DiscoverMedicare extends Discover {
         DirectoryFiles directoryFiles = new DirectoryFiles();
         List<String> files = null;
 
+        fieldNames = new HashMap<Integer,String>();
+        fieldNames.put(0, "first_name");
+        fieldNames.put(1, "last_name");
+        fieldNames.put(2, "middle_name");
+        fieldNames.put(3, "role");
+        fieldNames.put(4, "specialty");
+        fieldNames.put(5, "npi");
+        fieldNames.put(6, "tin");
+        fieldNames.put(7, "degree");
+        fieldNames.put(8, "group_name");
+        fieldNames.put(9, "address");
+        fieldNames.put(10, "suite");
+        fieldNames.put(11, "city");
+        fieldNames.put(12, "state");
+        fieldNames.put(13, "zip");
+        fieldNames.put(14, "phone");
+        fieldNames.put(15, "hours");
+        fieldNames.put(16, "directory_print");
+        fieldNames.put(17, "accepting_new");
+
+
         try {
             files = directoryFiles.getFiles(directoryFolder);
-            FileFactory getFile = new FileFactory(files.get(0).toString());
+            FileFactory rosterFile = new FileFactory(files.get(0).toString());
             LOGGER.info("FileName: " + files.get(0).toString());
 
             // Get dirty headers
             HashMap<Integer, String> headers;
-            headers = getFile.getHeaders();
+            headers = rosterFile.getHeaders();
 
             LOGGER.info("Size of headers: " + headers.size());
             // Get discovery field names
@@ -80,115 +103,130 @@ public class DiscoverMedicare extends Discover {
             System.out.println("FirstName Field: " + headers.get(firstNameLoc));
 
             // ------CLEAN UP ---
-            //headers.replace(firstNameLoc, getStandardDBHeaders(roster.getFirstName()));
-            //System.out.println("AFTER FirstName Field: " + headers.get(firstNameLoc));
+//            headers.replace(firstNameLoc, getStandardDBHeaders(roster.getFirstName()));
+//            System.out.println("AFTER FirstName Field: " + headers.get(firstNameLoc));
 
             // Get LastName
             lastNameLoc = getIndexLocation(discovery.getLastName().stream().toArray(String[]::new),
                     headers, "j");
-            if(getLastNameLoc() > 0) fieldcount[1] = true;
+            if(getLastNameLoc() > -1) fieldcount[1] = true;
             System.out.println("LastName Field: " + headers.get(lastNameLoc));
 
             // Get MiddleName
             middleNameLoc = getIndexLocation(discovery.getMiddleName().stream().toArray(String[]::new),
                     headers, "j");
-            if(getMiddleNameLoc() > 0) fieldcount[2] = true;
+            if(getMiddleNameLoc() > -1) fieldcount[2] = true;
             System.out.println("MiddleName Field: " + headers.get(middleNameLoc));
 
             // Get Role
             roleLoc = getIndexLocation(discovery.getRole().stream().toArray(String[]::new),
                     headers, "j");
-            if(getRoleLoc() > 0) fieldcount[3] = true;
+            if(getRoleLoc() > -1) fieldcount[3] = true;
             System.out.println("Role Field: " + headers.get(roleLoc));
 
             // Get Specialty
             specialtyLoc = getIndexLocation(discovery.getSpecialty().stream().toArray(String[]::new),
                     headers, "j");
-            if(getSpecialtyLoc() > 0) fieldcount[4] = true;
+            if(getSpecialtyLoc() > -1) fieldcount[4] = true;
             System.out.println("Specialty Field: " + headers.get(specialtyLoc));
 
             // Get npi
             npiLoc = getIndexLocation(discovery.getNpi().stream().toArray(String[]::new),
                     headers, "j");
-            if(getNpiLoc() > 0) fieldcount[5] = true;
+            if(getNpiLoc() > -1) fieldcount[5] = true;
             System.out.println("NPI Field: " + headers.get(npiLoc));
 
             // Get tin
             tinLoc = getIndexLocation(discovery.getTin().stream().toArray(String[]::new),
                     headers, "j");
-            if(getTinLoc() > 0) fieldcount[6] = true;
+            if(getTinLoc() > -1) fieldcount[6] = true;
             System.out.println("TIN Field: " + headers.get(tinLoc));
 
             // Get degree
             degreeLoc = getIndexLocation(discovery.getDegree().stream().toArray(String[]::new),
                     headers, "j");
-            if(getDegreeLoc() > 0) fieldcount[7] = true;
+            if(getDegreeLoc() > -1) fieldcount[7] = true;
             System.out.println("Degree: " + headers.get(degreeLoc));
 
             // Get group name
             groupNameLoc = getIndexLocation(discovery.getGroupName().stream().toArray(String[]::new),
                     headers, "j");
-            if(getGroupNameLoc() > 0) fieldcount[8] = true;
+            if(getGroupNameLoc() > -1) fieldcount[8] = true;
             System.out.println("GroupName Field: " + headers.get(groupNameLoc));
 
             // Get address
             addressLoc = getIndexLocation(discovery.getAddress().stream().toArray(String[]::new),
                     headers, "j");
-            if(getAddressLoc() > 0) fieldcount[9] = true;
+            if(getAddressLoc() > -1) fieldcount[9] = true;
             System.out.println("Address Field: " + headers.get(addressLoc));
 
             // Get suite
             suiteLoc = getIndexLocation(discovery.getSuite().stream().toArray(String[]::new),
                     headers, "j");
-            if(getSuiteLoc() > 0) fieldcount[10] = true;
+            if(getSuiteLoc() > -1) fieldcount[10] = true;
             System.out.println("Suite Field: " + headers.get(suiteLoc));
 
             // Get city
             cityLoc = getIndexLocation(discovery.getCity().stream().toArray(String[]::new),
                     headers, "j");
-            if(getCityLoc() > 0) fieldcount[11] = true;
+            if(getCityLoc() > -1) fieldcount[11] = true;
             System.out.println("City Field: " + headers.get(cityLoc));
 
             // Get state
             stateLoc = getIndexLocation(discovery.getState().stream().toArray(String[]::new),
                     headers, "j");
-            if(getStateLoc() > 0) fieldcount[12] = true;
+            if(getStateLoc() > -1) fieldcount[12] = true;
             System.out.println("State Field: " + headers.get(stateLoc));
 
             // Get zip
             zipLoc = getIndexLocation(discovery.getZip().stream().toArray(String[]::new),
                     headers, "j");
-            if(getZipLoc() > 0) fieldcount[13] = true;
+            if(getZipLoc() > -1) fieldcount[13] = true;
             System.out.println("ZipCode Field: " + headers.get(zipLoc));
 
             // Get service phone
             phoneLoc = getIndexLocation(discovery.getServicePhone().stream().toArray(String[]::new),
                     headers, "j");
-            if(getPhoneLoc() > 0) fieldcount[14] = true;
+            if(getPhoneLoc() > -1) fieldcount[14] = true;
             System.out.println("Phone Field: " + headers.get(phoneLoc));
 
 
             // Get office hours
             hoursLoc = getIndexLocation(discovery.getOfficeHours().stream().toArray(String[]::new),
                     headers, "j");
-            if(getHoursLoc() > 0) fieldcount[15] = true;
+            if(getHoursLoc() > -1) fieldcount[15] = true;
             System.out.println("Hours Field: " + headers.get(hoursLoc));
 
             // Get directory print
             directoryPrintLoc = getIndexLocation(discovery.getDirectoryPrint().stream().toArray(String[]::new),
                     headers, "j");
-            if(getDirectoryPrintLoc() > 0) fieldcount[16] = true;
+            if(getDirectoryPrintLoc() > -1) fieldcount[16] = true;
             System.out.println("Directory Print: " + headers.get(directoryPrintLoc));
 
 
             // Get accepting patients
             acceptingLoc = getIndexLocation(discovery.getAcceptingNewPatients().stream().toArray(String[]::new),
                     headers, "j");
-            if(getAcceptingLoc() > 0) fieldcount[17] = true;
+            if(getAcceptingLoc() > -1) fieldcount[17] = true;
             System.out.println("Accepting Field: " + headers.get(acceptingLoc));
 
 
             System.out.println("Fields successful: " + getFieldSuccessCount());
+
+            HashMap failedField;
+            failedField = getFailed(fieldcount);
+
+            Vector<String[]> record1 = new Vector<String[]>() ;
+            record1 = rosterFile.getRecords();
+
+
+
+//           for (int i=0; i< getRowCount(); i++) {
+//               System.out.println("First records: " + getValueAt(i, 5));
+//           }
+
+
+            //System.out.println("Failed: " + failedField.get(0).toString());
 
 
 
@@ -203,16 +241,48 @@ public class DiscoverMedicare extends Discover {
 
     // ----------------------------------------------
     int getFieldSuccessCount() {
-
         int successField = 0;
         for(int i = 0; i < totalFields; i++) {
 
             if(fieldcount[i] == true) successField++;
         }
-
         return successField;
     }
 
+
+    public  Object getValueAt(int row, int col) {
+        if (record.isEmpty()) {
+            return null;
+        } else {
+            return ((Object[]) record.elementAt(row))[col];
+        }
+    }
+
+
+    public int getRowCount() {
+        int count;
+        count = record.size();
+
+        return count;
+
+    }
+
+
+
+    HashMap<Integer,String> getFailed(boolean[] fields) {
+        HashMap<Integer, String> failedFields = new HashMap<Integer, String>();
+
+        LOGGER.info("Inside get logger...");
+        for (int i = 0; i < fields.length; i++) {
+            if(fields[i] == false) {
+                LOGGER.info("Found false: " + i + ", Field Missing: " + fieldNames.get(i));
+
+
+            }
+        }
+
+        return failedFields;
+    }
 
     // -------------------- GETTERS AND SETTERS
 

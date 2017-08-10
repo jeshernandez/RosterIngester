@@ -52,17 +52,22 @@ public class RosterIngester {
         // step 5 -> business rules for RPDB compare
         // step 6 -> autoreport (output to network drive).
 
-
+//
         DiscoverMedicare medicare = new DiscoverMedicare();
         medicare.findField();
 
 //        AlgoFactory f = new AlgoFactory();
 //        Double d = 0.0;
-//        String cleanfield = "accepting new patient";
-//        String[] dictionary = {"tax id number", "tax id", "tin", "provider tin number", "provider tin",
+//        String cleanfield = "provider id";
+//        String[] tinDictionary = {"tax id number", "tax id", "tin", "provider tin number", "provider tin",
 //                "individual tin", "taxid", "practice tin"};
-//        d = f.getBestScore("j", cleanfield, dictionary);
+//
+//        String[] stateDictionary = {"office state", "state", "practice state", "state one", "st one", "primary state", "service state"};
+//
+//
+//        d = f.getBestScore("j", cleanfield, tinDictionary);
 
+////
 //        String[] dictionary1 = new String[10];
 //        dictionary1[0] = "tax id number"; // .48 // NO
 //        dictionary1[1] = "tax id"; // .45 // NO
@@ -73,19 +78,19 @@ public class RosterIngester {
 //        dictionary1[6] = "taxid"; // 0.47, NO
 //        dictionary1[7] = "practice tin"; //0.66, NO
 //
-//        d = f.getScore("j", "accepting new patient", dictionary1[7]);
+//        d = f.getScore("j", cleanfield, "provider tin");
+//        System.out.println("Algo Test: " + d);
 //
 //        if(cleanfield.contains(dictionary1[7])) {
 //            System.out.println("Contains is true");
 //        }
+//
 
-//        System.out.println("Algo Test: " + d);
+
 
 //        DirectoryFileCategorization dfc = new DirectoryFileCategorization();
 //        dfc.categorizeDirectoryFiles();
 
-//        AutoReport r = new AutoReport();
-//        r.start();
 
 
 

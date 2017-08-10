@@ -16,8 +16,8 @@ public class FileFactory extends DirectoryFiles {
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
 
 
-    private HashMap<Integer, String> getHeaders;
-    private Vector<String[]> records;
+    HashMap<Integer, String> getHeaders;
+    Vector<String[]> records;
 
 //    // -------------------------------------------
 //    private void setFileName(String fileName) {
@@ -50,7 +50,7 @@ public class FileFactory extends DirectoryFiles {
             // TODO me - NY_Mount Sinai School of Medicine of NYU on Behalf of Faculty Practice Associates_011717_Aetna.xlsx failing
             // TODO - for setRecords, would have to be fixed.
             setHeaders(new XLSXFile().getHeaders(fileName)); //
-            setRecords(XLSXFile.getRecords(fileName));
+            setRecords(new XLSXFile().getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
             setHeaders(new XLSFile().getHeaders(fileName));

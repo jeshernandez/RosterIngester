@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class XLSXFile extends Excel implements FileReader {
     Logger LOGGER = Logger.getLogger(XLSXFile.class.getName());
     HashMap<Integer,String> rosterHeaders;
+    Vector<String[]> result;
 
     private FileType fileType; // Will be used when moving the file to archive.
 
@@ -69,12 +70,12 @@ public class XLSXFile extends Excel implements FileReader {
 
 
     // ----------------------------------------------------------
-    static Vector<String[]> getRecords(String excelFileName)  {
+    public Vector<String[]> getRecords(String excelFileName)  {
         System.out.println("File name: " + excelFileName);
         DataFormatter df = new DataFormatter();
         //ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
-        Vector<String[]> result = new Vector<String[]>();
+       result = new Vector<String[]>();
         try {
             InputStream ExcelFileToRead = new FileInputStream(excelFileName);
             XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
@@ -86,12 +87,6 @@ public class XLSXFile extends Excel implements FileReader {
 
             Iterator rows = sheet.rowIterator();
 
-//            Font font = wb.createFont();
-//            font.setFontHeightInPoints((short)12);
-//            font.setFontName("Courier New");
-//
-//            CellStyle style = wb.createCellStyle();
-//            style.setFont(font);
 
             int rowCount = 0;
             String cellName;
@@ -106,24 +101,26 @@ public class XLSXFile extends Excel implements FileReader {
 
                 Iterator cells = row.cellIterator();
                 HashMap<String, String> newCell = new HashMap<>();
-                String[] record = new String[getTotalRecords];
-                while (cells.hasNext()) {
 
+                String[] record = null;
+                while (cells.hasNext()) {
+                    record = new String[getTotalRecords];
                         cell = (XSSFCell) cells.next();
 
                         CellType type = cell.getCellTypeEnum();
                         if (type == CellType.STRING) {
                             record[rowCount] = cell.getRichStringCellValue().toString();
-                            if(RosterIngester.debug) System.out.println("Converted [STRING]: " + record[rowCount]);
+                             System.out.println("Converted [STRING]: " + record[rowCount]);
                         } else if (type == CellType.NUMERIC) {
                             record[rowCount] = Integer.toString((int)cell.getNumericCellValue(), 0);
-                            if(RosterIngester.debug)  System.out.println("Converted [NUMERIC]: " + record[rowCount]);
+                             System.out.println("Converted [NUMERIC]: " + record[rowCount]);
                         } else if (type == CellType.BOOLEAN) {
                             record[rowCount] = String.valueOf(cell.getBooleanCellValue()).toString();
-                            if(RosterIngester.debug) System.out.println("Converted [BOOLEAN]: " + record[rowCount]);
+                             System.out.println("Converted [BOOLEAN]: " + record[rowCount]);
                         } else if (type == CellType.BLANK) {
                             record[rowCount] = null;
                         }
+
 
                     } // End while-loop
 
@@ -131,7 +128,7 @@ public class XLSXFile extends Excel implements FileReader {
                 rowCount++;
             }
             //Removes the header.
-            result.remove(0);
+            //result.remove(0);
             ExcelFileToRead.close();
             wb.close();
         } catch (IOException e) {
@@ -139,7 +136,18 @@ public class XLSXFile extends Excel implements FileReader {
 
         }
 
+        System.out.println("Stuff in here>>>>" + getValueAt(10,10).toString());
+
         return result;
+    }
+
+
+    public  Object getValueAt(int row, int col) {
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return ((Object[]) result.elementAt(row))[col];
+        }
     }
 
 

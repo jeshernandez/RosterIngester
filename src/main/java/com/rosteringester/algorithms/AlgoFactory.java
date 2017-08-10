@@ -94,18 +94,22 @@ public class AlgoFactory {
                         // July2017 - corrected issue with zip code not captured by algo due to zip size (3).
                         // 08052017 - corrected issue with accepting new patient and tin discovery
 
-                        if(standardName.length()>20 && !discoveryList[i].toString().equals("tin")) {
-                            if(cleanField.contains(discoveryList[i].toString())) {
-                                finalDistance = 1.0;
-                            }
-                        } else {
-                            if(tempDistance > finalDistance) {
-                                if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
-                                        + ", in discovery of: " + discoveryList[i].toString());
-                                finalDistance = tempDistance;
-                                index = i;
-                            }
+
+                        if(tempDistance > finalDistance) {
+                            if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
+                                    + ", in discovery of: " + discoveryList[i].toString());
+                            finalDistance = tempDistance;
+                            index = i;
                         }
+
+
+//                        if(standardName.length()>20 && !discoveryList[i].toString().equals("tin")) {
+//                            if(cleanField.contains(discoveryList[i].toString())) {
+//                                finalDistance = 1.0;
+//                            }
+//                        } else {
+//
+//                        }
 
 
                     } // end for-loop

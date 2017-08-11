@@ -17,7 +17,6 @@ public class DiscoverMedicare extends Discover {
 
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
     private String directoryFolder = "C:\\DATA\\rosters";
-    static Vector<String[]> record;
 
 
     private int firstNameLoc = -1;
@@ -216,17 +215,14 @@ public class DiscoverMedicare extends Discover {
             HashMap failedField;
             failedField = getFailed(fieldcount);
 
-            //record = new Vector<String[]>();
-            record = rosterFile.getRecords();
 
+            String[][] records = rosterFile.getRecords();
 
-
-           for (int i=0; i< 15; i++) {
-               System.out.println("First records: " + getValueAt(i, 1));
+            // Start with 1 because of headers.
+           for (int i=1; i< 15; i++) {
+               System.out.println("first_name: " + records[i][firstNameLoc]);
+               System.out.println("last_name: " + records[i][lastNameLoc]);
            }
-
-
-            //System.out.println("Failed: " + failedField.get(0).toString());
 
 
 
@@ -250,22 +246,6 @@ public class DiscoverMedicare extends Discover {
     }
 
 
-    public static Object getValueAt(int row, int col) {
-        if (record.isEmpty()) {
-            return null;
-        } else {
-            return ((Object[]) record.elementAt(row))[col];
-        }
-    }
-
-
-    public int getRowCount() {
-        int count;
-        count = record.size();
-
-        return count;
-
-    }
 
 
 

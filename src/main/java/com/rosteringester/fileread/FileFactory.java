@@ -3,9 +3,7 @@ package com.rosteringester.fileread;
 
 import org.apache.commons.io.FilenameUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -17,7 +15,7 @@ public class FileFactory extends DirectoryFiles {
 
 
     HashMap<Integer, String> getHeaders;
-    Vector<String[]> records;
+    String[][]  records;
 
 //    // -------------------------------------------
 //    private void setFileName(String fileName) {
@@ -75,12 +73,12 @@ public class FileFactory extends DirectoryFiles {
     public HashMap<Integer, String> getHeaders() {
         return getHeaders;
     }
-    public Vector<String[]>  getRecords() { return records; }
+    public String[][] getRecords() { return records; }
 
     public void setHeaders(HashMap<Integer, String> getNames) {
         this.getHeaders = getNames;
     }
-    public void setRecords(Vector<String[]>  records) { this.records = records; }
+    public void setRecords(String[][]  records) { this.records = records; }
 
 
 

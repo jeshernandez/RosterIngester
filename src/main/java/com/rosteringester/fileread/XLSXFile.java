@@ -1,10 +1,8 @@
 package com.rosteringester.fileread;
 
 import com.rosteringester.main.RosterIngester;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,10 +10,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -24,12 +20,6 @@ import java.util.logging.Logger;
 public class XLSXFile extends Excel implements FileReader {
     Logger LOGGER = Logger.getLogger(XLSXFile.class.getName());
     HashMap<Integer,String> rosterHeaders;
-    Vector<String[]> result;
-
-    private FileType fileType; // Will be used when moving the file to archive.
-
-
-
 
     // ----------------------------------------------------------
     public HashMap<Integer,String> getHeaders(String FileName) {
@@ -70,65 +60,65 @@ public class XLSXFile extends Excel implements FileReader {
 
 
     // ----------------------------------------------------------
-    public Vector<String[]> getRecords(String excelFileName)  {
-        System.out.println("File name: " + excelFileName);
-        DataFormatter df = new DataFormatter();
-        //ArrayList<HashMap<String, String>> result = new ArrayList<>();
+    public String[][] getRecords(String excelFileName)  {
+        String[][] xlsxData = null;
+        // TODO Jesse, find workaround for special empty values, skipping cell.
 
-       result = new Vector<String[]>();
         try {
             InputStream ExcelFileToRead = new FileInputStream(excelFileName);
             XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
             XSSFSheet sheet = wb.getSheetAt(0);
             sheet.setDisplayGridlines(false);
-            XSSFRow row;
-            XSSFCell cell;
 
-            Iterator rows = sheet.rowIterator();
+            int getTotalRecords = sheet.getPhysicalNumberOfRows()+1;
+
+            XSSFRow rows = sheet.getRow(0);
+            int columnCount = rows.getLastCellNum();
+            System.out.println("Column Count: " + columnCount);
+            System.out.println("Row Count: " + getTotalRecords);
+            xlsxData = new String[getTotalRecords][columnCount];
+
+            int rowTracker = 0;
+            int colTracker = 0;
+
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
 
-            int rowCount = 0;
-            String cellName;
+            for (Row row : sheet) {
+                for (Cell cell : row) {
+                        cell.getCellTypeEnum();
 
-            int getTotalRecords = sheet.getPhysicalNumberOfRows();
+                        if(cell.getCellTypeEnum().equals(CellType.STRING)) {
+                            xlsxData[rowTracker][colTracker] = cell.getStringCellValue();
+                            //System.out.println("[STRING]: " + xlsxData[rowTracker][colTracker]);
+                        } else if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                xlsxData[rowTracker][colTracker] = df.format(cell.getDateCellValue());
+                                //System.out.println("[DATE]: " + df.format(cell.getDateCellValue()));
+                            } else {
+                                xlsxData[rowTracker][colTracker] = String.valueOf((int) cell.getNumericCellValue()).toString();
+                                //System.out.println("[NUMERIC]: " + xlsxData[rowTracker][colTracker]);
+                            }
 
-            System.out.println("[ EXCEL ]Total records: " + getTotalRecords);
-
-
-            while (rows.hasNext()) {
-                row = (XSSFRow) rows.next();
-
-                Iterator cells = row.cellIterator();
-                HashMap<String, String> newCell = new HashMap<>();
-
-                String[] record = null;
-                while (cells.hasNext()) {
-                    record = new String[getTotalRecords];
-                        cell = (XSSFCell) cells.next();
-
-                        CellType type = cell.getCellTypeEnum();
-                        if (type == CellType.STRING) {
-                            record[rowCount] = cell.getRichStringCellValue().toString();
-                             System.out.println("Converted [STRING]: " + record[rowCount]);
-                        } else if (type == CellType.NUMERIC) {
-                            record[rowCount] = Integer.toString((int)cell.getNumericCellValue(), 0);
-                             System.out.println("Converted [NUMERIC]: " + record[rowCount]);
-                        } else if (type == CellType.BOOLEAN) {
-                            record[rowCount] = String.valueOf(cell.getBooleanCellValue()).toString();
-                             System.out.println("Converted [BOOLEAN]: " + record[rowCount]);
-                        } else if (type == CellType.BLANK) {
-                            record[rowCount] = null;
+                        } else if (cell.getCellTypeEnum().equals(CellType.ERROR)) {
+                            xlsxData[rowTracker][colTracker] = "error";
+                        } else if (cell.getCellTypeEnum().equals(CellType._NONE)) {
+                            xlsxData[rowTracker][colTracker] = "none";
+                        }  else if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
+                            xlsxData[rowTracker][colTracker] = "formula";
+                        } else if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+                            xlsxData[rowTracker][colTracker] = "";
+                            //System.out.println("[BLANK]: " + xlsxData[rowTracker][colTracker]);
                         }
 
+                    colTracker++;
+                }
+                colTracker = 0;
+                rowTracker++;
 
-                    } // End while-loop
-
-                result.addElement(record);
-                rowCount++;
             }
-            //Removes the header.
-            //result.remove(0);
+
             ExcelFileToRead.close();
             wb.close();
         } catch (IOException e) {
@@ -136,19 +126,13 @@ public class XLSXFile extends Excel implements FileReader {
 
         }
 
-        System.out.println("Stuff in here>>>>" + getValueAt(10,10).toString());
+        return xlsxData;
 
-        return result;
-    }
+    } // End of getRecords
 
 
-    public  Object getValueAt(int row, int col) {
-        if (result.isEmpty()) {
-            return null;
-        } else {
-            return ((Object[]) result.elementAt(row))[col];
-        }
-    }
+
+
 
 
 } // End of XLSXFile

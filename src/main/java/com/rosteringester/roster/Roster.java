@@ -63,7 +63,7 @@ public class Roster {
             return this;
         }
 
-        public Builder middleName(String lastName)
+        public Builder middleName(String middleName)
         {
             this.middleName = middleName;
             return this;

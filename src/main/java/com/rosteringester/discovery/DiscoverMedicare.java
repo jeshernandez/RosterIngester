@@ -2,6 +2,7 @@ package com.rosteringester.discovery;
 
 import com.rosteringester.fileread.DirectoryFiles;
 import com.rosteringester.fileread.FileFactory;
+import com.rosteringester.filewrite.RosterWriter;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
@@ -10,7 +11,6 @@ import com.rosteringester.roster.RosterFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 public class DiscoverMedicare extends Discover {
@@ -41,6 +41,7 @@ public class DiscoverMedicare extends Discover {
     private int totalFields = 18;
     private boolean[] fieldcount = new boolean[totalFields];
     private HashMap<Integer,String> fieldNames;
+    private String[][] records;
 
     // ---------------------------------------
     public void findField() {
@@ -93,6 +94,7 @@ public class DiscoverMedicare extends Discover {
             Roster roster = null;
             roster = medicare.createRoster("medicare");
 
+
             // -------------GET INDEX LOCATIONS --------------------------
 
             // Get FirstName
@@ -101,9 +103,7 @@ public class DiscoverMedicare extends Discover {
             if(getFirstNameLoc() > 0) fieldcount[0] = true;
             System.out.println("FirstName Field: " + headers.get(firstNameLoc));
 
-            // ------CLEAN UP ---
-//            headers.replace(firstNameLoc, getStandardDBHeaders(roster.getFirstName()));
-//            System.out.println("AFTER FirstName Field: " + headers.get(firstNameLoc));
+            //System.out.println("AFTER FirstName Field: " + headers.get(firstNameLoc));
 
             // Get LastName
             lastNameLoc = getIndexLocation(discovery.getLastName().stream().toArray(String[]::new),
@@ -133,6 +133,7 @@ public class DiscoverMedicare extends Discover {
             npiLoc = getIndexLocation(discovery.getNpi().stream().toArray(String[]::new),
                     headers, "j");
             if(getNpiLoc() > -1) fieldcount[5] = true;
+
             System.out.println("NPI Field: " + headers.get(npiLoc));
 
             // Get tin
@@ -216,15 +217,206 @@ public class DiscoverMedicare extends Discover {
             failedField = getFailed(fieldcount);
 
 
-            String[][] records = rosterFile.getRecords();
+            records = rosterFile.getRecords();
+
+
+            System.out.println("Header Size: " + getHeaderCount());
+            System.out.println("Row Size: " + getRowCount());
+
+            String[][] normalRoster = new String[getHeaderCount()][getRowCount()];
 
             // Start with 1 because of headers.
-           for (int i=1; i< 15; i++) {
-               System.out.println("first_name: " + records[i][firstNameLoc]);
-               System.out.println("last_name: " + records[i][lastNameLoc]);
-           }
+            // -----------SET NPI--------------------
+            normalRoster[0][0] = roster.getNpi();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(npiLoc > -1) {
+                    normalRoster[0][i] = getValueAt(i, npiLoc);
+                } else {
+                    normalRoster[0][i] = "";
+                }
+
+            }
+
+            // -----------SET TIN--------------------
+            normalRoster[1][0] = roster.getTin();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(tinLoc > -1) {
+                    normalRoster[1][i] = getValueAt(i, tinLoc);
+                } else {
+                    normalRoster[1][i] ="";
+                }
+
+            }
+
+            // -----------SET FIRST_NAME--------------------
+            normalRoster[2][0] = roster.getFirstName();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(firstNameLoc > -1) {
+                    normalRoster[2][i] = getValueAt(i, firstNameLoc);
+                } else {
+                    normalRoster[2][i] = "";
+                }
+            }
+
+            // -----------SET MIDDLE_NAME--------------------
+            normalRoster[3][0] = roster.getMiddleName();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(middleNameLoc > -1) {
+                    normalRoster[3][i] = getValueAt(i, middleNameLoc);
+                } else {
+                    normalRoster[3][i] = "";
+                }
+            }
+
+            // -----------SET LAST_NAME--------------------
+            normalRoster[4][0] = roster.getLastName();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(lastNameLoc > -1) {
+                    normalRoster[4][i] = getValueAt(i, lastNameLoc);
+                } else {
+                    normalRoster[4][i] = "";
+                }
+            }
+
+            // -----------SET ROLE--------------------
+            normalRoster[5][0] = roster.getRole();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(roleLoc > -1) {
+                    normalRoster[5][i] = getValueAt(i, roleLoc);
+                } else {
+                    normalRoster[5][i] = "";
+                }
+            }
+
+            // -----------SET SPECIALTY--------------------
+            normalRoster[6][0] = roster.getSpecialty();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(specialtyLoc > -1) {
+                    normalRoster[6][i] = getValueAt(i, specialtyLoc);
+                } else {
+                    normalRoster[6][i] = "";
+                }
+            }
+
+            // -----------SET DEGREE--------------------
+            normalRoster[7][0] = roster.getSpecialty();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(degreeLoc > -1) {
+                    normalRoster[7][i] = getValueAt(i, degreeLoc);
+                } else {
+                    normalRoster[7][i] = "";
+                }
+            }
+
+            // -----------SET GROUP--------------------
+            normalRoster[8][0] = roster.getGroupName();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(groupNameLoc > 0) {
+                    normalRoster[8][i] = getValueAt(i, groupNameLoc);
+                } else {
+                    normalRoster[8][i] = "";
+                }
+            }
+
+            // -----------SET ADDRESS--------------------
+            normalRoster[9][0] = roster.getAddress();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(addressLoc > -1) {
+                    normalRoster[9][i] = getValueAt(i, addressLoc);
+                } else {
+                    normalRoster[9][i] = "";
+                }
+            }
+
+            // -----------SET SUITE--------------------
+            normalRoster[10][0] = roster.getSuite();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(suiteLoc > -1) {
+                    normalRoster[10][i] = getValueAt(i, suiteLoc);
+                } else {
+                    normalRoster[10][i] = "";
+                }
+            }
 
 
+            // -----------SET CITY--------------------
+            normalRoster[11][0] = roster.getSuite();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(cityLoc > -1) {
+                    normalRoster[11][i] = getValueAt(i, cityLoc);
+                } else {
+                    normalRoster[11][i] = "";
+                }
+            }
+
+            // -----------SET STATE--------------------
+            normalRoster[12][0] = roster.getState();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(stateLoc > -1) {
+                    normalRoster[12][i] = getValueAt(i, stateLoc);
+                } else {
+                    normalRoster[12][i] = "";
+                }
+            }
+
+            // -----------SET POSTAL CODE--------------------
+            normalRoster[13][0] = roster.getZip();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(zipLoc > -1) {
+                    normalRoster[13][i] = getValueAt(i, zipLoc);
+                } else {
+                    normalRoster[13][i] = "";
+                }
+            }
+
+            // -----------SET PHONE CODE--------------------
+            normalRoster[14][0] = roster.getServicePhone();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(phoneLoc > -1) {
+                    normalRoster[14][i] = getValueAt(i, phoneLoc);
+                } else {
+                    normalRoster[14][i] = "";
+                }
+            }
+
+            // -----------SET HOURS--------------------
+            normalRoster[15][0] = roster.getOfficeHours();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(hoursLoc > -1) {
+                    normalRoster[15][i] = getValueAt(i, hoursLoc);
+                } else {
+                    normalRoster[15][i] = "";
+                }
+            }
+
+            // -----------SET DIRECTORY PRINT--------------------
+            normalRoster[16][0] = roster.getDirectoryPrint();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(directoryPrintLoc > -1) {
+                    normalRoster[16][i] = getValueAt(i, directoryPrintLoc);
+                } else {
+                    normalRoster[16][i] = "";
+                }
+            }
+
+            // -----------SET HOURS CODE--------------------
+            normalRoster[17][0] = roster.getAcceptingNewPatients();
+            for (int i = 1; i < getRowCount()-1; i++) {
+                if(acceptingLoc > -1) {
+                    normalRoster[17][i] = getValueAt(i, acceptingLoc);
+                } else {
+                    normalRoster[17][i] = "";
+                }
+            }
+
+
+            RosterWriter rw = new RosterWriter();
+            rw.createExcelFile("RosterData", "C:\\DATA\\rosters\\normalized\\normalized.xlsx",
+                    normalRoster, getHeaderCount(), getRowCount());
+
+//            for (int i = 0; i < getRowCount()-1; i ++ ) {
+//                System.out.println(":::" + normalRoster[0][i]);
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -233,6 +425,29 @@ public class DiscoverMedicare extends Discover {
 
     } // End of findField method
 
+
+    // ----------------------------------------------
+    int getHeaderCount() {
+        int size = records[0].length;
+
+        return size;
+    }
+
+
+    // ----------------------------------------------
+    int getRowCount() {
+        int size = records.length;
+
+        return size;
+    }
+
+    // ----------------------------------------------
+    String getValueAt(int row, int col) {
+
+        String value = records[row][col].toLowerCase().toString();
+
+        return value;
+    }
 
 
     // ----------------------------------------------

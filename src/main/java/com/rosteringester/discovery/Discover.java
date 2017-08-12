@@ -17,12 +17,12 @@ abstract class Discover {
     int getHighestValue(double[] scores) {
 
         double highestValue = 0.0;
-        int index = 0;
-        int locationOfValue = 0;
+        int index = -1;
+        int locationOfValue = -1;
         for (int i = 0; i < scores.length; i++) {
             if(scores[i] > highestValue) {
                 highestValue = scores[i];
-                locationOfValue = index;
+                locationOfValue = i;
             }
             index++;
         }
@@ -48,24 +48,36 @@ abstract class Discover {
                                  HashMap<Integer, String> headers, String algorithm) {
         AlgoFactory jaro = new AlgoFactory();
         double[] scores = new double[headers.size()];
+        double bestScore = -1.0;
+        int indexLoc = -1;
 
         for (int i = 0; i < headers.size(); i++) {
 
             scores[i] = jaro.getBestScore(algorithm, headers.get(i).toString(), discoveryWord);
+            if(bestScore < scores[i]) {
+                bestScore = scores[i];
+                indexLoc = i;
+            }
+
         }
 
-
+        //System.out.println("::::::::Score: " + bestScore + " word: "
+           //     + discoveryWord[0].toString() + ", location: " + indexLoc);
         return getHighestValue(scores);
 
     }
 
 
+    // ------------------------------------------------------------
     String getStandardDBHeaders(String headerName) {
         String header = headerName.replaceAll(" ", "_");
 
         return header;
     }
 
+
+
+    // -------------------GETTERS / SETTERS---------------------
     public double getThreshold() {
         return threshold;
     }

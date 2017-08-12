@@ -72,7 +72,7 @@ public class AlgoFactory {
 //                    }
 
                 } // end for-loop
-                if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
+               // if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
 
 
                 return finalDistance;
@@ -84,11 +84,11 @@ public class AlgoFactory {
 
                     for (int i = 0; i < discoveryList.length; i++) {
                         double tempDistance = 0.0;
-                        if(RosterIngester.debug) System.out.println("Clean: " + cleanField + ": Discover: "
-                                + discoveryList[i].toString());
+                        //if(RosterIngester.debug) System.out.println("Clean: " + cleanField + ": Discover: "
+                               // + discoveryList[i].toString());
                         tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
-                        if(RosterIngester.debug) System.out.println("Getting inside value: " + tempDistance);
+                        //if(RosterIngester.debug) System.out.println("Getting inside value: " + tempDistance);
 
                         // Size of string distorts distance algorithm
                         // July2017 - corrected issue with zip code not captured by algo due to zip size (3).
@@ -96,8 +96,8 @@ public class AlgoFactory {
 
 
                         if(tempDistance > finalDistance) {
-                            if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
-                                    + ", in discovery of: " + discoveryList[i].toString());
+                           // if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
+                             //       + ", in discovery of: " + discoveryList[i].toString());
                             finalDistance = tempDistance;
                             index = i;
                         }
@@ -114,7 +114,7 @@ public class AlgoFactory {
 
                     } // end for-loop
 
-                    if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
+                    //if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
                     return finalDistance;
                 } // end-if
             }

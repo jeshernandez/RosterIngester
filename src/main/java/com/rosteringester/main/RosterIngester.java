@@ -25,7 +25,7 @@ import java.util.List;
 //TODO: Michael - Add into its own Service Object. Remove from main method.
 
 public class RosterIngester {
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     public static Connection logConn = null;
 
@@ -58,15 +58,24 @@ public class RosterIngester {
 
 //        AlgoFactory f = new AlgoFactory();
 //        Double d = 0.0;
-//        String cleanfield = "provider id";
+//        String cleanfield = "practice phone phone number patients would call to schedule appointments";
 //        String[] tinDictionary = {"tax id number", "tax id", "tin", "provider tin number", "provider tin",
 //                "individual tin", "taxid", "practice tin"};
 //
+//        String[] zipDictionary = {"zip", "zip code", "postal code", "zipcode", "practice zip", "zip one", "zipcode one", "office zip",
+//                "primary practice zip", "service zip"};
+//
+//
+//
+//        String[] npiDictionary = {"npi", "provider npi number", "provider npi","individual npi", "npi number"};
+//
 //        String[] stateDictionary = {"office state", "state", "practice state", "state one", "st one", "primary state", "service state"};
 //
+//        String[] phoneDictionary = {"main phone", "primary phone", "service phone","location phone", "practice phone",
+//                "phone number", "office phone","telephone", "one phone"};
 //
-//        d = f.getBestScore("j", cleanfield, tinDictionary);
-
+//        d = f.getBestScore("j", cleanfield, phoneDictionary);
+//        System.out.println("Algo Test: " + d);
 ////
 //        String[] dictionary1 = new String[10];
 //        dictionary1[0] = "tax id number"; // .48 // NO
@@ -79,7 +88,7 @@ public class RosterIngester {
 //        dictionary1[7] = "practice tin"; //0.66, NO
 //
 //        d = f.getScore("j", cleanfield, "provider tin");
-//        System.out.println("Algo Test: " + d);
+
 //
 //        if(cleanfield.contains(dictionary1[7])) {
 //            System.out.println("Contains is true");

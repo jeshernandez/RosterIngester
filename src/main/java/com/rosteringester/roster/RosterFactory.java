@@ -68,26 +68,26 @@ public class RosterFactory {
                             "fname"))
                     .lastName(Arrays.asList("provider last name", "provider last", "last name",
                             "lname"))
-                    .middleName(Arrays.asList("mi", "provider middle name", "middle", "middle name", "mname", "middle initial"))
+                    .middleName(Arrays.asList("middle", "provider middle name", "mi", "middle name", "mname", "middle initial"))
                     .role(Arrays.asList("role", "provider role", "pcp", "pcp spec", "type", "primary category", "category", "pcp status"))
                     .specialty(Arrays.asList("specialty", "primary specialty", "specialty one", "specialty  one", "division name"))
                     .npi(Arrays.asList( "npi", "provider npi number", "provider npi","individual npi", "npi number"))
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
                     .degree(Arrays.asList("degree"))
-                    .groupName(Arrays.asList("clinic name", "group", "group name", "office name", "physical group name", "practice name"))
-                    .address(Arrays.asList("prac street", "physicial address", "office address one", "office address", "add one",
-                            "practice address", "service address","address one", "address", "addr1", "prim add"))
-                    .suite(Arrays.asList("office  two", "practice suite", "suite", "second address"
+                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name", "practice name"))
+                    .address(Arrays.asList("address", "physicial address", "office address one", "office address", "add one",
+                            "practice address", "service address","address one", "addr1", "prim add"))
+                    .suite(Arrays.asList("suite", "office  two", "practice suite", "second address"
                             , "address two", "addr2", "address  two"))
-                    .city(Arrays.asList("office city", "city", "practice city" ,"city one", "primary city", "service city"))
-                    .state(Arrays.asList("office state", "state", "practice state", "state one", "st one", "primary state", "service state"))
-                    .zip(Arrays.asList("zip", "zip code", "postal code", "zipcode", "practice zip", "zip one", "zipcode one", "office zip",
+                    .city(Arrays.asList("city", "office city", "practice city" ,"city one", "primary city", "service city"))
+                    .state(Arrays.asList("state", "office state", "practice state", "state one", "st one", "primary state", "service state"))
+                    .zip(Arrays.asList("zip code", "zip", "postal code", "zipcode", "practice zip", "zip one", "zipcode one", "office zip",
                             "primary practice zip", "service zip"))
-                    .servicePhone(Arrays.asList("main phone", "primary phone", "service phone","location phone", "practice phone",
+                    .servicePhone(Arrays.asList("service phone", "main phone", "primary phone","location phone", "practice phone",
                             "phone number", "office phone","telephone", "one phone"))
                     .officeHours(Arrays.asList("hours"))
-                    .directoryPrint(Arrays.asList("directory", "directory print", "print directory", "show directory", "list directory"))
+                    .directoryPrint(Arrays.asList("directory print", "directory", "print directory", "show directory", "list directory"))
                     //.practiceAgeLimits(Arrays.asList("age limits"))
                     .acceptingNewPatients(Arrays.asList("accept new patients", "new patients", "accept", "closed", "taking new", "open"))
                     .build();

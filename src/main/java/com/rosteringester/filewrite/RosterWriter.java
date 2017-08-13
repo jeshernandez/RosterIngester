@@ -1,11 +1,6 @@
 package com.rosteringester.filewrite;
 
 import com.rosteringester.fileread.FileFactory;
-import com.rosteringester.main.RosterIngester;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -25,7 +20,7 @@ public class RosterWriter {
     FileOutputStream fileOut;
     int totalRows;
     int totalCols;
-    boolean debugLocal = true;
+    boolean debugLocal = false;
     String[][] localData;
 
 
@@ -65,7 +60,7 @@ public class RosterWriter {
                 for (int c = 0; c < totalCols-1; c++) { // this creates values based on columns
                     headerName[c] = datarow[rowTracker].createCell(c);
                     headerName[c].setCellValue(getValueAt(c,r).toString());
-                    if(RosterIngester.debug) System.out.println("Values: " + getValueAt(r,c).toString());
+                    if(debugLocal) System.out.println("Values: " + getValueAt(c,r).toString());
                 }
                 rowTracker++;
 
@@ -123,9 +118,16 @@ public class RosterWriter {
     // ----------------------------------------------
     String getValueAt(int col, int row) {
 
-        String value = localData[col][row].toLowerCase().toString();
+        String tempValue;
 
-        return value;
+        if(localData[col][row] != null) {
+             tempValue = localData[col][row].toLowerCase().toString();
+        } else {
+             tempValue = "";
+        }
+
+
+        return tempValue;
     }
 
 

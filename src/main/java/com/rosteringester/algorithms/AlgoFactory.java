@@ -1,8 +1,5 @@
 package com.rosteringester.algorithms;
 
-import com.rosteringester.main.RosterIngester;
-
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -10,28 +7,29 @@ import java.util.logging.Logger;
  */
 public class AlgoFactory {
     private static final Logger LOGGER = Logger.getLogger( AlgoFactory.class.getName() );
+    boolean debugLocal = false;
 
     // -------------------------------------------
-    public static Double getScore(String algoNames, String text1,
+    public Double getScore(String algoNames, String text1,
                                   String text2) {
         String cleanAlgoName = algoNames.toUpperCase();
 
         if(cleanAlgoName.equals("L")) {
-            if(RosterIngester.debug) LOGGER.info("Levenshtein Getting Score.");
+            if(debugLocal) LOGGER.info("Levenshtein Getting Score.");
             Levenshtein l = new Levenshtein();
             return l.startAlgo(cleanAlgoName, text1, text2);
         } else if (cleanAlgoName.equals("C")) {
-            if(RosterIngester.debug) LOGGER.info("Cosine Getting Score.");
+            if(debugLocal) LOGGER.info("Cosine Getting Score.");
             Cosine c = new Cosine();
             return c.startAlgo(cleanAlgoName, text1, text2);
         }
         else if (cleanAlgoName.equals("J")) {
-            if(RosterIngester.debug) LOGGER.info("Jaro Winkler Score.");
+            if(debugLocal) LOGGER.info("Jaro Winkler Score.");
             JaroWinkler c = new JaroWinkler();
             return c.startAlgo(cleanAlgoName, text1, text2);
         }
         else {
-            if(RosterIngester.debug) LOGGER.info("No Valid Algorithm Selected.");
+            if(debugLocal) LOGGER.info("No Valid Algorithm Selected.");
             return null;
         }
 
@@ -39,7 +37,7 @@ public class AlgoFactory {
 
 
     // ------------------------------------------------------------------------
-    public static Double getBestScore(String algoNames, String standardName,
+    public Double getBestScore(String algoNames, String standardName,
                                       String[] discoveryList) {
         String cleanAlgoName = algoNames.toUpperCase();
         double finalDistance = 0.0;
@@ -53,14 +51,14 @@ public class AlgoFactory {
 
                 for (int i = 0; i < discoveryList.length; i++) {
                     double tempDistance = 0.0;
-                    if(RosterIngester.debug) System.out.println("Clean: " + cleanField + ": Discover: "
-                            + discoveryList[i].toString());
+//                    if(debugLocal) System.out.println("Clean: " + cleanField + ": Discover: "
+//                            + discoveryList[i].toString());
                     tempDistance = l.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
 
 
                     if(tempDistance > finalDistance) {
-                        if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
-                                + ", in discovery of: " + discoveryList[i].toString());
+//                        if(debugLocal) LOGGER.info("Standard name " + standardName
+//                                + ", in discovery of: " + discoveryList[i].toString());
                         finalDistance = tempDistance;
                         index = i;
                     }
@@ -72,7 +70,7 @@ public class AlgoFactory {
 //                    }
 
                 } // end for-loop
-               // if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
+               if(debugLocal) System.out.println("Your best score>>>>>>>" + finalDistance + "Clean: " + cleanField);
 
 
                 return finalDistance;
@@ -84,11 +82,10 @@ public class AlgoFactory {
 
                     for (int i = 0; i < discoveryList.length; i++) {
                         double tempDistance = 0.0;
-                        //if(RosterIngester.debug) System.out.println("Clean: " + cleanField + ": Discover: "
-                               // + discoveryList[i].toString());
+//                        if(debugLocal) System.out.println("Clean: " + cleanField + ": Discover: "
+//                                + discoveryList[i].toString());
                         tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
-
-                        //if(RosterIngester.debug) System.out.println("Getting inside value: " + tempDistance);
+                        //if(debugLocal) System.out.println("Getting temp value: " + tempDistance);
 
                         // Size of string distorts distance algorithm
                         // July2017 - corrected issue with zip code not captured by algo due to zip size (3).
@@ -96,25 +93,17 @@ public class AlgoFactory {
 
 
                         if(tempDistance > finalDistance) {
-                           // if(RosterIngester.debug) LOGGER.info("Standard name " + standardName
+//                           if(debugLocal) LOGGER.info("Standard name " + standardName);
                              //       + ", in discovery of: " + discoveryList[i].toString());
                             finalDistance = tempDistance;
                             index = i;
                         }
 
 
-//                        if(standardName.length()>20 && !discoveryList[i].toString().equals("tin")) {
-//                            if(cleanField.contains(discoveryList[i].toString())) {
-//                                finalDistance = 1.0;
-//                            }
-//                        } else {
-//
-//                        }
-
 
                     } // end for-loop
 
-                    //if(RosterIngester.debug) System.out.println("Your best score>>>>>>>" + finalDistance);
+                    if(debugLocal) System.out.println("Your best score>> set [" + discoveryList[0] + "] " + finalDistance + ": Clean: " + cleanField);
                     return finalDistance;
                 } // end-if
             }

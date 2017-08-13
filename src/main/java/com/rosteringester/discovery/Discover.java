@@ -1,7 +1,6 @@
 package com.rosteringester.discovery;
 
 import com.rosteringester.algorithms.AlgoFactory;
-import com.rosteringester.main.RosterIngester;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -13,6 +12,7 @@ abstract class Discover {
 
     private double threshold;
     Logger LOGGER = Logger.getLogger(Discover.class.getName());
+    boolean debugLocal = false;
 
     int getHighestValue(double[] scores) {
 
@@ -35,8 +35,6 @@ abstract class Discover {
             locationOfValue = -1;
         }
 
-        if(RosterIngester.debug) LOGGER.info("Highest Score: "
-                + highestValue + ", location: " + locationOfValue);
 
         return locationOfValue;
 
@@ -50,10 +48,13 @@ abstract class Discover {
         double[] scores = new double[headers.size()];
         double bestScore = -1.0;
         int indexLoc = -1;
+        String discovery = discoveryWord[0];
 
+        if(debugLocal)System.out.println("---------START------------");
         for (int i = 0; i < headers.size(); i++) {
 
             scores[i] = jaro.getBestScore(algorithm, headers.get(i).toString(), discoveryWord);
+            if(debugLocal) System.out.println(headers.get(i).toString() + ":"+discoveryWord[0] + ": score [" + i + "]   " + scores[i]);
             if(bestScore < scores[i]) {
                 bestScore = scores[i];
                 indexLoc = i;
@@ -61,8 +62,9 @@ abstract class Discover {
 
         }
 
-        //System.out.println("::::::::Score: " + bestScore + " word: "
-           //     + discoveryWord[0].toString() + ", location: " + indexLoc);
+        if(debugLocal)System.out.println("--------END-------------");
+        if(debugLocal) System.out.println("Score: [[[[" + discovery.toUpperCase() + "]]]], best score"
+                + bestScore +  ", location: " + indexLoc);
         return getHighestValue(scores);
 
     }

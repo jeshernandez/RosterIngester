@@ -299,7 +299,7 @@ public class DiscoverMedicare extends Discover {
             }
 
             // -----------SET DEGREE--------------------
-            normalRoster[7][0] = roster.getSpecialty();
+            normalRoster[7][0] = roster.getDegree();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(degreeLoc > -1) {
                     normalRoster[7][i] = getValueAt(i, degreeLoc);
@@ -340,7 +340,7 @@ public class DiscoverMedicare extends Discover {
 
 
             // -----------SET CITY--------------------
-            normalRoster[11][0] = roster.getSuite();
+            normalRoster[11][0] = roster.getCity();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(cityLoc > -1) {
                     normalRoster[11][i] = getValueAt(i, cityLoc);

@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * Created by MichaelChrisco on 6/21/17.
+ * Created by MichaelChrisco (structure only) on 6/21/17.
+ * Complted by JesHernandez on 08/14/2017
  * Microsoft SQL Server Driver Class.
  * Can be used for single queries or within MVC DB Models.
  */
@@ -81,7 +82,7 @@ public class DbSqlServer extends DbCommonP {
 
 
     // -----------------------------------------------
-    public Vector<String[]> stEPDBNotInRoster(Connection conn, String delegateID ){
+    public Vector<String[]> setEPDBNotInRoster(Connection conn, String delegateID ){
         Vector<String[]> resultList = new Vector<String[]>();
         String SPsql = "EXEC dbo.select_epdb_not_in_roster ?";
 

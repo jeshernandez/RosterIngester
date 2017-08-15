@@ -46,7 +46,7 @@ public class AutoReport extends ReportP {
         // Open the master workbook for report
         XSSFWorkbook wb = new XSSFWorkbook();
         // Run the first query for the first sheet
-        Vector<String[]> data = sql.stEPDBNotInRoster(conn, DELEGATES[i].toString());
+        Vector<String[]> data = sql.setEPDBNotInRoster(conn, DELEGATES[i].toString());
         // Send first sheet data values
         String[] headers = sql.getHeaders();
         XLSXWriter x = new XLSXWriter();

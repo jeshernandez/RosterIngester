@@ -4,16 +4,18 @@ import java.sql.*;
 
 /**
  * Created by Michael Chrisco on 07/26/2017.
+ * Updated by JesHernandez on 08/03/2017 - updated with Java naming standards, versus date_created to dateCreated
+ *     - Date should be string.
  * Logs file fallout.
  */
-public class LogFile {
+public class LogFile extends LogP {
     private int id;
     private String filename;
     private String status;
     private String description;
-    private Date date_created;
-    private Date date_updated;
-    private String created_by;
+    private String dateCreated = this.getDateCreated();
+    private String dateUpdated;
+    private String createdBy;
 
     private Boolean isSavedFlag;
 
@@ -29,8 +31,8 @@ public class LogFile {
             stmt.setString(1, this.filename);
             stmt.setString(2, this.status);
             stmt.setString(3, this.description);
-            stmt.setDate(4, this.date_updated);
-            stmt.setString(5, this.created_by);
+            stmt.setString(4, this.dateCreated);
+            stmt.setString(5, this.createdBy);
             stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             generatedKeys.next();
@@ -69,24 +71,28 @@ public class LogFile {
         this.description = description;
     }
 
-    public Date getDate_created() {
-        return date_created;
+    public String getDateCreated() {
+        return dateCreated;
     }
 
-    public Date getDate_updated() {
-        return date_updated;
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public void setDate_updated(Date date_updated) {
-        this.date_updated = date_updated;
+    public String getDateUpdated() {
+        return dateUpdated;
     }
 
-    public String getCreated_by() {
-        return created_by;
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public void setCreated_by(String created_by) {
-        this.created_by = created_by;
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public int getId() {

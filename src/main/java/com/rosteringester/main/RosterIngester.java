@@ -1,15 +1,9 @@
 package com.rosteringester.main;
 
-import com.rosteringester.filecategorization.DirectoryFileCategorization;
-import com.rosteringester.fileread.DirectoryFiles;
-import com.rosteringester.fileread.FileFactory;
-import com.rosteringester.roster.Discovery;
-import com.rosteringester.roster.Roster;
-import com.rosteringester.roster.RosterFactory;
-
+import com.rosteringester.discovery.DiscoverMedicare;
 
 import java.sql.Connection;
-import java.util.List;
+
 
 
 /**
@@ -27,16 +21,36 @@ public class RosterIngester {
 
 
     public static void main(String [] args) {
-        DirectoryFileCategorization directory = new DirectoryFileCategorization();
-        List files = directory.categorizeDirectoryFiles();
 
-        //Get file Categories. Will be used later.
-        HashMap<String, Integer> fileCategories = directory.getFileCategories();
-//        System.out.println(fileCategories.toString());
-        DirectoryFiles directoryFiles = new DirectoryFiles();
+        // IDEAL SOLUTION
+        // ------------------------------
+        // step 1 -> file category
+        // step 2 -> file reading *
+        // step 3 -> algorithm *
+        // step 4 -> database (ingest) ??
+        // step 5 -> filewrite (output normalized roster)
+        // step 6 -> usps (standardize address)
+        // step 7 -> business rules for RPDB compare
+        // step 8 -> autoreport (output to network drive).
 
-        DiscoverFields d = new DiscoverFields();
-        d.findField();
+        // PLAN B
+        // -------------
+        // step 1 -> Donna to label every file
+        // step 2 -> Accenture standardizes rosters
+        // step 3 -> Ingest with Alteryx
+        // step 4 -> usps (standardize address)
+        // step 5 -> business rules for RPDB compare
+        // step 6 -> autoreport (output to network drive).
+
+
+        DiscoverMedicare medicare = new DiscoverMedicare();
+        medicare.findField();
+
+
+
+
+
+
 
 
 

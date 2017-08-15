@@ -123,7 +123,7 @@ public static class Builder {
     }
 
 public LogReportCreation create(Connection conn){
-    String query = "INSERT into [dbo].[grips_log_report] (reportname, delegate, epdb_total, usps_fallout, date_created)"
+    String query = "INSERT into [logs].[dbo].[grips_log_report] (reportname, delegate_id, epdb_total, usps_fallout, date_created)"
             + " values (?, ?, ?, ?, ?)";
     try {
         PreparedStatement stmt = conn.prepareStatement(query);

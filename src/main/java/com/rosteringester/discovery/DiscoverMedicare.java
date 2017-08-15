@@ -130,7 +130,7 @@ public class DiscoverMedicare extends Discover {
 
             // Get Specialty
             specialtyLoc = getIndexLocation(discovery.getSpecialty().stream().toArray(String[]::new),
-                    headers, "j");
+                    headers, "l");
             if(getSpecialtyLoc() > -1) fieldcount[4] = true;
             System.out.println("Specialty Field: " + headers.get(specialtyLoc));
 
@@ -360,7 +360,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[12][0] = roster.getState();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(stateLoc > -1) {
-                    normalRoster[12][i] = getValueAt(i, stateLoc);
+                    normalRoster[12][i] = rv.validateState(getValueAt(i, stateLoc));
                 } else {
                     normalRoster[12][i] = "";
                 }
@@ -370,7 +370,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[13][0] = roster.getZip();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(zipLoc > -1) {
-                    normalRoster[13][i] = getValueAt(i, zipLoc);
+                    normalRoster[13][i] = rv.validateZip(getValueAt(i, zipLoc));
                 } else {
                     normalRoster[13][i] = "";
                 }
@@ -400,7 +400,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[16][0] = roster.getDirectoryPrint();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(directoryPrintLoc > -1) {
-                    normalRoster[16][i] = getValueAt(i, directoryPrintLoc);
+                    normalRoster[16][i] = rv.validateDirectory(getValueAt(i, directoryPrintLoc));
                 } else {
                     normalRoster[16][i] = "";
                 }
@@ -410,7 +410,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[17][0] = roster.getAcceptingNewPatients();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(acceptingLoc > -1) {
-                    normalRoster[17][i] = getValueAt(i, acceptingLoc);
+                    normalRoster[17][i] = rv.validateAccepting(getValueAt(i, acceptingLoc));
                 } else {
                     normalRoster[17][i] = "";
                 }

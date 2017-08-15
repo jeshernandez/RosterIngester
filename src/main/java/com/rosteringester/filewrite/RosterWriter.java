@@ -69,15 +69,15 @@ public class RosterWriter {
 
 
             // Freeze top header row, when scrolling down stays on top
-            sheet.createFreezePane(0, 1);
-            sheet.setAutoFilter(CellRangeAddress.valueOf("A1:"+ (Character.toString((char)( 65+totalCols-2)))+"1"));
-            // create each row based on row size
+//            sheet.createFreezePane(0, 1);
+//            sheet.setAutoFilter(CellRangeAddress.valueOf("A1:"+ (Character.toString((char)( 65+totalCols-2)))+"1"));
+//            // create each row based on row size
 
 
             // AutoResizing columns
-            for (int i = 0; i<totalCols-1; i++) {
-                sheet.autoSizeColumn(i);
-            }
+//            for (int i = 0; i<totalCols-1; i++) {
+//                sheet.autoSizeColumn(i);
+//            }
 
                 LOGGER.info("Closing workbook...");
                 FileOutputStream fileOut = new FileOutputStream(savePath);

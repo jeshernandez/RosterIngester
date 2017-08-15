@@ -8,6 +8,7 @@ import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +80,9 @@ public class DiscoverMedicare extends Discover {
             files = directoryFiles.getFiles(directoryFolder);
             FileFactory rosterFile = new FileFactory(files.get(0).toString());
             LOGGER.info("FileName: " + files.get(0).toString());
+
+
+
 
             // Get dirty headers
             HashMap<Integer, String> headers;
@@ -411,7 +415,9 @@ public class DiscoverMedicare extends Discover {
 
 
             RosterWriter rw = new RosterWriter();
-            rw.createExcelFile("RosterData", "C:\\DATA\\rosters\\normalized\\normalized.xlsx",
+            rw.createExcelFile("RosterData",
+                    "C:\\DATA\\rosters\\normalized\\" +
+                            saveCleanFileName(files.get(0).toString()),
                     normalRoster, getHeaderCount(), getRowCount());
 
 //            for (int i = 0; i < getRowCount()-1; i ++ ) {
@@ -462,6 +468,22 @@ public class DiscoverMedicare extends Discover {
 
 
 
+    String saveCleanFileName (String fileName) {
+
+        String cleanFileName;
+        String name;
+
+        File f = new File(fileName);
+        name = f.getName();
+
+        cleanFileName = name.substring(0, name.lastIndexOf('.'));
+        cleanFileName = cleanFileName.toLowerCase().replace(" ", "_")
+                .replace("-", "");
+
+        cleanFileName = cleanFileName + "_normalized.xlsx";
+        return cleanFileName;
+
+    }
 
 
     HashMap<Integer,String> getFailed(boolean[] fields) {

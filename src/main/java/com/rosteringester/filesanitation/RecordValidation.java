@@ -1,6 +1,8 @@
 package com.rosteringester.filesanitation;
 
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.logging.Logger;
 
 /**
@@ -54,7 +56,7 @@ public class RecordValidation extends RecordSanitation {
     public String validatePhone(String phone) {
         String finalPhone = null;
         phone = sanitizeNumber(phone);
-
+        phone = phone.replace("(", "").replace(")", "");
         if(phone.length() >= 7) {
             finalPhone = phone;
         } else {
@@ -91,22 +93,52 @@ public class RecordValidation extends RecordSanitation {
         String finalWord = null;
         words = sanitizeWords(words);
 
-        finalWord = words;
+        if(!StringUtils.isNumeric(words.replace(" ", ""))) {
+            finalWord = words;
+        }
+
+
 
         return finalWord;
     }
 
 
     // ---------------------------
-    //      VALIDATE WORDS
+    //      VALIDATE ROLE
     // ---------------------------
 
     public String validateRole(String role) {
 
         String finalRole = null;
-        finalRole = sanitizeRole(role);
+        finalRole = sanitizeWords(role).toLowerCase();
+
+        switch (finalRole) {
+            case "pcp":
+                finalRole = finalRole;
+                break;
+            case "spec":
+                finalRole = finalRole;
+                break;
+            case "no":
+                finalRole = "spec";
+                break;
+            case "yes":
+                finalRole = "pcp";
+                break;
+            case "y":
+                finalRole = "pcp";
+                break;
+            case "n":
+                finalRole = "spec";
+                break;
+
+            default:
+                finalRole = "none";
+
+        }
 
         return finalRole;
+
     }
 
 
@@ -124,17 +156,112 @@ public class RecordValidation extends RecordSanitation {
 
 
     // ---------------------------
-    //      VALIDATE SUITE
+    //      VALIDATE STATE
     // ---------------------------
 
-    public String validateDirectoryPrint(String directory) {
+    public String validateState(String state) {
 
-        String finalDirectoryPrint = null;
-        finalDirectoryPrint = sanitizeAddress(directory);
+        String finalState = null;
 
-        return finalDirectoryPrint;
+        state = getCleanString(state);
+        if(state.length() > 2) {
+            finalState = sanitizeState(state);
+
+            if(finalState == null) {
+                LOGGER.info ("STATE FAILED TO VALIDATE " );
+                //System.out.println("State Failed > " + state);
+                // TODO throw error, and log it.
+            }
+        } else {
+            finalState = state;
+        }
+
+        return finalState;
     }
 
+
+    // ---------------------------
+    //      VALIDATE ZIPCODE
+    // ---------------------------
+
+    public String validateZip(String zip) {
+
+        String finalZip = null;
+        finalZip = sanitizeZip(zip);
+
+        return finalZip;
+    }
+
+
+    // ---------------------------
+    //      VALIDATE DIRECTORY
+    // ---------------------------
+
+    public String validateDirectory(String dir) {
+
+        String finalDir = null;
+
+        dir = sanitizeWords(dir);
+        dir = dir.toLowerCase().trim();
+
+        switch (dir) {
+            case "0":
+                finalDir = "N";
+                break;
+            case "1":
+                finalDir = "Y";
+                break;
+            case "no":
+                finalDir = "N";
+                break;
+            case "yes":
+                finalDir = "Y";
+                break;
+            case "y":
+                finalDir = dir;
+                break;
+            case "n":
+                finalDir = dir;
+                break;
+
+        }
+        return finalDir;
+    }
+
+    // ---------------------------
+    //      VALIDATE ACCEPTING
+    // ---------------------------
+
+    public String validateAccepting(String accpt) {
+
+        String finalAccpt = null;
+
+        accpt = sanitizeWords(accpt);
+        accpt = accpt.toLowerCase().trim();
+
+        switch (accpt) {
+            case "0":
+                finalAccpt = "N";
+                break;
+            case "1":
+                finalAccpt = "Y";
+                break;
+            case "no":
+                finalAccpt = "N";
+                break;
+            case "yes":
+                finalAccpt = "Y";
+                break;
+            case "y":
+                finalAccpt = accpt;
+                break;
+            case "n":
+                finalAccpt = accpt;
+                break;
+
+        }
+        return finalAccpt;
+    }
 
 
 

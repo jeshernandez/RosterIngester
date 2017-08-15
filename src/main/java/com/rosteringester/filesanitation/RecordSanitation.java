@@ -3,59 +3,63 @@ package com.rosteringester.filesanitation;
 /**
  * Created by Michael Chrisco on 07/27/2017.
  */
-public class RecordSanitation extends Sanitation{
-    /**
-     * Sanitizes Date strings. NOTE: This is slightly different in the regex to the sanitizeSpecialChars method.
-     * @param str un-sanitized string
-     * @return sanitized string
-     */
-    static String sanitizeDates(String str){
-        String sanStr = sanitizeString(str.replaceAll("[+$^,!@#%&*()+]",""));
-        return sanitizeBrackets(sanStr);
+public class RecordSanitation {
+
+
+
+    // --------------------------------------------
+     String sanitizeAddress(String str){
+         str = str.replace("#", "ste");
+         str = getcleanString(str);
+        return str;
     }
 
-    /**
-     * Sanitizes general phone numbers into a Numerical String
-     * @param str un-sanitized string
-     * @return sanitized string
-     */
-    static String sanitizePhoneNumbers(String str){
-        return sanitizeNumerical(str);
+
+    // --------------------------------------------
+     String sanitizeNumber(String str){
+        str = getcleanNumber(str);
+        return str;
     }
 
-    /**
-     * Sanitizes suites.
-     * @param str un-sanitized string
-     * @return sanitized string
-     */
-    static String sanitizeSuites(String str){
-        return sanitizeSpecialChars(str);
+    // --------------------------------------------
+    String sanitizeNames(String str){
+        str = getcleanString(str);
+        return str;
     }
 
-    /**
-     * Sanitizes zip codes into numerical string value.
-     * @param str un-sanitized string
-     * @return
-     */
-    static String sanitizeZipCodes(String str){
-        return sanitizeNumerical(str);
+    // --------------------------------------------
+    String sanitizeWords(String str){
+        str = getcleanString(str);
+        return str;
     }
 
-    /**
-     * Sanitizes speciality strings.
-     * @param str un-sanitized string
-     * @return sanitized string
-     */
-    static String sanitizeSpecialities(String str){
-        return sanitizeSpecialChars(str);
+
+    // --------------------------------------------
+    String sanitizeRole(String str){
+        str = str.toLowerCase().replace("y", "pcp");
+        str = str.toLowerCase().replace("n", "spec");
+        str = str.toLowerCase().replace("yes", "pcp");
+        str = str.toLowerCase().replace("no", "spec");
+        str = getcleanString(str);
+        return str;
     }
 
-    /**
-     * Sanitize TIN numbers.
-     * @param str
-     * @return
-     */
-    static String sanitizeTin(String str){
-        return sanitizeNumerical(str);
+
+
+    // ------- COMMON METHODS TO USE --------------
+    String getcleanNumber(String keyword) {
+        keyword = keyword.replaceAll("[^a-zA-Z0-9_//~~!`@#$%^&*()_+={\\[}\\]|.,<>]","");
+        return keyword;
     }
-}
+
+
+    String getcleanString(String keyword) {
+        keyword = keyword.replaceAll("[//~~!`@#$%^&*()_+={\\[}\\]|.,<>-]","");
+        return keyword;
+    }
+
+
+} // End of RecordSanitation class
+
+
+

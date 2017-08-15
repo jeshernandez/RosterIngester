@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class XLSXFile extends Excel implements FileReader {
     Logger LOGGER = Logger.getLogger(XLSXFile.class.getName());
     HashMap<Integer,String> rosterHeaders;
+    boolean localDebug = false;
 
     // ----------------------------------------------------------
     public HashMap<Integer,String> getHeaders(String FileName) {
@@ -38,7 +39,7 @@ public class XLSXFile extends Excel implements FileReader {
                     for (int j = 0; j < colNum; j++) {
                         String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
 
-                        if(RosterIngester.debug) System.out.println(header);
+                        if(localDebug) System.out.println(header);
 
                         rosterHeaders.put(j,header);
                     }
@@ -75,8 +76,7 @@ public class XLSXFile extends Excel implements FileReader {
 
             XSSFRow rows = sheet.getRow(0);
             int columnCount = rows.getLastCellNum();
-            System.out.println("Column Count: " + columnCount);
-            System.out.println("Row Count: " + rowCount);
+
             xlsxData = new String[rowCount][columnCount];
 
             int rowTracker = 0;

@@ -85,7 +85,7 @@ public class RosterFactory {
                     .zip(Arrays.asList("zip code", "zip", "postal code", "zipcode", "practice zip", "zip one", "zipcode one", "office zip",
                             "primary practice zip", "service zip"))
                     .servicePhone(Arrays.asList("service phone", "main phone", "primary phone","location phone", "practice phone",
-                            "phone number", "office phone","telephone", "one phone"))
+                            "phone number", "office phone","telephone", "one phone", "call appointments"))
                     .officeHours(Arrays.asList("hours"))
                     .directoryPrint(Arrays.asList("directory print", "directory", "print directory", "show directory", "list directory"))
                     //.practiceAgeLimits(Arrays.asList("age limits"))

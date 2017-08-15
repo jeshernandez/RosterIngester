@@ -42,19 +42,21 @@ abstract class Discover {
 
 
     // ------------------------------------------------------------
-    int getIndexLocation(String[] discoveryWord,
+    int getIndexLocation(String[] dictionaryList,
                                  HashMap<Integer, String> headers, String algorithm) {
         AlgoFactory jaro = new AlgoFactory();
         double[] scores = new double[headers.size()];
         double bestScore = -1.0;
         int indexLoc = -1;
-        String discovery = discoveryWord[0];
+        String dictionary = dictionaryList[0];
 
         if(debugLocal)System.out.println("---------START------------");
+
         for (int i = 0; i < headers.size(); i++) {
 
-            scores[i] = jaro.getBestScore(algorithm, headers.get(i).toString(), discoveryWord);
-            if(debugLocal) System.out.println(headers.get(i).toString() + ":"+discoveryWord[0] + ": score [" + i + "]   " + scores[i]);
+            scores[i] = jaro.getBestScore(algorithm, headers.get(i).toString(), dictionaryList);
+
+            if(debugLocal) System.out.println("Header->" + headers.get(i).toString() + ": Dictionary->"+dictionaryList[0] + ": score [" + i + "]   " + scores[i]);
             if(bestScore < scores[i]) {
                 bestScore = scores[i];
                 indexLoc = i;
@@ -63,7 +65,7 @@ abstract class Discover {
         }
 
         if(debugLocal)System.out.println("--------END-------------");
-        if(debugLocal) System.out.println("Score: [[[[" + discovery.toUpperCase() + "]]]], best score"
+        if(debugLocal) System.out.println("Score: [[[[" + dictionary.toUpperCase() + "]]]], best score"
                 + bestScore +  ", location: " + indexLoc);
         return getHighestValue(scores);
 

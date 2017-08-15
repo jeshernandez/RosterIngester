@@ -2,6 +2,7 @@ package com.rosteringester.discovery;
 
 import com.rosteringester.fileread.DirectoryFiles;
 import com.rosteringester.fileread.FileFactory;
+import com.rosteringester.filesanitation.RecordValidation;
 import com.rosteringester.filewrite.RosterWriter;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
@@ -228,13 +229,15 @@ public class DiscoverMedicare extends Discover {
             System.out.println("Row Size: " + getRowCount());
 
             String[][] normalRoster = new String[getHeaderCount()][getRowCount()];
-
+            RecordValidation rv = new RecordValidation();
             // Start with 1 because of headers.
             // -----------SET NPI--------------------
             normalRoster[0][0] = roster.getNpi();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(npiLoc > -1) {
-                    normalRoster[0][i] = getValueAt(i, npiLoc);
+
+                    normalRoster[0][i] = rv.validateNPI(getValueAt(i, npiLoc));
+
                 } else {
                     normalRoster[0][i] = "";
                 }
@@ -245,7 +248,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[1][0] = roster.getTin();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(tinLoc > -1) {
-                    normalRoster[1][i] = getValueAt(i, tinLoc);
+                    normalRoster[1][i] = rv.validateTIN(getValueAt(i, tinLoc));
                 } else {
                     normalRoster[1][i] ="";
                 }
@@ -256,7 +259,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[2][0] = roster.getFirstName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(firstNameLoc > -1) {
-                    normalRoster[2][i] = getValueAt(i, firstNameLoc);
+                    normalRoster[2][i] = rv.validateNames(getValueAt(i, firstNameLoc));
                 } else {
                     normalRoster[2][i] = "";
                 }
@@ -266,7 +269,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[3][0] = roster.getMiddleName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(middleNameLoc > -1) {
-                    normalRoster[3][i] = getValueAt(i, middleNameLoc);
+                    normalRoster[3][i] = rv.validateCleanWords(getValueAt(i, middleNameLoc));
                 } else {
                     normalRoster[3][i] = "";
                 }
@@ -276,7 +279,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[4][0] = roster.getLastName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(lastNameLoc > -1) {
-                    normalRoster[4][i] = getValueAt(i, lastNameLoc);
+                    normalRoster[4][i] = rv.validateNames(getValueAt(i, lastNameLoc));
                 } else {
                     normalRoster[4][i] = "";
                 }
@@ -286,7 +289,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[5][0] = roster.getRole();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(roleLoc > -1) {
-                    normalRoster[5][i] = getValueAt(i, roleLoc);
+                    normalRoster[5][i] = rv.validateRole(getValueAt(i, roleLoc));
                 } else {
                     normalRoster[5][i] = "";
                 }
@@ -296,7 +299,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[6][0] = roster.getSpecialty();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(specialtyLoc > -1) {
-                    normalRoster[6][i] = getValueAt(i, specialtyLoc);
+                    normalRoster[6][i] = rv.validateCleanWords(getValueAt(i, specialtyLoc));
                 } else {
                     normalRoster[6][i] = "";
                 }
@@ -306,7 +309,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[7][0] = roster.getDegree();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(degreeLoc > -1) {
-                    normalRoster[7][i] = getValueAt(i, degreeLoc);
+                    normalRoster[7][i] = rv.validateCleanWords(getValueAt(i, degreeLoc));
                 } else {
                     normalRoster[7][i] = "";
                 }
@@ -316,7 +319,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[8][0] = roster.getGroupName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(groupNameLoc > 0) {
-                    normalRoster[8][i] = getValueAt(i, groupNameLoc);
+                    normalRoster[8][i] = rv.validateCleanWords(getValueAt(i, groupNameLoc));
                 } else {
                     normalRoster[8][i] = "";
                 }
@@ -326,7 +329,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[9][0] = roster.getAddress();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(addressLoc > -1) {
-                    normalRoster[9][i] = getValueAt(i, addressLoc);
+                    normalRoster[9][i] = rv.validateAddressAndSuite(getValueAt(i, addressLoc));
                 } else {
                     normalRoster[9][i] = "";
                 }
@@ -336,7 +339,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[10][0] = roster.getSuite();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(suiteLoc > -1) {
-                    normalRoster[10][i] = getValueAt(i, suiteLoc);
+                    normalRoster[10][i] = rv.validateAddressAndSuite(getValueAt(i, suiteLoc));
                 } else {
                     normalRoster[10][i] = "";
                 }
@@ -347,7 +350,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[11][0] = roster.getCity();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(cityLoc > -1) {
-                    normalRoster[11][i] = getValueAt(i, cityLoc);
+                    normalRoster[11][i] = rv.validateCleanWords(getValueAt(i, cityLoc));
                 } else {
                     normalRoster[11][i] = "";
                 }
@@ -377,7 +380,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[14][0] = roster.getServicePhone();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(phoneLoc > -1) {
-                    normalRoster[14][i] = getValueAt(i, phoneLoc);
+                    normalRoster[14][i] = rv.validatePhone(getValueAt(i, phoneLoc));
                 } else {
                     normalRoster[14][i] = "";
                 }
@@ -387,7 +390,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[15][0] = roster.getOfficeHours();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(hoursLoc > -1) {
-                    normalRoster[15][i] = getValueAt(i, hoursLoc);
+                    normalRoster[15][i] = rv.validateCleanWords(getValueAt(i, hoursLoc));
                 } else {
                     normalRoster[15][i] = "";
                 }

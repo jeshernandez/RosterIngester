@@ -7,7 +7,7 @@ import java.util.logging.Logger;
  */
 public class AlgoFactory {
     private static final Logger LOGGER = Logger.getLogger( AlgoFactory.class.getName() );
-    boolean debugLocal = false;
+    boolean debugLocal = true;
 
     // -------------------------------------------
     public Double getScore(String algoNames, String text1,
@@ -53,7 +53,7 @@ public class AlgoFactory {
                     double tempDistance = 0.0;
 //                    if(debugLocal) System.out.println("Clean: " + cleanField + ": Discover: "
 //                            + discoveryList[i].toString());
-                    tempDistance = l.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
+                    tempDistance = l.startAlgo(cleanAlgoName, cleanField.toLowerCase(), discoveryList[i].toString().toLowerCase());
 
 
                     if(tempDistance > finalDistance) {

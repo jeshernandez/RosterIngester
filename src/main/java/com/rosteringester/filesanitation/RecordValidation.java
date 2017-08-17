@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
-    private boolean localDebug = false;
+    private boolean localDebug = true;
     // ---------------------------
     //      VALIDATE NPI
     // ---------------------------
@@ -38,7 +38,6 @@ public class RecordValidation extends RecordSanitation {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
 
-        if(localDebug) System.out.println("POST TIN: >" + tin);
         if(tin.length() == 9) {
             finalTIN = tin;
         } else {
@@ -58,7 +57,11 @@ public class RecordValidation extends RecordSanitation {
         phone = sanitizeNumber(phone);
         phone = phone.replace("(", "").replace(")", "");
         if(phone.length() >= 7) {
-            finalPhone = phone;
+          if(phone.length() < 11) {
+              finalPhone = phone;
+          } else {
+              if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
+          }
         } else {
             if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
             // TODO throw error, and log it.

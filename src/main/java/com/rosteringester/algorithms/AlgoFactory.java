@@ -7,7 +7,7 @@ import java.util.logging.Logger;
  */
 public class AlgoFactory {
     private static final Logger LOGGER = Logger.getLogger( AlgoFactory.class.getName() );
-    boolean debugLocal = true;
+    boolean debugLocal = false;
 
     // -------------------------------------------
     public Double getScore(String algoNames, String text1,
@@ -53,7 +53,8 @@ public class AlgoFactory {
                     double tempDistance = 0.0;
 //                    if(debugLocal) System.out.println("Clean: " + cleanField + ": Discover: "
 //                            + discoveryList[i].toString());
-                    tempDistance = l.startAlgo(cleanAlgoName, cleanField.toLowerCase(), discoveryList[i].toString().toLowerCase());
+                    tempDistance = l.startAlgo(cleanAlgoName,
+                            cleanField.toLowerCase().replace(" ", ""), discoveryList[i].toString().toLowerCase().replace(" ", ""));
 
 
                     if(tempDistance > finalDistance) {
@@ -84,12 +85,15 @@ public class AlgoFactory {
                         double tempDistance = 0.0;
 //                        if(debugLocal) System.out.println("Clean: " + cleanField + ": Discover: "
 //                                + discoveryList[i].toString());
-                        tempDistance = c.startAlgo(cleanAlgoName, cleanField, discoveryList[i].toString());
+                        tempDistance = c.startAlgo(cleanAlgoName,
+                                cleanField.toLowerCase().replace(" ", ""),
+                                discoveryList[i].toString().toLowerCase().replace(" ", ""));
                         //if(debugLocal) System.out.println("Getting temp value: " + tempDistance);
 
                         // Size of string distorts distance algorithm
                         // July2017 - corrected issue with zip code not captured by algo due to zip size (3).
                         // 08052017 - corrected issue with accepting new patient and tin discovery
+                        // 08172017 - trying lower case scores.
 
 
                         if(tempDistance > finalDistance) {

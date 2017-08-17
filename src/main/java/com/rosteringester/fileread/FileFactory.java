@@ -47,12 +47,12 @@ public class FileFactory extends DirectoryFiles {
             LOGGER.info("Sending xlsx file...");
             // TODO me - NY_Mount Sinai School of Medicine of NYU on Behalf of Faculty Practice Associates_011717_Aetna.xlsx failing
             // TODO - for setRecords, would have to be fixed.
-            setHeaders(new XLSXFile().getHeaders(fileName)); //
+            setHeaders(new XLSXFile().getHeaders(fileName));
             setRecords(new XLSXFile().getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
             setHeaders(new XLSFile().getHeaders(fileName));
-            //setRecords(XLSFile.getRecords(fileName));
+            setRecords(XLSFile.getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
             DelimitedFile delim = new DelimitedFile();

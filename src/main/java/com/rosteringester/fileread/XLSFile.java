@@ -5,11 +5,12 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,44 +55,88 @@ public class XLSFile extends Excel implements FileReader {
 
 
     // ----------------------------------------------------------
-    static ArrayList<HashMap<String, String>> getRecords(String excelFileName)  {
-        DataFormatter df = new DataFormatter();
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+    static String[][] getRecords(String excelFileName)  {
+        String[][] xlsxData = null;
+        // TODO Jesse, find workaround for special empty values, skipping cell.
 
         try {
             InputStream ExcelFileToRead = new FileInputStream(excelFileName);
             HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
+
             HSSFSheet sheet = wb.getSheetAt(0);
+            sheet.setDisplayGridlines(false);
 
-            HSSFRow row;
-            HSSFCell cell;
+            int rowCount = sheet.getPhysicalNumberOfRows()+1;
 
-            Iterator rows = sheet.rowIterator();
-            while (rows.hasNext()) {
-                row = (HSSFRow) rows.next();
-                Iterator cells = row.cellIterator();
-                HashMap<String, String> newCell = new HashMap<>();
-                while (cells.hasNext()) {
-                    cell = (HSSFCell) cells.next();
-                    String cellName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-                    newCell.put(cellName, (String) df.formatCellValue(cell));
+            HSSFRow rows = sheet.getRow(0);
+            int columnCount = rows.getLastCellNum();
+
+            xlsxData = new String[rowCount][columnCount];
+
+            int rowTracker = 0;
+            int colTracker = 0;
+
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
+            //System.out.println("::: READING ROW COUNT: " + rowCount);
+            //System.out.println("::: READING COL COUNT: " + columnCount);
+
+            //for (Row row : sheet) {
+            for (int r = 0; r < rowCount-1; r++) {
+                Row row = sheet.getRow(r);
+
+                //for (Cell cell : row) {
+                for (int c = 0; c < columnCount; c++) {
+                    Cell cell = row.getCell(c);
+
+                    if(cell == null) {
+                        xlsxData[rowTracker][colTracker] = "";
+                        //System.out.println("[NULL]: " + xlsxData[rowTracker][colTracker]);
+                    } else {
+
+                        cell.getCellTypeEnum();
+
+                        if(cell.getCellTypeEnum().equals(CellType.STRING)) {
+                            xlsxData[rowTracker][colTracker] = cell.getStringCellValue();
+                            //System.out.println("[STRING]: " + xlsxData[rowTracker][colTracker]);
+                        } else if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                xlsxData[rowTracker][colTracker] = df.format(cell.getDateCellValue());
+                                //System.out.println("[DATE]: " + df.format(cell.getDateCellValue()));
+                            } else {
+                                xlsxData[rowTracker][colTracker] = String.valueOf((int) cell.getNumericCellValue()).toString();
+                                //System.out.println("[NUMERIC]: " + xlsxData[rowTracker][colTracker]);
+                            }
+
+                        } else if (cell.getCellTypeEnum().equals(CellType.ERROR)) {
+                            xlsxData[rowTracker][colTracker] = "error";
+                        } else if (cell.getCellTypeEnum().equals(CellType._NONE)) {
+                            xlsxData[rowTracker][colTracker] = "none";
+                        }  else if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
+                            xlsxData[rowTracker][colTracker] = "formula";
+                        } else if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+                            xlsxData[rowTracker][colTracker] = "";
+                            //System.out.println("[BLANK]: " + xlsxData[rowTracker][colTracker]);
+                        }
+                    }
+
+                    colTracker++;
                 }
-                result.add(newCell);
+                colTracker = 0;
+                rowTracker++;
+
             }
-            //Removes the header.
-            result.remove(0);
+
             ExcelFileToRead.close();
             wb.close();
-
         } catch (IOException e) {
             e.printStackTrace();
+
         }
 
+        return xlsxData;
 
-
-        return result;
-
-    }
+    } // End of getRecords
 
 
 } // End of XLSFile class

@@ -1,6 +1,8 @@
 package com.rosteringester.filesanitation;
 
 
+import com.rosteringester.logs.LogAlgorithmFallout;
+import com.rosteringester.main.RosterIngester;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.logging.Logger;
@@ -12,16 +14,26 @@ public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
     private boolean localDebug = true;
+    private String status = "validate error";
+    LogAlgorithmFallout dbLog = null;
     // ---------------------------
     //      VALIDATE NPI
     // ---------------------------
-    public String validateNPI(String npi) {
+    public String validateNPI(String npi, String filename) {
         String finalNPI = null;
         npi = sanitizeNumber(npi);
 
         if(npi.length() == 10) {
             finalNPI = npi;
         } else {
+            dbLog = new LogAlgorithmFallout.Builder()
+                    .fileName(filename)
+                    .status(status)
+                    .description("Failed to validate NPI")
+                    .dateCreated(dbDate())
+                    .createdBy(getUserName())
+                    .build()
+                    .create(RosterIngester.logConn);
             if(localDebug) LOGGER.info (" NPI FAILED TO VALIDATE " );
             // TODO throw error, and log it.
         }
@@ -34,13 +46,21 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE TIN
     // ---------------------------
 
-    public String validateTIN(String tin) {
+    public String validateTIN(String tin, String filename) {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
 
         if(tin.length() == 9) {
             finalTIN = tin;
         } else {
+            dbLog = new LogAlgorithmFallout.Builder()
+                    .fileName(filename)
+                    .status(status)
+                    .description("Failed to validate TIN")
+                    .dateCreated(dbDate())
+                    .createdBy(getUserName())
+                    .build()
+                    .create(RosterIngester.logConn);
             if(localDebug) LOGGER.info (" TIN FAILED TO VALIDATE " );
             // TODO throw error, and log it.
         }
@@ -52,7 +72,7 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE PHONE
     // ---------------------------
 
-    public String validatePhone(String phone) {
+    public String validatePhone(String phone, String filename) {
         String finalPhone = null;
         phone = sanitizeNumber(phone);
         phone = phone.replace("(", "").replace(")", "");
@@ -60,6 +80,14 @@ public class RecordValidation extends RecordSanitation {
           if(phone.length() < 11) {
               finalPhone = phone;
           } else {
+              dbLog = new LogAlgorithmFallout.Builder()
+                      .fileName(filename)
+                      .status(status)
+                      .description("Failed to validate Phone")
+                      .dateCreated(dbDate())
+                      .createdBy(getUserName())
+                      .build()
+                      .create(RosterIngester.logConn);
               if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
           }
         } else {
@@ -74,16 +102,36 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE NAMES
     // ---------------------------
 
-    public String validateNames(String name) {
+    public String validateNames(String name, String filename) {
         String finalName = null;
         name = sanitizeNames(name);
 
-        if(name.length() >= 1) {
-            finalName = name;
+        if(!StringUtils.isNumeric(name)) {
+            if(name.length() >= 1) {
+                finalName = name;
+            } else {
+                dbLog = new LogAlgorithmFallout.Builder()
+                        .fileName(filename)
+                        .status(status)
+                        .description("Failed to validate first name, empty")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if(localDebug) LOGGER.info (" NAME FAILED TO VALIDATE " );
+                // TODO throw error, and log it.
+            }
         } else {
-            if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
-            // TODO throw error, and log it.
+            dbLog = new LogAlgorithmFallout.Builder()
+                    .fileName(filename)
+                    .status(status)
+                    .description("Failed to validate first name, numerical")
+                    .dateCreated(dbDate())
+                    .createdBy(getUserName())
+                    .build()
+                    .create(RosterIngester.logConn);
         }
+
         return finalName;
     }
 
@@ -162,7 +210,7 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE STATE
     // ---------------------------
 
-    public String validateState(String state) {
+    public String validateState(String state, String filename) {
 
         String finalState = null;
 
@@ -171,6 +219,14 @@ public class RecordValidation extends RecordSanitation {
             finalState = sanitizeState(state);
 
             if(finalState == null) {
+                dbLog = new LogAlgorithmFallout.Builder()
+                        .fileName(filename)
+                        .status(status)
+                        .description("Failed to validate State")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
                 LOGGER.info ("STATE FAILED TO VALIDATE " );
                 //System.out.println("State Failed > " + state);
                 // TODO throw error, and log it.

@@ -19,7 +19,7 @@ public class DiscoverMedicare extends Discover {
 
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
     private String directoryFolder = "C:\\DATA\\rosters";
-
+    private boolean localDebug = false;
 
     private int firstNameLoc = -1;
     private int lastNameLoc = -1;
@@ -224,10 +224,12 @@ public class DiscoverMedicare extends Discover {
 
             records = rosterFile.getRecords();
 
+            if(localDebug) System.out.println("Initial size: " + records.length);
 
-            System.out.println("Header Size: " + getHeaderCount());
-            System.out.println("Row Size: " + getRowCount());
+            if(localDebug) System.out.println("Header Size: " + getHeaderCount());
+            if(localDebug) System.out.println("Row Size: " + getRowCount());
 
+            //
             String[][] normalRoster = new String[getHeaderCount()][getRowCount()];
             RecordValidation rv = new RecordValidation();
             // Start with 1 because of headers.
@@ -236,7 +238,8 @@ public class DiscoverMedicare extends Discover {
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(npiLoc > -1) {
 
-                    normalRoster[0][i] = rv.validateNPI(getValueAt(i, npiLoc));
+                    normalRoster[0][i] = rv.validateNPI(getValueAt(i, npiLoc),
+                            saveCleanFileName(files.get(0).toString()), i);
 
                 } else {
                     normalRoster[0][i] = "";
@@ -248,7 +251,8 @@ public class DiscoverMedicare extends Discover {
             normalRoster[1][0] = roster.getTin();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(tinLoc > -1) {
-                    normalRoster[1][i] = rv.validateTIN(getValueAt(i, tinLoc));
+                    normalRoster[1][i] = rv.validateTIN(getValueAt(i, tinLoc),
+                            saveCleanFileName(files.get(0).toString()), i);
                 } else {
                     normalRoster[1][i] ="";
                 }
@@ -259,7 +263,8 @@ public class DiscoverMedicare extends Discover {
             normalRoster[2][0] = roster.getFirstName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(firstNameLoc > -1) {
-                    normalRoster[2][i] = rv.validateNames(getValueAt(i, firstNameLoc));
+                    normalRoster[2][i] = rv.validateNames(getValueAt(i, firstNameLoc),
+                            saveCleanFileName(files.get(0).toString()), i);
                 } else {
                     normalRoster[2][i] = "";
                 }
@@ -279,7 +284,8 @@ public class DiscoverMedicare extends Discover {
             normalRoster[4][0] = roster.getLastName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(lastNameLoc > -1) {
-                    normalRoster[4][i] = rv.validateNames(getValueAt(i, lastNameLoc));
+                    normalRoster[4][i] = rv.validateNames(getValueAt(i, lastNameLoc),
+                            saveCleanFileName(files.get(0).toString()), i);
                 } else {
                     normalRoster[4][i] = "";
                 }
@@ -360,7 +366,8 @@ public class DiscoverMedicare extends Discover {
             normalRoster[12][0] = roster.getState();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(stateLoc > -1) {
-                    normalRoster[12][i] = rv.validateState(getValueAt(i, stateLoc));
+                    normalRoster[12][i] = rv.validateState(getValueAt(i, stateLoc),
+                            saveCleanFileName(files.get(0).toString()), i);
                 } else {
                     normalRoster[12][i] = "";
                 }
@@ -380,7 +387,8 @@ public class DiscoverMedicare extends Discover {
             normalRoster[14][0] = roster.getServicePhone();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(phoneLoc > -1) {
-                    normalRoster[14][i] = rv.validatePhone(getValueAt(i, phoneLoc));
+                    normalRoster[14][i] = rv.validatePhone(getValueAt(i, phoneLoc),
+                            saveCleanFileName(files.get(0).toString()), i);
                 } else {
                     normalRoster[14][i] = "";
                 }

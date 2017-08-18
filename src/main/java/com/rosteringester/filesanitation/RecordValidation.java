@@ -1,7 +1,7 @@
 package com.rosteringester.filesanitation;
 
 
-import com.rosteringester.logs.LogAlgorithmFallout;
+import com.rosteringester.logs.LogValidationFallout;
 import com.rosteringester.main.RosterIngester;
 import org.apache.commons.lang.StringUtils;
 
@@ -15,19 +15,20 @@ public class RecordValidation extends RecordSanitation {
 
     private boolean localDebug = true;
     private String status = "validate error";
-    LogAlgorithmFallout dbLog = null;
+    LogValidationFallout dbLog = null;
     // ---------------------------
     //      VALIDATE NPI
     // ---------------------------
-    public String validateNPI(String npi, String filename) {
+    public String validateNPI(String npi, String filename, int rowid) {
         String finalNPI = null;
         npi = sanitizeNumber(npi);
 
         if(npi.length() == 10) {
             finalNPI = npi;
         } else {
-            dbLog = new LogAlgorithmFallout.Builder()
+            dbLog = new LogValidationFallout.Builder()
                     .fileName(filename)
+                    .rowID(rowid)
                     .status(status)
                     .description("Failed to validate NPI")
                     .dateCreated(dbDate())
@@ -46,15 +47,16 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE TIN
     // ---------------------------
 
-    public String validateTIN(String tin, String filename) {
+    public String validateTIN(String tin, String filename, int rowid) {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
 
         if(tin.length() == 9) {
             finalTIN = tin;
         } else {
-            dbLog = new LogAlgorithmFallout.Builder()
+            dbLog = new LogValidationFallout.Builder()
                     .fileName(filename)
+                    .rowID(rowid)
                     .status(status)
                     .description("Failed to validate TIN")
                     .dateCreated(dbDate())
@@ -72,7 +74,7 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE PHONE
     // ---------------------------
 
-    public String validatePhone(String phone, String filename) {
+    public String validatePhone(String phone, String filename, int rowid) {
         String finalPhone = null;
         phone = sanitizeNumber(phone);
         phone = phone.replace("(", "").replace(")", "");
@@ -80,8 +82,9 @@ public class RecordValidation extends RecordSanitation {
           if(phone.length() < 11) {
               finalPhone = phone;
           } else {
-              dbLog = new LogAlgorithmFallout.Builder()
+              dbLog = new LogValidationFallout.Builder()
                       .fileName(filename)
+                      .rowID(rowid)
                       .status(status)
                       .description("Failed to validate Phone")
                       .dateCreated(dbDate())
@@ -102,7 +105,7 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE NAMES
     // ---------------------------
 
-    public String validateNames(String name, String filename) {
+    public String validateNames(String name, String filename, int rowid) {
         String finalName = null;
         name = sanitizeNames(name);
 
@@ -110,8 +113,9 @@ public class RecordValidation extends RecordSanitation {
             if(name.length() >= 1) {
                 finalName = name;
             } else {
-                dbLog = new LogAlgorithmFallout.Builder()
+                dbLog = new LogValidationFallout.Builder()
                         .fileName(filename)
+                        .rowID(rowid)
                         .status(status)
                         .description("Failed to validate first name, empty")
                         .dateCreated(dbDate())
@@ -122,8 +126,9 @@ public class RecordValidation extends RecordSanitation {
                 // TODO throw error, and log it.
             }
         } else {
-            dbLog = new LogAlgorithmFallout.Builder()
+            dbLog = new LogValidationFallout.Builder()
                     .fileName(filename)
+                    .rowID(rowid)
                     .status(status)
                     .description("Failed to validate first name, numerical")
                     .dateCreated(dbDate())
@@ -210,7 +215,7 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE STATE
     // ---------------------------
 
-    public String validateState(String state, String filename) {
+    public String validateState(String state, String filename, int rowid) {
 
         String finalState = null;
 
@@ -219,8 +224,9 @@ public class RecordValidation extends RecordSanitation {
             finalState = sanitizeState(state);
 
             if(finalState == null) {
-                dbLog = new LogAlgorithmFallout.Builder()
+                dbLog = new LogValidationFallout.Builder()
                         .fileName(filename)
+                        .rowID(rowid)
                         .status(status)
                         .description("Failed to validate State")
                         .dateCreated(dbDate())

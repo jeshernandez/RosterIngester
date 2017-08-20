@@ -52,7 +52,7 @@ public class FileFactory extends DirectoryFiles {
         } else if (fileExt.toUpperCase().equals(FileReader.types.XLS.toString())) {
             LOGGER.info("Sending xls file...");
             setHeaders(new XLSFile().getHeaders(fileName));
-            setRecords(XLSFile.getRecords(fileName));
+            setRecords(new XLSFile().getRecords(fileName));
         } else if (fileExt.toUpperCase().equals(FileReader.types.DELIMITED.toString())) {
             LOGGER.info("Sending delimited file...");
             DelimitedFile delim = new DelimitedFile();

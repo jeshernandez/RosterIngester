@@ -4,6 +4,7 @@ import com.rosteringester.fileread.DirectoryFiles;
 import com.rosteringester.fileread.FileFactory;
 import com.rosteringester.filesanitation.RecordValidation;
 import com.rosteringester.filewrite.RosterWriter;
+import com.rosteringester.main.RosterIngester;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
 import com.rosteringester.roster.RosterFactory;
@@ -18,7 +19,6 @@ import java.util.logging.Logger;
 public class DiscoverMedicare extends Discover {
 
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
-    private String directoryFolder = "C:\\DATA\\rosters";
     private boolean localDebug = false;
 
     private int firstNameLoc = -1;
@@ -78,7 +78,7 @@ public class DiscoverMedicare extends Discover {
 
 
         try {
-            files = directoryFiles.getFiles(directoryFolder);
+            files = directoryFiles.getFiles(RosterIngester.ROSTERS);
             FileFactory rosterFile = new FileFactory(files.get(0).toString());
             LOGGER.info("FileName: " + files.get(0).toString());
 
@@ -345,7 +345,8 @@ public class DiscoverMedicare extends Discover {
             normalRoster[10][0] = roster.getSuite();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(suiteLoc > -1) {
-                    normalRoster[10][i] = rv.validateAddressAndSuite(getValueAt(i, suiteLoc));
+                    normalRoster[10][i] = rv.validateSuite(getValueAt(i, suiteLoc),
+                            files.get(0).toString(), i);
                 } else {
                     normalRoster[10][i] = "";
                 }
@@ -427,7 +428,7 @@ public class DiscoverMedicare extends Discover {
 
             RosterWriter rw = new RosterWriter();
             rw.createExcelFile("RosterData",
-                    "C:\\DATA\\rosters\\normalized\\" +
+                    RosterIngester.NORMALIZE_PATH +
                             saveCleanFileName(files.get(0).toString()),
                     normalRoster, getHeaderCount(), getRowCount());
 

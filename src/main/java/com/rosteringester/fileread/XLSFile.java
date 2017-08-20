@@ -14,12 +14,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 /**
  * Created by jeshernandez on 07/22/2017.
  */
 public class XLSFile extends Excel implements FileReader {
-
+    Logger LOGGER = Logger.getLogger(XLSFile.class.getName());
     private FileType fileType; // Will be used when moving the file to archive.
 
 
@@ -37,9 +38,17 @@ public class XLSFile extends Excel implements FileReader {
             colMapByName = new HashMap<>();
             if (sheet.getRow(0).cellIterator().hasNext()) {
                 for (int j = 0; j < colNum; j++) {
-                   if(RosterIngester.debug) System.out.println(sheet.getRow(0).getCell(j).toString());
-                    String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
-                    colMapByName.put(j, header);
+
+                    if(sheet.getRow(0).getCell(j) != null) {
+                        String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
+                        if(RosterIngester.debug) System.out.println(header);
+                        colMapByName.put(j, header);
+                    } else {
+                        // TODO - me log empty field, and drop.
+                        LOGGER.info("Empty Field Name");
+                        colMapByName.put(j, "null_field_name");
+                    }
+
                 }
             }
             ExcelFileToRead.close();

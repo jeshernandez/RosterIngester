@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
-    private boolean localDebug = true;
+    private boolean localDebug = false;
     private String status = "validate error";
     LogValidationFallout dbLog = null;
     // ---------------------------
@@ -167,6 +167,7 @@ public class RecordValidation extends RecordSanitation {
 
         String finalRole = null;
         finalRole = sanitizeWords(role).toLowerCase();
+        if(localDebug) System.out.println("Role: " + finalRole);
 
         switch (finalRole) {
             case "pcp":
@@ -187,7 +188,12 @@ public class RecordValidation extends RecordSanitation {
             case "n":
                 finalRole = "spec";
                 break;
-
+            case "specialist":
+                finalRole = "spec";
+                break;
+            case "scp":
+                finalRole = "spec";
+                break;
             default:
                 finalRole = "none";
 
@@ -199,7 +205,7 @@ public class RecordValidation extends RecordSanitation {
 
 
     // ---------------------------
-    //      VALIDATE SUITE
+    //      VALIDATE ADRESS
     // ---------------------------
 
     public String validateAddressAndSuite(String address) {
@@ -209,6 +215,37 @@ public class RecordValidation extends RecordSanitation {
 
         return finalAddress;
     }
+
+
+    // ---------------------------
+    //      VALIDATE suite
+    // ---------------------------
+
+    public String validateSuite(String suite, String filename, int rowid) {
+
+        String finalSuite = null;
+        suite = sanitizeAddress(suite);
+
+        if(suite.length() > 10) {
+//            dbLog = new LogValidationFallout.Builder()
+//                    .fileName(filename)
+//                    .rowID(rowid)
+//                    .status(status)
+//                    .description("Failed to validate suite. Size is too long.")
+//                    .dateCreated(dbDate())
+//                    .createdBy(getUserName())
+//                    .build()
+//                    .create(RosterIngester.logConn);
+            if(localDebug) LOGGER.info (" NAME FAILED TO VALIDATE " );
+        } else {
+            finalSuite = suite;
+        }
+
+
+        return finalSuite;
+    }
+
+
 
 
     // ---------------------------

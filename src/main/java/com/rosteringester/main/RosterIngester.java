@@ -1,9 +1,12 @@
 package com.rosteringester.main;
 
+import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.discovery.DiscoverMedicare;
+import com.rosteringester.filecategorization.FileMover;
 
 import java.sql.Connection;
-
+import java.sql.SQLException;
+import java.util.logging.Logger;
 
 
 /**
@@ -12,12 +15,15 @@ import java.sql.Connection;
 
 // TODO me - 07/04/2017 remove word from key and add to requiredFields
 // TODO me - 07/04/2017 find a way to remove highest score for iterator
-//TODO: Michael - Add into its own Service Object. Remove from main method.
+// TODO: Michael - Add into its own Service Object. Remove from main method.
 
 public class RosterIngester {
-    public static boolean debug = false;
-
+    public static boolean debug = true;
+    static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
+    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyIT\\ArrivingRosters\\normalized\\";
+    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
+    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyIT\\ROSTERS\\";
 
 
     public static void main(String [] args) {
@@ -42,10 +48,25 @@ public class RosterIngester {
         // step 5 -> business rules for RPDB compare
         // step 6 -> autoreport (output to network drive).
 
+       // new FileMover().detectFilesMoveThem();
 
-        DiscoverMedicare medicare = new DiscoverMedicare();
-        medicare.findField();
+        new FileMover().lastAccess();
+//        // Discover the roster
+//        DiscoverMedicare medicare = new DiscoverMedicare();
+//        medicare.findField();
 
+
+        try {
+            if(logConn != null) {
+                if(!logConn.isClosed() ) {
+                    LOGGER.info("Connection open, closing...");
+                    logConn.close();
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
 

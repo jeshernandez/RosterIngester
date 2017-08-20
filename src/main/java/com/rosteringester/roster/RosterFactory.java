@@ -68,7 +68,7 @@ public class RosterFactory {
                             "fname"))
                     .lastName(Arrays.asList("provider last name", "provider last", "last name",
                             "lname"))
-                    .middleName(Arrays.asList("middle", "provider middle name", "mi", "middle name", "mname", "middle initial"))
+                    .middleName(Arrays.asList("middle", "provider middle ", "mi", "middle", "mname", "middle initial"))
                     .role(Arrays.asList("role", "provider role", "pcp", "pcp spec", "type", "primary category", "category", "pcp status", "provider pcp"))
                     .specialty(Arrays.asList("specialty", "primary specialty", "specialty one", "specialty  one", "division name"))
                     .npi(Arrays.asList( "npi", "provider npi number", "provider npi","individual npi", "npi number"))

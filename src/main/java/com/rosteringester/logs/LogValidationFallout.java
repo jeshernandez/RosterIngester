@@ -136,4 +136,9 @@ public class LogValidationFallout {
     public String getCreatedBy() {
         return createdBy;
     }
-}
+
+
+
+
+
+} // End of LogValidationFallout class

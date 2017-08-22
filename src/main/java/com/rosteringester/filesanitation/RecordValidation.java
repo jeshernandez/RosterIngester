@@ -96,6 +96,7 @@ public class RecordValidation extends RecordSanitation {
         } else {
             if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
             // TODO throw error, and log it.
+            finalPhone = "0";
         }
         return finalPhone;
     }

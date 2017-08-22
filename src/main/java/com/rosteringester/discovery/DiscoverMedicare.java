@@ -1,5 +1,8 @@
 package com.rosteringester.discovery;
 
+
+import com.rosteringester.db.dbModels.DBRosterMDCRRequired;
+import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.fileread.DirectoryFiles;
 import com.rosteringester.fileread.FileFactory;
 import com.rosteringester.filesanitation.RecordValidation;
@@ -12,6 +15,8 @@ import com.rosteringester.roster.RosterFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,6 +49,7 @@ public class DiscoverMedicare extends Discover {
     private boolean[] fieldcount = new boolean[totalFields];
     private HashMap<Integer,String> fieldNames;
     private String[][] records;
+    DBRosterMDCRRequired dbRoster;
 
     // ---------------------------------------
     public void findField() {
@@ -79,6 +85,28 @@ public class DiscoverMedicare extends Discover {
 
         try {
             files = directoryFiles.getFiles(RosterIngester.ROSTERS);
+
+            if(files.get(0).toString() != null) {
+                LOGGER.info("FileName: " + files.get(0).toString());
+            } else {
+                LOGGER.info("NULL FILE, CLOSING");
+                try {
+                    if(RosterIngester.logConn != null) {
+                        if(!RosterIngester.logConn.isClosed() ) {
+                            LOGGER.info("Connection open, closing...");
+                            RosterIngester.logConn.close();
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                System.exit(0);
+
+            } // End of else
+
+
             FileFactory rosterFile = new FileFactory(files.get(0).toString());
             LOGGER.info("FileName: " + files.get(0).toString());
 
@@ -232,6 +260,12 @@ public class DiscoverMedicare extends Discover {
             //
             String[][] normalRoster = new String[getHeaderCount()][getRowCount()];
             RecordValidation rv = new RecordValidation();
+
+
+
+
+
+
             // Start with 1 because of headers.
             // -----------SET NPI--------------------
             normalRoster[0][0] = roster.getNpi();
@@ -432,9 +466,53 @@ public class DiscoverMedicare extends Discover {
                             saveCleanFileName(files.get(0).toString()),
                     normalRoster, getHeaderCount(), getRowCount());
 
-//            for (int i = 0; i < getRowCount()-1; i ++ ) {
-//                System.out.println(":::" + normalRoster[0][i]);
-//            }
+
+            //System.out.println("Insert data into database. Records: " + normalRoster[0].length + ".");
+
+            MD5Hasher md5 = new MD5Hasher();
+            String rosterFileName;
+            File f = new File(files.get(0).toString());
+            rosterFileName = f.getName();
+            // Generate roster key
+            String rosterKey = md5.generateRosterKey(rosterFileName, 13);
+
+
+            // Insert records into database
+            for (int i = 1; i < normalRoster[0].length-1; i++) {
+                System.out.println("Value [" + i+"] " + md5.generateRowKey(normalRoster[0][i],
+                        normalRoster[1][i],normalRoster[2][i],
+                        normalRoster[3][i], normalRoster[6][i],
+                        normalRoster[9][i],normalRoster[17][i]));
+                dbRoster = new DBRosterMDCRRequired.Builder()
+                        .delegateID(13)
+                        .rosterName(rosterFileName)
+                        .rosterKey(rosterKey)
+                        .rowKey(md5.generateRowKey(normalRoster[0][i],
+                                normalRoster[1][i],normalRoster[2][i],
+                                normalRoster[3][i], normalRoster[6][i],
+                                normalRoster[9][i],normalRoster[17][i]))
+                        .npi(Integer.parseInt(normalRoster[0][i]))
+                        .tin(Integer.parseInt(normalRoster[1][i]))
+                        .firstName(normalRoster[2][i])
+                        .middleName(normalRoster[3][i])
+                        .lastName(normalRoster[4][i])
+                        .role(normalRoster[5][i])
+                        .specialty(normalRoster[6][i])
+                        .degree(normalRoster[7][i])
+                        .groupName(normalRoster[8][i].toString())
+                        .address(normalRoster[9][i])
+                        .suite(normalRoster[10][i])
+                        .city(normalRoster[11][i])
+                        .state(normalRoster[12][i])
+                        .zipCode(Integer.parseInt(normalRoster[13][i]))
+                        .servicePhone(Long.parseLong(normalRoster[14][i]))
+                        .officeHours(normalRoster[15][i])
+                        .directoryPrint(normalRoster[16][i])
+                        .acceptingNew(normalRoster[17][i])
+                        .build()
+                        .create(RosterIngester.logConn);
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();

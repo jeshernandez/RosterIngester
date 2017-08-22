@@ -33,12 +33,30 @@ public class MD5Hasher {
 
 
     // --------------------------------------------------------
-    public String generateRowKey(String rosterName, int delegateID) {
+    public String generateRowKey(String npi, String tin,
+                                 String firstName, String lastName,
+                                 String specialty, String address,
+                                 String acceptingNew) {
+
+        String keyword = npi + " : " + tin + " : "
+                + firstName + " : " + lastName + " : "
+                + specialty + " : " + address + " : " + acceptingNew;
+
+                String rowKey = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md  = MessageDigest.getInstance("MD5");
+            md.update(keyword.getBytes());
+
+            byte byteData[] = md.digest();
+            rowKey = getHexString(byteData);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
 
 
-
-        return null;
+        return rowKey;
     } // End of rosterKey method
 
 

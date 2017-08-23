@@ -24,13 +24,13 @@ public class RosterIngester {
     public static boolean debug = true;
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
-//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
-//    public static String ARRIVING_ROSTERS = "";
-//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
+    public static String ARRIVING_ROSTERS = "";
+    public static String ROSTERS = "C:\\DATA\\rosters\\";
 
-    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
-    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
-    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
+    //public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
+//    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
+//    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
 
 
     public static void main(String [] args) {
@@ -65,9 +65,9 @@ public class RosterIngester {
         // ----------------------------------
         //      INSTANTIATE CONN
         // ----------------------------------
-        DbSqlServer dbSql =  new DbSqlServer();
-        dbSql.setConnectionUrl();
-        logConn = dbSql.getDBConn();
+//        DbSqlServer dbSql =  new DbSqlServer();
+//        dbSql.setConnectionUrl();
+//        logConn = dbSql.getDBConn();
 
 
 

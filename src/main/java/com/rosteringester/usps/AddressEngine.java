@@ -159,7 +159,7 @@ public class AddressEngine {
 
 
 
-
+        int[] id = new int[batchMax];
         String[] address = new String[batchMax];
         String[] suite = new String[batchMax];
         String[] addressSuite = new String[batchMax];
@@ -172,19 +172,20 @@ public class AddressEngine {
         try {
             pstmt  = conn.prepareStatement(updateFile);
 
-            for (int i = 0; i < rowCount; i++) {
+            for (int i = 0; i < 5000; i++) {
 
                     if(statementHolder < batchMax) {
                         if (localDebug) System.out.println("Processing: " + i + " , of " + rowCount);
-                        if (localDebug) System.out.println("Batching Address[" + db.getValueAt(i, 0).toString()
-                                + "] Suite[" + db.getValueAt(i, 1).toString()
-                                + "] City[" + db.getValueAt(i, 2).toString() + "]");
-                        String addressWithSuite = db.getValueAt(i, 0).toString() + " " + db.getValueAt(i, 1).toString();
-                        suite[statementHolder] = db.getValueAt(i, 1).toString();
-                        address[statementHolder] = db.getValueAt(i, 0).toString();
+                        if (localDebug) System.out.println("Batching Address[" + db.getValueAt(i, 1).toString()
+                                + "] Suite[" + db.getValueAt(i, 2).toString()
+                                + "] City[" + db.getValueAt(i, 3).toString() + "]");
+                        id[statementHolder] = Integer.parseInt(db.getValueAt(i, 0).toString());
+                        String addressWithSuite = db.getValueAt(i, 1).toString() + " " + db.getValueAt(i, 2).toString();
+                        suite[statementHolder] = db.getValueAt(i, 2).toString();
+                        address[statementHolder] = db.getValueAt(i, 1).toString();
                         addressSuite[statementHolder] = addressWithSuite;
-                        city[statementHolder] = db.getValueAt(i, 2).toString();
-                        state[statementHolder] = db.getValueAt(i, 3).toString();
+                        city[statementHolder] = db.getValueAt(i, 3).toString();
+                        state[statementHolder] = db.getValueAt(i, 4).toString();
 
                         statementHolder++;
                     } else {
@@ -195,16 +196,14 @@ public class AddressEngine {
                         // Adding 1 to statementHolder to activate commit.
                         for (int b = 0; b < statementHolder+1; b++) {
                             if(batchHolder != statementHolder) {
-                                if (localDebug) System.out.println("Adding SQL Statement [" + s.getValueAt(batchHolder, 0).toString() + "]");
+                                if (localDebug) System.out.println("Adding SQL Statement, ID [" + id[batchHolder] + " ["
+                                        + s.getValueAt(batchHolder, 0).toString() + "]");
 
                                 pstmt.setString(1, s.getValueAt(batchHolder, 0).toString());
                                 String todaysDate = sdf.format(cal.getTime());
                                 pstmt.setString(2, todaysDate);
                                 pstmt.setString(3, System.getProperty("user.name").toUpperCase());
-                                pstmt.setString(4, address[batchHolder]);
-                                pstmt.setString(5, suite[batchHolder]);
-                                pstmt.setString(6, city[batchHolder]);
-                                pstmt.setString(7, state[batchHolder]);
+                                pstmt.setInt(4, id[batchHolder]);
                                 pstmt.addBatch();
                                 batchHolder++;
                             } else {
@@ -227,6 +226,10 @@ public class AddressEngine {
 
             } // End for-loop
 
+            // Wait a few seconds before closing.
+            Thread.sleep(4000);
+
+            if(!pstmt.isClosed()) pstmt.close();
             // Close the connection if its open.
             if(!conn.isClosed()) {
                 LOGGER.info("Address Engine connection closing...");
@@ -235,6 +238,8 @@ public class AddressEngine {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
         }
 
 

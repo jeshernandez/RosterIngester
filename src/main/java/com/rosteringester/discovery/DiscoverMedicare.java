@@ -478,40 +478,40 @@ public class DiscoverMedicare extends Discover {
 
 
             // Insert records into database
-            for (int i = 1; i < normalRoster[0].length-1; i++) {
-                System.out.println("Value [" + i+"] " + md5.generateRowKey(normalRoster[0][i],
-                        normalRoster[1][i],normalRoster[2][i],
-                        normalRoster[3][i], normalRoster[6][i],
-                        normalRoster[9][i],normalRoster[17][i]));
-                dbRoster = new DBRosterMDCRRequired.Builder()
-                        .delegateID(13)
-                        .rosterName(rosterFileName)
-                        .rosterKey(rosterKey)
-                        .rowKey(md5.generateRowKey(normalRoster[0][i],
-                                normalRoster[1][i],normalRoster[2][i],
-                                normalRoster[3][i], normalRoster[6][i],
-                                normalRoster[9][i],normalRoster[17][i]))
-                        .npi(Integer.parseInt(normalRoster[0][i]))
-                        .tin(Integer.parseInt(normalRoster[1][i]))
-                        .firstName(normalRoster[2][i])
-                        .middleName(normalRoster[3][i])
-                        .lastName(normalRoster[4][i])
-                        .role(normalRoster[5][i])
-                        .specialty(normalRoster[6][i])
-                        .degree(normalRoster[7][i])
-                        .groupName(normalRoster[8][i].toString())
-                        .address(normalRoster[9][i])
-                        .suite(normalRoster[10][i])
-                        .city(normalRoster[11][i])
-                        .state(normalRoster[12][i])
-                        .zipCode(Integer.parseInt(normalRoster[13][i]))
-                        .servicePhone(Long.parseLong(normalRoster[14][i]))
-                        .officeHours(normalRoster[15][i])
-                        .directoryPrint(normalRoster[16][i])
-                        .acceptingNew(normalRoster[17][i])
-                        .build()
-                        .create(RosterIngester.logConn);
-            }
+//            for (int i = 1; i < normalRoster[0].length-1; i++) {
+//                System.out.println("Value [" + i+"] " + md5.generateRowKey(normalRoster[0][i],
+//                        normalRoster[1][i],normalRoster[2][i],
+//                        normalRoster[3][i], normalRoster[6][i],
+//                        normalRoster[9][i],normalRoster[17][i]));
+//                dbRoster = new DBRosterMDCRRequired.Builder()
+//                        .delegateID(13)
+//                        .rosterName(rosterFileName)
+//                        .rosterKey(rosterKey)
+//                        .rowKey(md5.generateRowKey(normalRoster[0][i],
+//                                normalRoster[1][i],normalRoster[2][i],
+//                                normalRoster[3][i], normalRoster[6][i],
+//                                normalRoster[9][i],normalRoster[17][i]))
+//                        .npi(Integer.parseInt(normalRoster[0][i]))
+//                        .tin(Integer.parseInt(normalRoster[1][i]))
+//                        .firstName(normalRoster[2][i])
+//                        .middleName(normalRoster[3][i])
+//                        .lastName(normalRoster[4][i])
+//                        .role(normalRoster[5][i])
+//                        .specialty(normalRoster[6][i])
+//                        .degree(normalRoster[7][i])
+//                        .groupName(normalRoster[8][i].toString())
+//                        .address(normalRoster[9][i])
+//                        .suite(normalRoster[10][i])
+//                        .city(normalRoster[11][i])
+//                        .state(normalRoster[12][i])
+//                        .zipCode(Integer.parseInt(normalRoster[13][i]))
+//                        .servicePhone(Long.parseLong(normalRoster[14][i]))
+//                        .officeHours(normalRoster[15][i])
+//                        .directoryPrint(normalRoster[16][i])
+//                        .acceptingNew(normalRoster[17][i])
+//                        .build()
+//                        .create(RosterIngester.logConn);
+//            }
 
 
         } catch (IOException e) {

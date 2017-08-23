@@ -26,7 +26,7 @@ public class DBRosterMDCRRequired {
     private String city;
     private String state;
     private int zipCode;
-    private int servicePhone;
+    private Long servicePhone;
     private String officeHours;
     private String directoryPrint;
     private String acceptingNew;
@@ -52,7 +52,7 @@ public class DBRosterMDCRRequired {
         private String city;
         private String state;
         private int zipCode;
-        private int servicePhone;
+        private Long servicePhone;
         private String officeHours;
         private String directoryPrint;
         private String acceptingNew;
@@ -172,7 +172,7 @@ public class DBRosterMDCRRequired {
             return this;
         }
 
-        public DBRosterMDCRRequired.Builder servicePhone(int servicePhone)
+        public DBRosterMDCRRequired.Builder servicePhone(Long servicePhone)
         {
             this.servicePhone = servicePhone;
             return this;
@@ -241,8 +241,8 @@ public class DBRosterMDCRRequired {
 
     // ------------------------------------------------
     public DBRosterMDCRRequired create(Connection conn){
-        String query = "INSERT into [grips].[dbo].[grips_roster_required] (filename, rowid, status, description, date_created, created_by)"
-                + " values (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT into [grips].[dbo].[grips_roster_required] (delegate_id, roster_name, roster_key, row_key, npi, tin, first_name, middle_name, last_name, role, specialty, degree, group_name, address, suite, city, state, zip, service_phone, office_hours, directory_print, accepting_new)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, this.delegateID);
@@ -251,6 +251,22 @@ public class DBRosterMDCRRequired {
             stmt.setString(4, this.rowKey);
             stmt.setInt(5, this.npi);
             stmt.setInt(6, this.tin);
+            stmt.setString(7, this.firstName);
+            stmt.setString(8, this.middleName);
+            stmt.setString(9, this.lastName);
+            stmt.setString(10, this.role);
+            stmt.setString(11, this.specialty);
+            stmt.setString(12, this.degree);
+            stmt.setString(13, this.groupName);
+            stmt.setString(14, this.address);
+            stmt.setString(15, this.suite);
+            stmt.setString(16, this.city);
+            stmt.setString(17, this.state);
+            stmt.setInt(18, this.zipCode);
+            stmt.setLong(19, this.servicePhone);
+            stmt.setString(20, this.officeHours);
+            stmt.setString(21, this.directoryPrint);
+            stmt.setString(22, this.acceptingNew);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -339,7 +355,7 @@ public class DBRosterMDCRRequired {
         return zipCode;
     }
 
-    public int getServicePhone() {
+    public Long getServicePhone() {
         return servicePhone;
     }
 

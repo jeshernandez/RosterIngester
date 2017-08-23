@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by jeshernandez on 08/21/2017.
+ * Rocking Created by jeshernandez on 08/21/2017.
  */
 public class DBRosterMDCRRequired {
     private int delegateID;

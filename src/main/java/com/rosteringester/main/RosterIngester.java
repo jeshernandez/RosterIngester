@@ -2,7 +2,10 @@ package com.rosteringester.main;
 
 import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.discovery.DiscoverMedicare;
+import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
+import com.rosteringester.usps.AddressEngine;
+
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,9 +24,13 @@ public class RosterIngester {
     public static boolean debug = true;
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
-    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyIT\\ArrivingRosters\\normalized\\";
+//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
+//    public static String ARRIVING_ROSTERS = "";
+//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+
+    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
     public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
-    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyIT\\ROSTERS\\";
+    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
 
 
     public static void main(String [] args) {
@@ -48,12 +55,28 @@ public class RosterIngester {
         // step 5 -> business rules for RPDB compare
         // step 6 -> autoreport (output to network drive).
 
-       // new FileMover().detectFilesMoveThem();
+//        new FileMover().detectFilesMoveThem();
 
-        new FileMover().lastAccess();
-//        // Discover the roster
+        //new FileMover().lastAccess();
+       // Discover the roster
+
+
+
+        // ----------------------------------
+        //      INSTANTIATE CONN
+        // ----------------------------------
+        DbSqlServer dbSql =  new DbSqlServer();
+        dbSql.setConnectionUrl();
+        logConn = dbSql.getDBConn();
+
+
+
 //        DiscoverMedicare medicare = new DiscoverMedicare();
 //        medicare.findField();
+
+        AddressEngine ae = new AddressEngine();
+                ae.startStandard("epdbQuery.sql",
+                        "epdbUpdate.sql");
 
 
         try {

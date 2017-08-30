@@ -379,8 +379,13 @@ public class DiscoverMedicare extends Discover {
             normalRoster[10][0] = roster.getSuite();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(suiteLoc > -1) {
-                    normalRoster[10][i] = rv.validateSuite(getValueAt(i, suiteLoc),
-                            files.get(0).toString(), i);
+
+                    normalRoster[10][i] = rv.validateAddressAndSuite(getValueAt(i, suiteLoc));
+
+//                    normalRoster[10][i] = rv.validateAddressAndSuite(getValueAt(i, suiteLoc),
+//                            files.get(0).toString(), i);
+//
+
                 } else {
                     normalRoster[10][i] = "";
                 }

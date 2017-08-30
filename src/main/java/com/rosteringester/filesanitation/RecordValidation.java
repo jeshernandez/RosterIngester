@@ -226,7 +226,7 @@ public class RecordValidation extends RecordSanitation {
 
         String finalSuite = null;
         suite = sanitizeAddress(suite);
-
+        System.out.println("Validated Suite: " + suite);
         if(suite.length() > 10) {
 //            dbLog = new LogValidationFallout.Builder()
 //                    .fileName(filename)

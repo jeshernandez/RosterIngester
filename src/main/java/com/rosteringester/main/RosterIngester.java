@@ -24,11 +24,12 @@ public class RosterIngester {
     public static boolean debug = true;
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
+
     public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
     public static String ARRIVING_ROSTERS = "";
     public static String ROSTERS = "C:\\DATA\\rosters\\";
 
-    //public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
+//    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
 //    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
 //    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
 
@@ -55,7 +56,7 @@ public class RosterIngester {
         // step 5 -> business rules for RPDB compare
         // step 6 -> autoreport (output to network drive).
 
-//        new FileMover().detectFilesMoveThem();
+        //new FileMover().detectFilesMoveThem();
 
         //new FileMover().lastAccess();
        // Discover the roster
@@ -65,18 +66,18 @@ public class RosterIngester {
         // ----------------------------------
         //      INSTANTIATE CONN
         // ----------------------------------
-//        DbSqlServer dbSql =  new DbSqlServer();
-//        dbSql.setConnectionUrl();
-//        logConn = dbSql.getDBConn();
+        DbSqlServer dbSql =  new DbSqlServer();
+        dbSql.setConnectionUrl();
+        logConn = dbSql.getDBConn();
 
 
 
-//        DiscoverMedicare medicare = new DiscoverMedicare();
-//        medicare.findField();
+        DiscoverMedicare medicare = new DiscoverMedicare();
+        medicare.findField();
 
-        AddressEngine ae = new AddressEngine();
-                ae.startStandard("epdbQuery.sql",
-                        "epdbUpdate.sql");
+//        AddressEngine ae = new AddressEngine();
+//                ae.startStandard("epdbQueryCustom.sql",
+//                        "epdbUpdate.sql");
 
 
         try {

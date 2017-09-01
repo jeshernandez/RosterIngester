@@ -195,6 +195,11 @@ public class RecordValidation extends RecordSanitation {
             case "scp":
                 finalRole = "spec";
                 break;
+            case "true":
+                finalRole = "pcp";
+            case "false":
+                finalRole = "spec";
+                break;
             default:
                 finalRole = "none";
 

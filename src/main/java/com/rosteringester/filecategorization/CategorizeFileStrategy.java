@@ -25,11 +25,11 @@ public class CategorizeFileStrategy {
     }
 
     private Boolean isAetna(){
-        return (Stream.of("aetna", "aet").anyMatch(x -> fileName.contains(x)));
+        return (Stream.of("aetna", "aet", "atna").anyMatch(x -> fileName.contains(x)));
     }
 
     private Boolean isCoventry(){
-         return (Stream.of("coventry", "cov").anyMatch(x -> fileName.contains(x)));
+         return (Stream.of("coventry", "cov", "cooventry").anyMatch(x -> fileName.contains(x)));
      }
 
     private Boolean isBoth(){

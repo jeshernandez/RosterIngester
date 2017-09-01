@@ -26,7 +26,7 @@ public class RosterIngester {
     public static Connection logConn = null;
 
     public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
-    public static String ARRIVING_ROSTERS = "";
+    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
     public static String ROSTERS = "C:\\DATA\\rosters\\";
 
 //    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
@@ -56,24 +56,25 @@ public class RosterIngester {
         // step 5 -> business rules for RPDB compare
         // step 6 -> autoreport (output to network drive).
 
-        //new FileMover().detectFilesMoveThem();
 
-        //new FileMover().lastAccess();
        // Discover the roster
 
 
 
         // ----------------------------------
-        //      INSTANTIATE CONN
+        //    1.   INSTANTIATE CONN
         // ----------------------------------
         DbSqlServer dbSql =  new DbSqlServer();
         dbSql.setConnectionUrl();
         logConn = dbSql.getDBConn();
 
+        // ----------------------------------
+        //    2.   MOVE AND LOG FILES
+        // ----------------------------------
+        new FileMover().detectFilesMoveThem();
 
-
-        DiscoverMedicare medicare = new DiscoverMedicare();
-        medicare.findField();
+//        DiscoverMedicare medicare = new DiscoverMedicare();
+//        medicare.findField();
 
 //        AddressEngine ae = new AddressEngine();
 //                ae.startStandard("epdbQueryCustom.sql",

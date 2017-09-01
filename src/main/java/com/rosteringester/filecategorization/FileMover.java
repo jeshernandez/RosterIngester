@@ -1,6 +1,8 @@
 package com.rosteringester.filecategorization;
 
 import com.rosteringester.fileread.DirectoryFiles;
+import com.rosteringester.filesanitation.RecordSanitation;
+import com.rosteringester.logs.LogReceived;
 import com.rosteringester.main.RosterIngester;
 import org.apache.commons.io.FilenameUtils;
 
@@ -10,44 +12,86 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 /**
  * Created by jeshernandez on 08/19/2017.
  */
-public class FileMover  {
+public class FileMover extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(FileMover.class.getName());
     boolean localDebug = true;
+    LogReceived  lr = null;
 
     public void detectFilesMoveThem() {
 
 
         List<String> files = null;
         String name = null;
+        Double size = null;
+        String lastAccessDate = null;
+        CategorizeFileStrategy cfs = null;
         DirectoryFiles directoryFiles = new DirectoryFiles();
 
         try {
             files = directoryFiles.getFiles(RosterIngester.ARRIVING_ROSTERS);
-            System.out.println("File Found: " + files.get(0).toString());
 
-            // Get just the filename
 
             for (int i = 0; i < files.size(); i++) {
-                String fileExt = FilenameUtils.getExtension(files.get(i).toString());
 
-                File f = new File(files.get(i).toString());
-                name = f.getName();
+                File file = new File(files.get(i));
 
-                if(fileExt.toUpperCase().equals("TXT") || fileExt.toUpperCase().equals("CSV")
-                        || fileExt.toUpperCase().equals("XLS") || fileExt.toUpperCase().equals("XLSX")) {
-                    moveFile(files.get(i).toString(), RosterIngester.ROSTERS+name);
-                    LOGGER.warning("Moved file: " +name);
+                    if(file.exists()) {
+                    String fileExt = FilenameUtils.getExtension(files.get(i).toString());
+
+                    File f = new File(files.get(i).toString());
+                    name = f.getName();
+
+                    lastAccessDate = lastAccess(files.get(i).toString());
+
+                    // get product
+                    cfs = new CategorizeFileStrategy(files.get(i).toString());
+
+                    // format for size into MB
+                    size = getFileSize(files.get(i).toString());
+                    NumberFormat formatter = new DecimalFormat("#0.00");
+
+                    if(fileExt.toUpperCase().equals("TXT") || fileExt.toUpperCase().equals("CSV")
+                            || fileExt.toUpperCase().equals("XLS") || fileExt.toUpperCase().equals("XLSX")) {
+
+                        if (localDebug) System.out.println("Name>>>" + name);
+                        if (localDebug) System.out.println("FileSize>>>" + size);
+                        if (localDebug) System.out.println("Last Access>>>" + lastAccessDate);
+
+                        lr = new LogReceived.Builder()
+                                .fileName(name)
+                                .size(formatter.format(size))
+                                .product(cfs.getCategorization())
+                                .dateReceived(lastAccessDate)
+                                .dateUpdated(dbDate())
+                                .createdBy(getUserName())
+                                .build()
+                                .create(RosterIngester.logConn);
+
+
+                        moveFile(files.get(i).toString(), RosterIngester.ROSTERS + name);
+
+
+                        LOGGER.warning("Moved file: " + name);
+                    } else {
+                        LOGGER.warning("No File Found: " + name);
+                    }
+
                 } else {
                     LOGGER.warning("Found non-standard file: " +name);
                 }
 
-            }
+            } // End of for-loop
 
 
         } catch (IOException e) {
@@ -58,40 +102,46 @@ public class FileMover  {
     } // End of detectFilesMoveThem
 
 
-    public String lastAccess() {
-        DirectoryFiles directoryFiles = new DirectoryFiles();
-        List<String> files = null;
-        String lastModifiedDate = null;
-        String lastAccessDate = null;
+    public String lastAccess(String path) {
+        String fileTime = null;
 
-        try {
-            files = directoryFiles.getFiles(RosterIngester.ROSTERS);
+        System.out.println("File inside access: " + path);
 
-            Path filePath = Paths.get(files.get(0).toString());
-            BasicFileAttributes attr =
-                    Files.readAttributes(filePath, BasicFileAttributes.class);
+            File file = new File(path);
 
-            System.out.println("FileName: " + files.get(0).toString());
-            System.out.println("creationTime: " + attr.creationTime());
-            System.out.println("lastAccessTime: " + attr.lastAccessTime());
-            System.out.println("lastModifiedTime: " + attr.lastModifiedTime());
-            lastModifiedDate = attr.lastModifiedTime().toString();
-            lastAccessDate = attr.creationTime().toString();
-            System.out.println("isDirectory: " + attr.isDirectory());
-            System.out.println("isOther: " + attr.isOther());
-            System.out.println("isRegularFile: " + attr.isRegularFile());
-            System.out.println("isSymbolicLink: " + attr.isSymbolicLink());
-            System.out.println("size: " + attr.size());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                fileTime = sdf.format(file.lastModified());
+                //fileTime = Files.getLastModifiedTime(Paths.get(file.toString()));
+                System.out.println("Last access: " + fileTime);
 
 
-        return lastModifiedDate;
-
+        return fileTime;
 
     }
+
+
+
+
+    public Double getFileSize(String path) {
+        DirectoryFiles directoryFiles = new DirectoryFiles();
+        Long size = null;
+        double megabytes = 0.0;
+
+        if(localDebug) System.out.println("Inside file size: " + path);
+
+        File file = new File(path);
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024);
+        megabytes = (kilobytes / 1024);
+
+        if(localDebug) System.out.println("1. File Size>>" + megabytes);
+
+
+        return megabytes;
+
+    }
+
+
 
 
     public boolean moveFile(String fileName, String destination) {

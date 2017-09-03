@@ -281,7 +281,7 @@ public class DBRosterMDCRRequired {
             stmt.setString(21, this.directoryPrint);
             stmt.setString(22, this.acceptingNew);
             stmt.setString(23, dbDate());
-            stmt.setInt(23, this.product);
+            stmt.setInt(24, this.product);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

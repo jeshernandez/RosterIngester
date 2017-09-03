@@ -23,8 +23,9 @@ import java.util.logging.Logger;
 
 public class RosterIngester {
     public static boolean debug = true;
-    private static boolean activateMove = true;
+    private static boolean activateMove = false;
     private static boolean activateDelegateDetection = true;
+    public static boolean ingestData = false;
 
 
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());

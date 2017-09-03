@@ -4,6 +4,7 @@ import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.db.dbModels.DBRosterMDCRRequired;
 import com.rosteringester.discovery.DiscoverMedicare;
 import com.rosteringester.encryption.MD5Hasher;
+import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.fileread.ReadEntireTextFiles;
 import com.rosteringester.filewrite.RosterWriter;
 import com.rosteringester.main.RosterIngester;
@@ -29,6 +30,7 @@ public class DetectDelegate {
     private String fileName;
     private int productID;
     private int id;
+    String updateQuery = null;
 
     public DetectDelegate() {
         Map<String, String> config = setConfig("env.yaml");
@@ -76,10 +78,16 @@ public class DetectDelegate {
         }
 
         // Detect delegate ID
-        int delegateID = getDelegateID(tinList);
+        int delegateID = -1;
+        delegateID = getDelegateID(tinList);
 
         // Ingest the roster
-        //ingestRoster(delegateID);
+        if(RosterIngester.ingestData && delegateID != -1) {
+            ingestRoster(delegateID);
+        } else {
+            LOGGER.info("Ingest turned off, or delegate not detected.");
+        }
+
 
         // Close the connection if its open.
         try {
@@ -114,8 +122,8 @@ public class DetectDelegate {
         int minRandom = 1;
         int maxRandom = totalCount-2;
 
-        if(totalCount > 200) {
-            sampleSize = 200;
+        if(totalCount > 500) {
+            sampleSize = 500;
         } else {
             sampleSize = totalCount;
         }
@@ -162,15 +170,25 @@ public class DetectDelegate {
         // Assigned delegate
         // --------------------------
 
-        String updateQuery = null;
+
         // Assigned found delegate
         if(db.getRowCount() > 1) {
             LOGGER.info("Found more than one delegate.");
+        } else if (db.getValueAt(0,0) == null) {
+            if(localDebug) LOGGER.info("Delegation detection failed. Logging");
+            updateQuery = "update logs.dbo.grips_log_received\n" +
+                    " set status = 'NETWORK REVIEW, DELEGATE ERROR'" +
+                    " , valid = 'N'" +
+                    " , standardized = 'Y'" +
+                    " where id = " + id;
+            FileMover move = new FileMover();
+            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
         } else {
             delegateID = Integer.parseInt(db.getValueAt(0,0).toString());
             updateQuery = "update logs.dbo.grips_log_received\n" +
                     " set delegate_id =" + delegateID +
                     " , valid = 'Y'" +
+                    " , status = 'INGESTED' " +
                     " , standardized = 'Y'" +
                     " where id = " + id;
         }
@@ -179,8 +197,6 @@ public class DetectDelegate {
         // Update assigned delegate
         // --------------------------
         db.update(conn, updateQuery);
-
-
 
         return delegateID;
     }

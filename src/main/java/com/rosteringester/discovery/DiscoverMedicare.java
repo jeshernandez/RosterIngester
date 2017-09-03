@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class DiscoverMedicare extends Discover {
-
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
     private boolean localDebug = false;
+
+    public String[][] normalRoster;
+
 
     private int firstNameLoc = -1;
     private int lastNameLoc = -1;
@@ -52,14 +54,14 @@ public class DiscoverMedicare extends Discover {
     DBRosterMDCRRequired dbRoster;
 
     // ---------------------------------------
-    public void findField() {
+    public void findField(String fileName) {
 
         // -----------------------
         //   Set default threshold
         // -------------------------
         setThreshold(0.8);
 
-        DirectoryFiles directoryFiles = new DirectoryFiles();
+//        DirectoryFiles directoryFiles = new DirectoryFiles();
         List<String> files = null;
 
         fieldNames = new HashMap<Integer,String>();
@@ -82,12 +84,13 @@ public class DiscoverMedicare extends Discover {
         fieldNames.put(16, "directory_print");
         fieldNames.put(17, "accepting_new");
 
+            File file = new File(RosterIngester.ROSTERS+fileName);
+            //files =  //directoryFiles.getFiles(RosterIngester.ROSTERS);
 
-        try {
-            files = directoryFiles.getFiles(RosterIngester.ROSTERS);
+            String fullFilePath  = file.toString();
 
-            if(files.get(0).toString() != null) {
-                LOGGER.info("FileName: " + files.get(0).toString());
+            if(fullFilePath != null) {
+                LOGGER.info("FileName: " + file.toString());
             } else {
                 LOGGER.info("NULL FILE, CLOSING");
                 try {
@@ -107,8 +110,8 @@ public class DiscoverMedicare extends Discover {
             } // End of else
 
 
-            FileFactory rosterFile = new FileFactory(files.get(0).toString());
-            LOGGER.info("FileName: " + files.get(0).toString());
+            FileFactory rosterFile = new FileFactory(fullFilePath);
+            LOGGER.info("FileName: " + fullFilePath);
 
 
 
@@ -258,7 +261,7 @@ public class DiscoverMedicare extends Discover {
             if(localDebug) System.out.println("Row Size: " + getRowCount());
 
             //
-            String[][] normalRoster = new String[getHeaderCount()][getRowCount()];
+        normalRoster = new String[getHeaderCount()][getRowCount()];
             RecordValidation rv = new RecordValidation();
 
 
@@ -273,7 +276,7 @@ public class DiscoverMedicare extends Discover {
                 if(npiLoc > -1) {
 
                     normalRoster[0][i] = rv.validateNPI(getValueAt(i, npiLoc),
-                            saveCleanFileName(files.get(0).toString()), i);
+                            saveCleanFileName(fullFilePath), i);
 
                 } else {
                     normalRoster[0][i] = "";
@@ -286,19 +289,23 @@ public class DiscoverMedicare extends Discover {
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(tinLoc > -1) {
                     normalRoster[1][i] = rv.validateTIN(getValueAt(i, tinLoc),
-                            saveCleanFileName(files.get(0).toString()), i);
+                            saveCleanFileName(fullFilePath), i);
                 } else {
                     normalRoster[1][i] ="";
                 }
 
             }
 
+
+
+
+
             // -----------SET FIRST_NAME--------------------
             normalRoster[2][0] = roster.getFirstName();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(firstNameLoc > -1) {
                     normalRoster[2][i] = rv.validateNames(getValueAt(i, firstNameLoc),
-                            saveCleanFileName(files.get(0).toString()), i);
+                            saveCleanFileName(fullFilePath), i);
                 } else {
                     normalRoster[2][i] = "";
                 }
@@ -319,7 +326,7 @@ public class DiscoverMedicare extends Discover {
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(lastNameLoc > -1) {
                     normalRoster[4][i] = rv.validateNames(getValueAt(i, lastNameLoc),
-                            saveCleanFileName(files.get(0).toString()), i);
+                            saveCleanFileName(fullFilePath), i);
                 } else {
                     normalRoster[4][i] = "";
                 }
@@ -383,7 +390,7 @@ public class DiscoverMedicare extends Discover {
                     normalRoster[10][i] = rv.validateAddressAndSuite(getValueAt(i, suiteLoc));
 
 //                    normalRoster[10][i] = rv.validateAddressAndSuite(getValueAt(i, suiteLoc),
-//                            files.get(0).toString(), i);
+//                            fullFilePath, i);
 //
 
                 } else {
@@ -407,7 +414,7 @@ public class DiscoverMedicare extends Discover {
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(stateLoc > -1) {
                     normalRoster[12][i] = rv.validateState(getValueAt(i, stateLoc),
-                            saveCleanFileName(files.get(0).toString()), i);
+                            saveCleanFileName(fullFilePath), i);
                 } else {
                     normalRoster[12][i] = "";
                 }
@@ -428,7 +435,7 @@ public class DiscoverMedicare extends Discover {
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(phoneLoc > -1) {
                     normalRoster[14][i] = rv.validatePhone(getValueAt(i, phoneLoc),
-                            saveCleanFileName(files.get(0).toString()), i);
+                            saveCleanFileName(fullFilePath), i);
                 } else {
                     normalRoster[14][i] = "";
                 }
@@ -468,7 +475,7 @@ public class DiscoverMedicare extends Discover {
             RosterWriter rw = new RosterWriter();
             rw.createExcelFile("RosterData",
                     RosterIngester.NORMALIZE_PATH +
-                            saveCleanFileName(files.get(0).toString()),
+                            saveCleanFileName(fullFilePath),
                     normalRoster, getHeaderCount(), getRowCount());
 
 
@@ -476,7 +483,7 @@ public class DiscoverMedicare extends Discover {
 
             MD5Hasher md5 = new MD5Hasher();
             String rosterFileName;
-            File f = new File(files.get(0).toString());
+            File f = new File(fullFilePath);
             rosterFileName = f.getName();
             // Generate roster key
             String rosterKey = md5.generateRosterKey(rosterFileName, 13);
@@ -519,16 +526,14 @@ public class DiscoverMedicare extends Discover {
 //            }
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
 
     } // End of findField method
 
 
     // ----------------------------------------------
-    int getHeaderCount() {
+    public int getHeaderCount() {
         int size = records[0].length;
 
         return size;
@@ -536,7 +541,7 @@ public class DiscoverMedicare extends Discover {
 
 
     // ----------------------------------------------
-    int getRowCount() {
+    public int getRowCount() {
         int size = records.length;
 
         return size;

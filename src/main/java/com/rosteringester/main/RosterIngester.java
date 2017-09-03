@@ -1,6 +1,7 @@
 package com.rosteringester.main;
 
 import com.rosteringester.db.DbSqlServer;
+import com.rosteringester.delegatedetect.DetectDelegate;
 import com.rosteringester.discovery.DiscoverMedicare;
 import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
@@ -22,17 +23,21 @@ import java.util.logging.Logger;
 
 public class RosterIngester {
     public static boolean debug = true;
+    private static boolean activateMove = true;
+    private static boolean activateDelegateDetection = true;
+
+
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
 
-    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
-    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
-    public static String ROSTERS = "C:\\DATA\\rosters\\";
+//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
+//    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
+//    public static String ROSTERS = "C:\\DATA\\rosters\\";
 
-//    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
-//    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
-//    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
-
+    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
+    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
+    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
+    public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
 
     public static void main(String [] args) {
 
@@ -71,7 +76,17 @@ public class RosterIngester {
         // ----------------------------------
         //    2.   MOVE AND LOG FILES
         // ----------------------------------
-        new FileMover().detectFilesMoveThem();
+        if(activateMove) new FileMover().detectFilesMoveThem();
+
+        // ----------------------------------
+        //    3.   START DELEGATE DETECTION
+        // ----------------------------------
+
+        if(activateDelegateDetection) {
+            DetectDelegate dd = new DetectDelegate();
+            dd.getRosterForDetection("delegateDetection.sql");
+        }
+
 
 //        DiscoverMedicare medicare = new DiscoverMedicare();
 //        medicare.findField();

@@ -9,14 +9,10 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,9 +24,12 @@ public class FileMover extends RecordSanitation {
     boolean localDebug = true;
     LogReceived  lr = null;
 
+
+
+
+
+    // --------------------------------------------------------
     public void detectFilesMoveThem() {
-
-
         List<String> files = null;
         String name = null;
         Double size = null;
@@ -75,6 +74,7 @@ public class FileMover extends RecordSanitation {
                                 .dateReceived(lastAccessDate)
                                 .dateUpdated(dbDate())
                                 .createdBy(getUserName())
+                                .valid("Y")
                                 .build()
                                 .create(RosterIngester.logConn);
 
@@ -102,6 +102,7 @@ public class FileMover extends RecordSanitation {
     } // End of detectFilesMoveThem
 
 
+    // --------------------------------------------------------
     public String lastAccess(String path) {
         String fileTime = null;
 
@@ -121,10 +122,8 @@ public class FileMover extends RecordSanitation {
 
 
 
-
+    // --------------------------------------------------------
     public Double getFileSize(String path) {
-        DirectoryFiles directoryFiles = new DirectoryFiles();
-        Long size = null;
         double megabytes = 0.0;
 
         if(localDebug) System.out.println("Inside file size: " + path);
@@ -143,7 +142,7 @@ public class FileMover extends RecordSanitation {
 
 
 
-
+    // --------------------------------------------------------
     public boolean moveFile(String fileName, String destination) {
         File file = new File(destination);
 

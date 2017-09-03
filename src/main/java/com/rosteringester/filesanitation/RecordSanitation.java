@@ -129,7 +129,7 @@ public class RecordSanitation {
 
 
     String getCleanString(String keyword) {
-        keyword = keyword.replaceAll("[//~~!`@#$%^&*()_+={\\[}\\]|.,<>-]","");
+        keyword = keyword.replaceAll("[//~~!`\"@#$%^&*()_+={\\[}\\]|.,<>-]","");
         return keyword;
     }
 

@@ -1,10 +1,15 @@
 package com.rosteringester.delegatedetect;
 
 import com.rosteringester.db.DbSqlServer;
+import com.rosteringester.db.dbModels.DBRosterMDCRRequired;
 import com.rosteringester.discovery.DiscoverMedicare;
+import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.fileread.ReadEntireTextFiles;
+import com.rosteringester.filewrite.RosterWriter;
+import com.rosteringester.main.RosterIngester;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -16,8 +21,9 @@ import java.util.logging.Logger;
  */
 public class DetectDelegate {
     Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
+    DiscoverMedicare medicare;
     private String directoryPath;
-    private boolean localDebug = false;
+    private boolean localDebug = true;
     private Connection conn;
     private DbSqlServer db;
     private String fileName;
@@ -56,7 +62,7 @@ public class DetectDelegate {
 
         if(localDebug) System.out.println("File Name: " + db.getValueAt(0,0).toString());
 
-        DiscoverMedicare medicare = new DiscoverMedicare();
+        medicare = new DiscoverMedicare();
         medicare.findField(fileName);
 
         int listSize = medicare.getRowCount();
@@ -69,9 +75,11 @@ public class DetectDelegate {
             tinList[i] = medicare.normalRoster[1][i];
         }
 
+        // Detect delegate ID
+        int delegateID = getDelegateID(tinList);
 
-        getDelegateID(tinList);
-
+        // Ingest the roster
+        //ingestRoster(delegateID);
 
         // Close the connection if its open.
         try {
@@ -101,9 +109,17 @@ public class DetectDelegate {
         StringBuilder inTinList = new StringBuilder();
 
         Random rand = new Random();
-        int sampleSize = tinList.length;
+        int totalCount = tinList.length;
+        int sampleSize = 0;
         int minRandom = 1;
-        int maxRandom = sampleSize-2;
+        int maxRandom = totalCount-2;
+
+        if(totalCount > 200) {
+            sampleSize = 200;
+        } else {
+            sampleSize = totalCount;
+        }
+
         for (int i = 1; i < sampleSize; i++) {
             int random = (int )(Math.random() * maxRandom + minRandom);
 
@@ -155,6 +171,7 @@ public class DetectDelegate {
             updateQuery = "update logs.dbo.grips_log_received\n" +
                     " set delegate_id =" + delegateID +
                     " , valid = 'Y'" +
+                    " , standardized = 'Y'" +
                     " where id = " + id;
         }
 
@@ -173,7 +190,83 @@ public class DetectDelegate {
 
 
 
+    public void ingestRoster(int delegateID) {
+        RosterWriter rw = new RosterWriter();
+        DBRosterMDCRRequired dbRoster;
 
+        File file = new File(RosterIngester.ROSTERS+fileName);
+
+        rw.createExcelFile("RosterData",
+                RosterIngester.NORMALIZE_PATH +
+                        saveCleanFileName(file.toString()),
+                medicare.normalRoster, medicare.getHeaderCount(), medicare.getRowCount());
+
+
+        //System.out.println("Insert data into database. Records: " + normalRoster[0].length + ".");
+
+        MD5Hasher md5 = new MD5Hasher();
+        String rosterFileName;
+
+        rosterFileName = fileName.toString();
+        // Generate roster key
+        String rosterKey = md5.generateRosterKey(rosterFileName, delegateID);
+
+
+        // Insert records into database
+            for (int i = 1; i < medicare.normalRoster[0].length-1; i++) {
+                if(localDebug) System.out.println("Value [" + i+"] " + md5.generateRowKey(medicare.normalRoster[0][i],
+                        medicare.normalRoster[1][i],medicare.normalRoster[2][i],
+                        medicare.normalRoster[3][i], medicare.normalRoster[6][i],
+                        medicare.normalRoster[9][i],medicare.normalRoster[17][i]));
+                dbRoster = new DBRosterMDCRRequired.Builder()
+                        .delegateID(delegateID)
+                        .rosterName(rosterFileName)
+                        .rosterKey(rosterKey)
+                        .rowKey(md5.generateRowKey(medicare.normalRoster[0][i],
+                                medicare.normalRoster[1][i],medicare.normalRoster[2][i],
+                                medicare.normalRoster[3][i], medicare.normalRoster[6][i],
+                                medicare.normalRoster[9][i],medicare.normalRoster[17][i]))
+                        .npi(Integer.parseInt(medicare.normalRoster[0][i]))
+                        .tin(Integer.parseInt(medicare.normalRoster[1][i]))
+                        .firstName(medicare.normalRoster[2][i])
+                        .middleName(medicare.normalRoster[3][i])
+                        .lastName(medicare.normalRoster[4][i])
+                        .role(medicare.normalRoster[5][i])
+                        .specialty(medicare.normalRoster[6][i])
+                        .degree(medicare.normalRoster[7][i])
+                        .groupName(medicare.normalRoster[8][i].toString())
+                        .address(medicare.normalRoster[9][i])
+                        .suite(medicare.normalRoster[10][i])
+                        .city(medicare.normalRoster[11][i])
+                        .state(medicare.normalRoster[12][i])
+                        .zipCode(Integer.parseInt(medicare.normalRoster[13][i]))
+                        .servicePhone(Long.parseLong(medicare.normalRoster[14][i]))
+                        .officeHours(medicare.normalRoster[15][i])
+                        .directoryPrint(medicare.normalRoster[16][i])
+                        .acceptingNew(medicare.normalRoster[17][i])
+                        .product(productID)
+                        .build()
+                        .create(RosterIngester.logConn);
+            }
+    }
+
+
+    String saveCleanFileName (String fileName) {
+
+        String cleanFileName;
+        String name;
+
+        File f = new File(fileName);
+        name = f.getName();
+
+        cleanFileName = name.substring(0, name.lastIndexOf('.'));
+        cleanFileName = cleanFileName.toLowerCase().replace(" ", "_")
+                .replace("-", "");
+
+        cleanFileName = cleanFileName + "_normalized.xlsx";
+        return cleanFileName;
+
+    }
 
 
 

@@ -37,6 +37,7 @@ public class RecordValidation extends RecordSanitation {
                     .create(RosterIngester.logConn);
             if(localDebug) LOGGER.info (" NPI FAILED TO VALIDATE " );
             // TODO throw error, and log it.
+            finalNPI = "-1";
         }
 
         return finalNPI;

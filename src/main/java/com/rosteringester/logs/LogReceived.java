@@ -15,6 +15,7 @@ public class LogReceived {
     private String dateReceived;
     private String dateUpdated;
     private String createdBy;
+    private String valid;
 
 
     public static class Builder {
@@ -25,6 +26,7 @@ public class LogReceived {
         private String dateReceived;
         private String dateUpdated;
         private String createdBy;
+        private String valid;
 
 
         public LogReceived.Builder fileName(String fileName)
@@ -70,6 +72,11 @@ public class LogReceived {
             return this;
         }
 
+        public LogReceived.Builder valid(String valid)
+        {
+            this.valid = valid;
+            return this;
+        }
 
         // Call builder
         public LogReceived build() {
@@ -94,14 +101,15 @@ public class LogReceived {
         this.dateReceived = b.dateReceived;
         this.dateUpdated = b.dateUpdated;
         this.createdBy = b.createdBy;
+        this.valid = b.valid;
 
     }
 
 
     // ------------------------------------------------
     public LogReceived create(Connection conn){
-        String query = "INSERT into [logs].[dbo].[grips_log_received] (filename, size, product, date_last_modified, date_created, created_by)"
-                + " values (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT into [logs].[dbo].[grips_log_received] (filename, size, product, date_last_modified, date_created, created_by, valid)"
+                + " values (?, ?, ?, ?, ?, ?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, this.fileName);
@@ -110,6 +118,7 @@ public class LogReceived {
             stmt.setString(4, this.dateReceived);
             stmt.setString(5, this.dateUpdated);
             stmt.setString(6, this.createdBy);
+            stmt.setString(7, this.valid);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace(System.err);
@@ -149,6 +158,10 @@ public class LogReceived {
 
     public String getCreatedBy() {
         return createdBy;
+    }
+
+    public String getValid() {
+        return valid;
     }
 
 

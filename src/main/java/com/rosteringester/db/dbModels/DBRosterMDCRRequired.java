@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.rosteringester.filesanitation.RecordSanitation.dbDate;
+
 /**
  * Rocking Created by jeshernandez on 08/21/2017.
  */
@@ -30,6 +32,7 @@ public class DBRosterMDCRRequired {
     private String officeHours;
     private String directoryPrint;
     private String acceptingNew;
+    private int product;
 
 
 
@@ -56,6 +59,7 @@ public class DBRosterMDCRRequired {
         private String officeHours;
         private String directoryPrint;
         private String acceptingNew;
+        private int product;
 
 
         public DBRosterMDCRRequired.Builder delegateID(int delegateID)
@@ -196,6 +200,12 @@ public class DBRosterMDCRRequired {
             return this;
         }
 
+        public DBRosterMDCRRequired.Builder product(int product)
+        {
+            this.product = product;
+            return this;
+        }
+
 
         // Call builder
         public DBRosterMDCRRequired build() {
@@ -235,14 +245,17 @@ public class DBRosterMDCRRequired {
         this.officeHours = b.officeHours;
         this.directoryPrint = b.directoryPrint;
         this.acceptingNew = b.acceptingNew;
+        this.product = b.product;
 
     }
 
 
     // ------------------------------------------------
     public DBRosterMDCRRequired create(Connection conn){
-        String query = "INSERT into [grips].[dbo].[grips_roster_required] (delegate_id, roster_name, roster_key, row_key, npi, tin, first_name, middle_name, last_name, role, specialty, degree, group_name, address, suite, city, state, zip, service_phone, office_hours, directory_print, accepting_new)"
-                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT into [grips].[dbo].[grips_roster_required] (delegate_id, roster_name, roster_key, row_key, npi, tin, first_name," +
+        " middle_name, last_name, role, specialty, degree, group_name, address, suite, city, state, zip, service_phone, office_hours, directory_print," +
+        " accepting_new, date_created, product)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, this.delegateID);
@@ -267,6 +280,8 @@ public class DBRosterMDCRRequired {
             stmt.setString(20, this.officeHours);
             stmt.setString(21, this.directoryPrint);
             stmt.setString(22, this.acceptingNew);
+            stmt.setString(23, dbDate());
+            stmt.setInt(23, this.product);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -370,5 +385,10 @@ public class DBRosterMDCRRequired {
     public String getAcceptingNew() {
         return acceptingNew;
     }
+
+    public int getProduct() {
+        return product;
+    }
+
 
 } // End of DBRosterMDCRRequired

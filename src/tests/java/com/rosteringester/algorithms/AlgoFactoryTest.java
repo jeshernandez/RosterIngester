@@ -14,7 +14,8 @@ public class AlgoFactoryTest {
         AlgoFactory f = new AlgoFactory();
         Double d = 0.0;
         //String cleanfield = "Practice Phone (phone number patients would call to schedule appointments)";
-        String cleanfield = "CU Medicine Primary Specialty";
+        String cleanfield = "Practicing Specialty";
+        //String cleanfield = "Social";
 
         String[] tinDictionary = {"tax id number", "tax id", "tin", "provider tin number", "provider tin",
                 "individual tin", "taxid", "practice tin"};
@@ -22,7 +23,7 @@ public class AlgoFactoryTest {
         String[] zipDictionary = {"zip", "zip code", "postal code", "zipcode", "practice zip", "zip one", "zipcode one", "office zip",
                 "primary practice zip", "service zip"};
 
-
+        String[] specialtyDictionary = {"specialty", "primary specialty", "specialty one", "specialty  one", "division name"};
 
         String[] npiDictionary = {"npi", "provider npi number", "provider npi","individual npi", "npi number"};
 
@@ -30,7 +31,7 @@ public class AlgoFactoryTest {
 
         String[] phoneDictionary = {"main phone", "primary phone", "service phone","location phone", "practice phone",
                 "phone number", "office phone","telephone", "one phone"};
-        d = f.getBestScore("j", cleanfield.toLowerCase(), phoneDictionary);
+        d = f.getBestScore("l", cleanfield.toLowerCase(), specialtyDictionary);
         System.out.println("Algo Test: " + d);
 
     }

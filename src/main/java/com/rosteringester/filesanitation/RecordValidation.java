@@ -1,6 +1,8 @@
 package com.rosteringester.filesanitation;
 
 
+import com.rosteringester.logs.LogValidationFallout;
+import com.rosteringester.main.RosterIngester;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.logging.Logger;
@@ -12,18 +14,30 @@ public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
     private boolean localDebug = false;
+    private String status = "validate error";
+    LogValidationFallout dbLog = null;
     // ---------------------------
     //      VALIDATE NPI
     // ---------------------------
-    public String validateNPI(String npi) {
+    public String validateNPI(String npi, String filename, int rowid) {
         String finalNPI = null;
         npi = sanitizeNumber(npi);
 
         if(npi.length() == 10) {
             finalNPI = npi;
         } else {
+            dbLog = new LogValidationFallout.Builder()
+                    .fileName(filename)
+                    .rowID(rowid)
+                    .status(status)
+                    .description("Failed to validate NPI")
+                    .dateCreated(dbDate())
+                    .createdBy(getUserName())
+                    .build()
+                    .create(RosterIngester.logConn);
             if(localDebug) LOGGER.info (" NPI FAILED TO VALIDATE " );
             // TODO throw error, and log it.
+            finalNPI = "-1";
         }
 
         return finalNPI;
@@ -34,14 +48,22 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE TIN
     // ---------------------------
 
-    public String validateTIN(String tin) {
+    public String validateTIN(String tin, String filename, int rowid) {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
 
-        if(localDebug) System.out.println("POST TIN: >" + tin);
         if(tin.length() == 9) {
             finalTIN = tin;
         } else {
+            dbLog = new LogValidationFallout.Builder()
+                    .fileName(filename)
+                    .rowID(rowid)
+                    .status(status)
+                    .description("Failed to validate TIN")
+                    .dateCreated(dbDate())
+                    .createdBy(getUserName())
+                    .build()
+                    .create(RosterIngester.logConn);
             if(localDebug) LOGGER.info (" TIN FAILED TO VALIDATE " );
             // TODO throw error, and log it.
         }
@@ -53,15 +75,29 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE PHONE
     // ---------------------------
 
-    public String validatePhone(String phone) {
+    public String validatePhone(String phone, String filename, int rowid) {
         String finalPhone = null;
         phone = sanitizeNumber(phone);
         phone = phone.replace("(", "").replace(")", "");
         if(phone.length() >= 7) {
-            finalPhone = phone;
+          if(phone.length() < 11) {
+              finalPhone = phone;
+          } else {
+              dbLog = new LogValidationFallout.Builder()
+                      .fileName(filename)
+                      .rowID(rowid)
+                      .status(status)
+                      .description("Failed to validate Phone")
+                      .dateCreated(dbDate())
+                      .createdBy(getUserName())
+                      .build()
+                      .create(RosterIngester.logConn);
+              if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
+          }
         } else {
             if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
             // TODO throw error, and log it.
+            finalPhone = "0";
         }
         return finalPhone;
     }
@@ -71,16 +107,38 @@ public class RecordValidation extends RecordSanitation {
     //      VALIDATE NAMES
     // ---------------------------
 
-    public String validateNames(String name) {
+    public String validateNames(String name, String filename, int rowid) {
         String finalName = null;
         name = sanitizeNames(name);
 
-        if(name.length() >= 1) {
-            finalName = name;
+        if(!StringUtils.isNumeric(name)) {
+            if(name.length() >= 1) {
+                finalName = name;
+            } else {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate first name, empty")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if(localDebug) LOGGER.info (" NAME FAILED TO VALIDATE " );
+                // TODO throw error, and log it.
+            }
         } else {
-            if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
-            // TODO throw error, and log it.
+            dbLog = new LogValidationFallout.Builder()
+                    .fileName(filename)
+                    .rowID(rowid)
+                    .status(status)
+                    .description("Failed to validate first name, numerical")
+                    .dateCreated(dbDate())
+                    .createdBy(getUserName())
+                    .build()
+                    .create(RosterIngester.logConn);
         }
+
         return finalName;
     }
 
@@ -111,6 +169,7 @@ public class RecordValidation extends RecordSanitation {
 
         String finalRole = null;
         finalRole = sanitizeWords(role).toLowerCase();
+        if(localDebug) System.out.println("Role: " + finalRole);
 
         switch (finalRole) {
             case "pcp":
@@ -131,7 +190,17 @@ public class RecordValidation extends RecordSanitation {
             case "n":
                 finalRole = "spec";
                 break;
-
+            case "specialist":
+                finalRole = "spec";
+                break;
+            case "scp":
+                finalRole = "spec";
+                break;
+            case "true":
+                finalRole = "pcp";
+            case "false":
+                finalRole = "spec";
+                break;
             default:
                 finalRole = "none";
 
@@ -143,7 +212,7 @@ public class RecordValidation extends RecordSanitation {
 
 
     // ---------------------------
-    //      VALIDATE SUITE
+    //      VALIDATE ADRESS
     // ---------------------------
 
     public String validateAddressAndSuite(String address) {
@@ -156,10 +225,41 @@ public class RecordValidation extends RecordSanitation {
 
 
     // ---------------------------
+    //      VALIDATE suite
+    // ---------------------------
+
+    public String validateSuite(String suite, String filename, int rowid) {
+
+        String finalSuite = null;
+        suite = sanitizeAddress(suite);
+        System.out.println("Validated Suite: " + suite);
+        if(suite.length() > 10) {
+//            dbLog = new LogValidationFallout.Builder()
+//                    .fileName(filename)
+//                    .rowID(rowid)
+//                    .status(status)
+//                    .description("Failed to validate suite. Size is too long.")
+//                    .dateCreated(dbDate())
+//                    .createdBy(getUserName())
+//                    .build()
+//                    .create(RosterIngester.logConn);
+            if(localDebug) LOGGER.info (" NAME FAILED TO VALIDATE " );
+        } else {
+            finalSuite = suite;
+        }
+
+
+        return finalSuite;
+    }
+
+
+
+
+    // ---------------------------
     //      VALIDATE STATE
     // ---------------------------
 
-    public String validateState(String state) {
+    public String validateState(String state, String filename, int rowid) {
 
         String finalState = null;
 
@@ -168,6 +268,15 @@ public class RecordValidation extends RecordSanitation {
             finalState = sanitizeState(state);
 
             if(finalState == null) {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate State")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
                 LOGGER.info ("STATE FAILED TO VALIDATE " );
                 //System.out.println("State Failed > " + state);
                 // TODO throw error, and log it.

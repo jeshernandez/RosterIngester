@@ -79,6 +79,18 @@ public class DbSqlServer extends DbCommonP {
         return resultList;
     }
 
+    // -----------------------------------------------
+    public void update(Connection conn, String SQL){
+
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(SQL);
+            stmt.close();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+
+    }
 
 
     // -----------------------------------------------

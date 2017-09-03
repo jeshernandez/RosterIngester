@@ -1,9 +1,16 @@
 package com.rosteringester.main;
 
+import com.rosteringester.db.DbSqlServer;
+import com.rosteringester.delegatedetect.DetectDelegate;
 import com.rosteringester.discovery.DiscoverMedicare;
+import com.rosteringester.encryption.MD5Hasher;
+import com.rosteringester.filecategorization.FileMover;
+import com.rosteringester.usps.AddressEngine;
+
 
 import java.sql.Connection;
-
+import java.sql.SQLException;
+import java.util.logging.Logger;
 
 
 /**
@@ -12,13 +19,25 @@ import java.sql.Connection;
 
 // TODO me - 07/04/2017 remove word from key and add to requiredFields
 // TODO me - 07/04/2017 find a way to remove highest score for iterator
-//TODO: Michael - Add into its own Service Object. Remove from main method.
+// TODO: Michael - Add into its own Service Object. Remove from main method.
 
 public class RosterIngester {
-    public static boolean debug = false;
+    public static boolean debug = true;
+    private static boolean activateMove = true;
+    private static boolean activateDelegateDetection = true;
 
+
+    static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
 
+//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
+//    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
+//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+
+    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
+    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
+    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
+    public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
 
     public static void main(String [] args) {
 
@@ -43,9 +62,51 @@ public class RosterIngester {
         // step 6 -> autoreport (output to network drive).
 
 
-        DiscoverMedicare medicare = new DiscoverMedicare();
-        medicare.findField();
+       // Discover the roster
 
+
+
+        // ----------------------------------
+        //    1.   INSTANTIATE CONN
+        // ----------------------------------
+        DbSqlServer dbSql =  new DbSqlServer();
+        dbSql.setConnectionUrl();
+        logConn = dbSql.getDBConn();
+
+        // ----------------------------------
+        //    2.   MOVE AND LOG FILES
+        // ----------------------------------
+        if(activateMove) new FileMover().detectFilesMoveThem();
+
+        // ----------------------------------
+        //    3.   START DELEGATE DETECTION
+        // ----------------------------------
+
+        if(activateDelegateDetection) {
+            DetectDelegate dd = new DetectDelegate();
+            dd.getRosterForDetection("delegateDetection.sql");
+        }
+
+
+//        DiscoverMedicare medicare = new DiscoverMedicare();
+//        medicare.findField();
+
+//        AddressEngine ae = new AddressEngine();
+//                ae.startStandard("epdbQueryCustom.sql",
+//                        "epdbUpdate.sql");
+
+
+        try {
+            if(logConn != null) {
+                if(!logConn.isClosed() ) {
+                    LOGGER.info("Connection open, closing...");
+                    logConn.close();
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
 

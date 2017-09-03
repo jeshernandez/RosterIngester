@@ -40,7 +40,10 @@ abstract class Excel implements FileReader {
         header = header.replaceAll("3", " three");
         header = header.replaceAll("[-+$^:,!@%&*()+]","");
         header = header.replaceAll("_", " ");
+        header = header.replaceAll("//", " ");
         header = header.replaceAll("/", " ");
+        header = header.replaceAll("\\)", "");
+        header = header.replaceAll("\\(", "");
         header = header.toLowerCase();
         return header;
     }

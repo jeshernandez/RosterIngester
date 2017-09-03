@@ -63,10 +63,12 @@ public class SmartyStreets extends AddressP {
         }
 
         Vector<Lookup> lookups = batch.getAllLookups();
-        String[] record = new String[4];
+        int recordCount = batch.size();
+
+
         for (int i = 0; i < batch.size(); i++) {
             ArrayList<Candidate> candidates = lookups.get(i).getResult();
-
+            String[] record = new String[4];
 
             if (candidates.isEmpty()) {
                 this.setValidAddress(false);
@@ -79,6 +81,10 @@ public class SmartyStreets extends AddressP {
 
             System.out.println("Address " + i + " is valid. (There is at least one candidate)");
             // 7 based on candidate values stored.
+
+            int recordSize = batch.size();
+
+            String[] StandardAddress = new String[batch.size()];
 
 
             for (Candidate candidate : candidates) {
@@ -97,11 +103,11 @@ public class SmartyStreets extends AddressP {
 //                System.out.println("Latitude:        " + metadata.getLatitude());
 //                System.out.println("Longitude:       " + metadata.getLongitude());
             }
+
             standardAddyVector.addElement(record);
 
 
-            System.out.println();
-        }
+        } // end of first for-loop
 
         return standardAddyVector;
 

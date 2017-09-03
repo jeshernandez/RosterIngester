@@ -1,7 +1,5 @@
 package com.rosteringester.fileread;
 
-import com.rosteringester.main.RosterIngester;
-import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -37,11 +35,17 @@ public class XLSXFile extends Excel implements FileReader {
                 int colNum = sheet.getRow(0).getLastCellNum();
                 if (sheet.getRow(0).cellIterator().hasNext()) {
                     for (int j = 0; j < colNum; j++) {
-                        String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
 
-                        if(localDebug) System.out.println(header);
+                        if(sheet.getRow(0).getCell(j) != null) {
+                            String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
+                            if(localDebug) System.out.println(header);
+                            rosterHeaders.put(j,header);
+                        } else {
+                            // TODO - me log empty field, and drop.
+                            LOGGER.info("Empty Field Name");
+                            rosterHeaders.put(j, "null_field_name");
+                        }
 
-                        rosterHeaders.put(j,header);
                     }
                 }
                 ExcelFileToRead.close();

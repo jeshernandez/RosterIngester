@@ -2,12 +2,40 @@ package com.rosteringester.filesanitation;
 
 import com.rosteringester.algorithms.AlgoFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by JesHernandez 08/15/2017
  */
 public class RecordSanitation {
 
 
+    // ----------------------------------------------------------------------------
+    public static String getFileDate() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+        String todaysDate = sdf.format(cal.getTime());
+
+        return todaysDate;
+    }
+
+    // ----------------------------------------------------------------------------
+    public static String getUserName() {
+        String user = System.getProperty("user.name").toUpperCase();
+
+        return user;
+    }
+
+
+    // ----------------------------------------------------------------------------
+    public static String dbDate() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String todaysDate = sdf.format(cal.getTime());
+
+        return todaysDate;
+    }
 
     // --------------------------------------------
      String sanitizeAddress(String str){
@@ -101,7 +129,7 @@ public class RecordSanitation {
 
 
     String getCleanString(String keyword) {
-        keyword = keyword.replaceAll("[//~~!`@#$%^&*()_+={\\[}\\]|.,<>-]","");
+        keyword = keyword.replaceAll("[//~~!`\"@#$%^&*()_+={\\[}\\]|.,<>-]","");
         return keyword;
     }
 

@@ -68,16 +68,17 @@ public class RosterFactory {
                             "fname"))
                     .lastName(Arrays.asList("provider last name", "provider last", "last name",
                             "lname"))
-                    .middleName(Arrays.asList("middle", "provider middle name", "mi", "middle name", "mname", "middle initial"))
-                    .role(Arrays.asList("role", "provider role", "pcp", "pcp spec", "type", "primary category", "category", "pcp status", "provider pcp"))
+                    .middleName(Arrays.asList("middle", "provider middle ", "mi", "middle", "mname", "middle initial"))
+                    .role(Arrays.asList("role", "provider role", "pcp", "pcp spec", "type", "primary category", "category",
+                            "pcp status", "provider pcp", "pcp indicator"))
                     .specialty(Arrays.asList("specialty", "primary specialty", "specialty one", "specialty  one", "division name"))
                     .npi(Arrays.asList( "npi", "provider npi number", "provider npi","individual npi", "npi number"))
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
                     .degree(Arrays.asList("degree"))
-                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name", "practice name"))
+                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name"))
                     .address(Arrays.asList("address", "physicial address", "office address one", "office address", "add one",
-                            "practice address", "service address","address one", "addr1", "prim add"))
+                            "practice address", "service address","address one", "addr1", "prim add", "PrimaryAddressLine"))
                     .suite(Arrays.asList("suite", "office  two", "practice suite", "second address"
                             , "address two", "addr2", "address  two"))
                     .city(Arrays.asList("city", "office city", "practice city" ,"city one", "primary city", "service city"))

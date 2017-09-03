@@ -13,8 +13,12 @@ import java.util.logging.Logger;
  * Moves a file.
  */
 abstract class FileMove {
+    boolean localDebug = true;
     Logger log = Logger.getLogger(FileState.class.getName());
     public boolean moveFile(String fileName, String destination) {
+
+        if(localDebug) System.out.println("Moving: " + fileName + ", to: " + destination);
+
         File file = new File(fileName);
         if (!file.exists()) {
             try {

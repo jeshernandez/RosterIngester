@@ -79,7 +79,7 @@ public class DetectDelegate {
         int delegateID = getDelegateID(tinList);
 
         // Ingest the roster
-        //ingestRoster(delegateID);
+        ingestRoster(delegateID);
 
         // Close the connection if its open.
         try {
@@ -114,8 +114,8 @@ public class DetectDelegate {
         int minRandom = 1;
         int maxRandom = totalCount-2;
 
-        if(totalCount > 200) {
-            sampleSize = 200;
+        if(totalCount > 500) {
+            sampleSize = 500;
         } else {
             sampleSize = totalCount;
         }

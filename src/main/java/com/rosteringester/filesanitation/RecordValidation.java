@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
-    private boolean localDebug = false;
+    private boolean localDebug = true;
     private String status = "validate error";
     LogValidationFallout dbLog = null;
     // ---------------------------
@@ -169,7 +169,6 @@ public class RecordValidation extends RecordSanitation {
 
         String finalRole = null;
         finalRole = sanitizeWords(role).toLowerCase();
-        if(localDebug) System.out.println("Role: " + finalRole);
 
         switch (finalRole) {
             case "pcp":
@@ -198,6 +197,7 @@ public class RecordValidation extends RecordSanitation {
                 break;
             case "true":
                 finalRole = "pcp";
+                break;
             case "false":
                 finalRole = "spec";
                 break;
@@ -332,6 +332,12 @@ public class RecordValidation extends RecordSanitation {
             case "n":
                 finalDir = dir;
                 break;
+            case "false":
+                finalDir = "N";
+                break;
+            case "true":
+                finalDir = "Y";
+                break;
 
         }
         return finalDir;
@@ -366,6 +372,12 @@ public class RecordValidation extends RecordSanitation {
                 break;
             case "n":
                 finalAccpt = accpt;
+                break;
+            case "true":
+                finalAccpt = "Y";
+                break;
+            case "false":
+                finalAccpt = "N";
                 break;
 
         }

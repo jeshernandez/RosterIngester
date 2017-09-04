@@ -6,13 +6,12 @@ import com.rosteringester.discovery.DiscoverMedicare;
 import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.fileread.ReadEntireTextFiles;
-import com.rosteringester.filewrite.RosterWriter;
 import com.rosteringester.main.RosterIngester;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -24,12 +23,18 @@ public class DetectDelegate {
     Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
     DiscoverMedicare medicare;
     private String directoryPath;
-    private boolean localDebug = true;
+    private boolean localDebug = false;
     private Connection conn;
     private DbSqlServer db;
     private String fileName;
     private int productID;
     private int id;
+    private int delegateIDTIN;
+    private int delegateIDPOIN;
+    private int delegateFinal;
+    private String delegateErrorMsg;
+    private int scanRecords = 8000;
+
     String updateQuery = null;
 
     public DetectDelegate() {
@@ -77,16 +82,82 @@ public class DetectDelegate {
             tinList[i] = medicare.normalRoster[1][i];
         }
 
-        // Detect delegate ID
-        int delegateID = -1;
-        delegateID = getDelegateID(tinList);
+        // Default final value
+        delegateFinal = -1;
+        // Detect delegate ID Based on TIN
+        delegateIDTIN = -1;
+        delegateIDTIN = getDelegateIDTIN(tinList);
 
-        // Ingest the roster
-        if(RosterIngester.ingestData && delegateID != -1) {
-            ingestRoster(delegateID);
-        } else {
-            LOGGER.info("Ingest turned off, or delegate not detected.");
+        // Detect delegate ID Based on POIN TIN list.
+        delegateIDPOIN = -1;
+        delegateIDPOIN = getDelegateIDPOIN(tinList);
+
+
+        if(localDebug) System.out.println("Delegate TIN: " + delegateIDTIN);
+        if(localDebug) System.out.println("Delegate POIN: " + delegateIDPOIN);
+
+
+        if (delegateIDTIN == -1 && delegateIDPOIN == -1) {
+            LOGGER.info("No delegate information was found.");
+            delegateErrorMsg = "NO DELEGATE FOUND";
+        } else if(delegateIDTIN != -1) {
+            LOGGER.info("Delegate found on TIN list.");
+            delegateFinal = delegateIDTIN;
+        } else if(delegateIDPOIN != -1) {
+            LOGGER.info("Delegate found on POIN list.");
+            delegateFinal = delegateIDPOIN;
+        } else if(delegateIDTIN != -1 && delegateIDPOIN != -1) {
+            LOGGER.info("Delegate found on both TIN and POIN lists.");
+            delegateErrorMsg = "DELEGATE OVERLAP";
         }
+
+        // Ingest the roster if ingest flag is true and delegate ID was captured
+        // for either POIN or TIN list.
+        if(RosterIngester.ingestData && delegateFinal != -1) {
+
+            LOGGER.info("Delegate [" + delegateFinal + "] Ingest roster into database...");
+            ingestRoster(delegateFinal);
+
+        } else {
+            LOGGER.info("Ingest turned off, or issue detecting delegate ID.");
+        }
+
+
+
+
+        // ------------------------
+        // Assigned delegate
+        // --------------------------
+
+
+        // Assigned found delegate
+        if(delegateFinal != -1) {
+            LOGGER.info("Logging delegate in database...");
+            updateQuery = "update logs.dbo.grips_log_received\n" +
+                    " set delegate_id =" + delegateFinal +
+                    " , valid = 'Y'" +
+                    " , status = 'INGESTED' " +
+                    " , standardized = 'Y'" +
+                    " where id = " + id;
+            FileMover move = new FileMover();
+            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
+        } else {
+            if(localDebug) LOGGER.info("Logging delegate error.");
+            updateQuery = "update logs.dbo.grips_log_received\n" +
+                    " set status = 'NETWORK REVIEW: " + delegateErrorMsg +
+                    " , valid = 'N'" +
+                    " , standardized = 'Y'" +
+                    " where id = " + id;
+            FileMover move = new FileMover();
+            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
+        }
+
+        // ------------------------
+        // Update assigned delegate
+        // --------------------------
+        db.update(conn, updateQuery);
+
+
 
 
         // Close the connection if its open.
@@ -105,7 +176,7 @@ public class DetectDelegate {
 
 
     // ---------------------------------
-    public int getDelegateID(String[] tinList) {
+    public int getDelegateIDTIN(String[] tinList) {
         int delegateID = -1;
 
         for (int i = 1; i < tinList.length-1; i++) {
@@ -122,8 +193,8 @@ public class DetectDelegate {
         int minRandom = 1;
         int maxRandom = totalCount-2;
 
-        if(totalCount > 500) {
-            sampleSize = 500;
+        if(totalCount > scanRecords) {
+            sampleSize = scanRecords;
         } else {
             sampleSize = totalCount;
         }
@@ -152,7 +223,7 @@ public class DetectDelegate {
                     " WHERE tin in (" + inTinList.toString() + ")\n";
         } else if(productID == 0) {
             query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_tin\n" +
+                    " FROM grips.dbo.grips_cpd_tin\n" +
                     " WHERE tin in (" + inTinList.toString() + ")\n";
         } else if (productID == 2) {
             query = "SELECT DISTINCT did \n" +
@@ -164,76 +235,122 @@ public class DetectDelegate {
 
         db.query(conn, query);
 
-        if(localDebug) System.out.println("Delegate Found: " + db.getValueAt(0,0));
-
-        // ------------------------
-        // Assigned delegate
-        // --------------------------
-
-
-        // Assigned found delegate
-        if(db.getRowCount() > 1) {
-            LOGGER.info("Found more than one delegate.");
-        } else if (db.getValueAt(0,0) == null) {
-            if(localDebug) LOGGER.info("Delegation detection failed. Logging");
-            updateQuery = "update logs.dbo.grips_log_received\n" +
-                    " set status = 'NETWORK REVIEW, DELEGATE ERROR'" +
-                    " , valid = 'N'" +
-                    " , standardized = 'Y'" +
-                    " where id = " + id;
-            FileMover move = new FileMover();
-            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
-        } else {
+        if(db.getValueAt(0,0) != null) {
             delegateID = Integer.parseInt(db.getValueAt(0,0).toString());
-            updateQuery = "update logs.dbo.grips_log_received\n" +
-                    " set delegate_id =" + delegateID +
-                    " , valid = 'Y'" +
-                    " , status = 'INGESTED' " +
-                    " , standardized = 'Y'" +
-                    " where id = " + id;
         }
 
-        // ------------------------
-        // Update assigned delegate
-        // --------------------------
-        db.update(conn, updateQuery);
+        if(localDebug) System.out.println("Delegate Found: " + db.getValueAt(0,0));
+
 
         return delegateID;
     }
 
 
+
+
+
     // ---------------------------------
+    public int getDelegateIDPOIN(String[] tinList) {
+        int delegateID = -1;
+
+        for (int i = 1; i < tinList.length-1; i++) {
+
+            if(localDebug) System.out.println("POIN TIN [" + i + "]: " + tinList[i]);
+
+        }
+
+        StringBuilder inTinList = new StringBuilder();
+
+        Random rand = new Random();
+        int totalCount = tinList.length;
+        int sampleSize = 0;
+        int minRandom = 1;
+        int maxRandom = totalCount-2;
+
+        if(totalCount > scanRecords) {
+            sampleSize = scanRecords;
+        } else {
+            sampleSize = totalCount;
+        }
+
+        for (int i = 1; i < sampleSize; i++) {
+            int random = (int )(Math.random() * maxRandom + minRandom);
+
+            // Detect the last number to avoid adding comma.
+            //System.out.println("Random: " + random);
+            if(i == sampleSize-1) {
+                inTinList.append(tinList[random].toString());
+            } else {
+                inTinList.append(tinList[random].toString() + ",");
+            }
+
+        } // End for-loop
+
+
+        // ------------------------
+        // get appropriate query for product
+        // --------------------------
+        String query = null;
+        if(productID == 1) {
+            query = "SELECT DISTINCT did \n" +
+                    " FROM grips.dbo.grips_poin\n" +
+                    " WHERE tin in (" + inTinList.toString() + ")\n";
+        } else if(productID == 0) {
+            query = "SELECT DISTINCT did \n" +
+                    " FROM grips.dbo.grips_cpd_poin\n" +
+                    " WHERE tin in (" + inTinList.toString() + ")\n";
+        } else if (productID == 2) {
+            query = "SELECT DISTINCT did \n" +
+                    " FROM grips.dbo.grips_poin\n" +
+                    " WHERE tin in (" + inTinList.toString() + ")\n";
+        }
+
+        if(localDebug) System.out.println("Query\n: " + query);
+
+
+        db.query(conn, query);
+
+
+        if(db.getValueAt(0,0) != null) {
+            delegateID = Integer.parseInt(db.getValueAt(0,0).toString());
+        }
+
+
+        if(localDebug) System.out.println("Delegate Found: " + db.getValueAt(0,0));
+
+
+        return delegateID;
+    }
 
 
 
+
+
+
+
+    // ---------------------------------
     public void ingestRoster(int delegateID) {
-        RosterWriter rw = new RosterWriter();
         DBRosterMDCRRequired dbRoster;
-
-        File file = new File(RosterIngester.ROSTERS+fileName);
-
-        rw.createExcelFile("RosterData",
-                RosterIngester.NORMALIZE_PATH +
-                        saveCleanFileName(file.toString()),
-                medicare.normalRoster, medicare.getHeaderCount(), medicare.getRowCount());
-
-
-        //System.out.println("Insert data into database. Records: " + normalRoster[0].length + ".");
 
         MD5Hasher md5 = new MD5Hasher();
         String rosterFileName;
-
+        int recordSize = medicare.normalRoster[0].length-1;
         rosterFileName = fileName.toString();
         // Generate roster key
         String rosterKey = md5.generateRosterKey(rosterFileName, delegateID);
 
 
-        // Insert records into database
-            for (int i = 1; i < medicare.normalRoster[0].length-1; i++) {
-                if(localDebug) System.out.println("Value [" + i+"] " + md5.generateRowKey(medicare.normalRoster[0][i],
-                        medicare.normalRoster[1][i],medicare.normalRoster[2][i],
-                        medicare.normalRoster[3][i], medicare.normalRoster[6][i],
-                        medicare.normalRoster[9][i],medicare.normalRoster[17][i]));
+            // Insert records into database
+            for (int i = 1; i < recordSize; i++) {
+
+                System.out.println(getPercentage(i, recordSize));
+
+
+
+//                if(localDebug) System.out.println("Value [" + i+"] " + md5.generateRowKey(medicare.normalRoster[0][i],
+//                        medicare.normalRoster[1][i],medicare.normalRoster[2][i],
+//                        medicare.normalRoster[3][i], medicare.normalRoster[6][i],
+//                        medicare.normalRoster[9][i],medicare.normalRoster[17][i]));
                 dbRoster = new DBRosterMDCRRequired.Builder()
                         .delegateID(delegateID)
                         .rosterName(rosterFileName)
@@ -250,7 +367,7 @@ public class DetectDelegate {
                         .role(medicare.normalRoster[5][i])
                         .specialty(medicare.normalRoster[6][i])
                         .degree(medicare.normalRoster[7][i])
-                        .groupName(medicare.normalRoster[8][i].toString())
+                        .groupName(medicare.normalRoster[8][i])
                         .address(medicare.normalRoster[9][i])
                         .suite(medicare.normalRoster[10][i])
                         .city(medicare.normalRoster[11][i])
@@ -267,21 +384,42 @@ public class DetectDelegate {
     }
 
 
-    String saveCleanFileName (String fileName) {
 
-        String cleanFileName;
-        String name;
+    private String getPercentage(int start, int end) {
 
-        File f = new File(fileName);
-        name = f.getName();
+        String progressBar = null;
 
-        cleanFileName = name.substring(0, name.lastIndexOf('.'));
-        cleanFileName = cleanFileName.toLowerCase().replace(" ", "_")
-                .replace("-", "");
+        DecimalFormat df = new DecimalFormat("#.##");
+        double progress;
 
-        cleanFileName = cleanFileName + "_normalized.xlsx";
-        return cleanFileName;
+        progress = start*100 / end;
+        String fp = df.format(progress);
 
+        if(progress > 0 && progress < 10) {
+            progressBar = "Progress(" + fp + "%) [=                   ] of " + end +" rows.";
+        } else if(progress >= 10 && progress < 20) {
+            progressBar = "Progress(" + fp + "%) [==                  ] of " + end +" rows.";
+        } else if(progress >=20 && progress < 30) {
+            progressBar = "Progress(" + fp + "%) [====                ] of " + end +" rows.";
+        } else if(progress >=30 && progress < 40) {
+            progressBar = "Progress(" + fp + "%) [=======             ] of " + end +" rows.";
+        } else if(progress >=40 && progress < 50) {
+            progressBar = "Progress(" + fp + "%) [==========          ] of " + end +" rows.";
+        } else if(progress >=50 && progress < 60) {
+            progressBar = "Progress(" + fp + "%) [===========         ] of " + end +" rows.";
+        } else if(progress >=60 && progress < 70) {
+            progressBar = "Progress(" + fp + "%) [============        ] of " + end +" rows.";
+        } else if(progress >=70 && progress < 80) {
+            progressBar = "Progress(" + fp + "%) [===============     ] of " + end +" rows.";
+        } else if(progress >=80 && progress < 90) {
+            progressBar = "Progress(" + fp + "%) [==================  ] of " + end +" rows.";
+        } else if(progress >=90 && progress <= 100) {
+            progressBar = "Progress(" + fp + "%) [====================] of " + end +" rows.";
+        } else {
+            progressBar = "Progress(" + fp + "%) [                    ] of " + end +" rows.";
+        }
+
+        return progressBar;
     }
 
 

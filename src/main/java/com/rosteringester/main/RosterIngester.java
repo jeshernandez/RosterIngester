@@ -24,21 +24,25 @@ import java.util.logging.Logger;
 public class RosterIngester {
     public static boolean debug = true;
     private static boolean activateMove = false;
-    private static boolean activateDelegateDetection = true;
+    private static boolean activateDelegateDetection = false;
     public static boolean ingestData = false;
 
 
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
 
-//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
-//    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
-//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\standardized\\";
+    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
+    public static String ROSTERS = "C:\\DATA\\rosters\\";
+    public static String NETWORK_FOLDER = "C:\\DATA\\rosters\\network_review\\";
+    public static String COMPLETED_ROSTER = "C:\\DATA\\rosters\\archive_completed\\";
 
-    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
-    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
-    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
-    public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
+
+//    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\standardized\\";
+//    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
+//    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
+//    public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
+//    public static String COMPLETED_ROSTER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\archive_completed\\";
 
     public static void main(String [] args) {
 
@@ -89,12 +93,10 @@ public class RosterIngester {
         }
 
 
-//        DiscoverMedicare medicare = new DiscoverMedicare();
-//        medicare.findField();
 
-//        AddressEngine ae = new AddressEngine();
-//                ae.startStandard("epdbQueryCustom.sql",
-//                        "epdbUpdate.sql");
+        AddressEngine ae = new AddressEngine();
+                ae.startStandard("cpdAddressQuery.sql",
+                        "cpdAddressUpdate.sql");
 
 
         try {

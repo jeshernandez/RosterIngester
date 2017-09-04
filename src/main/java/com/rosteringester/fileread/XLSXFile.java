@@ -108,7 +108,7 @@ public class XLSXFile extends Excel implements FileReader {
 
                             if(cell.getCellTypeEnum().equals(CellType.STRING)) {
                                 xlsxData[rowTracker][colTracker] = cell.getStringCellValue();
-                                //System.out.println("[STRING]: " + xlsxData[rowTracker][colTracker]);
+                                if(localDebug)  System.out.println("[STRING]: " + xlsxData[rowTracker][colTracker]);
                             } else if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
                                 if (DateUtil.isCellDateFormatted(cell)) {
                                     xlsxData[rowTracker][colTracker] = df.format(cell.getDateCellValue());
@@ -120,13 +120,20 @@ public class XLSXFile extends Excel implements FileReader {
 
                             } else if (cell.getCellTypeEnum().equals(CellType.ERROR)) {
                                 xlsxData[rowTracker][colTracker] = "error";
+                            } else if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)) {
+                                if(cell.getBooleanCellValue()) {
+                                    xlsxData[rowTracker][colTracker] = "TRUE";
+                                } else {
+                                    xlsxData[rowTracker][colTracker] = "FALSE";
+                                }
+                                if(localDebug) System.out.println("[BOOLEAN]: " + xlsxData[rowTracker][colTracker]);
                             } else if (cell.getCellTypeEnum().equals(CellType._NONE)) {
                                 xlsxData[rowTracker][colTracker] = "none";
                             }  else if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
                                 xlsxData[rowTracker][colTracker] = "formula";
                             } else if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
                                 xlsxData[rowTracker][colTracker] = "";
-                                //System.out.println("[BLANK]: " + xlsxData[rowTracker][colTracker]);
+                                //if(localDebug) System.out.println("[BLANK]: " + xlsxData[rowTracker][colTracker]);
                             }
                         }
 

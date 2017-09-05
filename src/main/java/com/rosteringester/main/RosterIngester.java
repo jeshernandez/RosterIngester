@@ -22,10 +22,13 @@ import java.util.logging.Logger;
 // TODO: Michael - Add into its own Service Object. Remove from main method.
 
 public class RosterIngester {
-    public static boolean debug = true;
     private static boolean activateMove = false;
     private static boolean activateDelegateDetection = false;
+    private static boolean activeAddressNormalization = true;
+
     public static boolean ingestData = false;
+    public static boolean debug = true;
+
 
 
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
@@ -93,10 +96,12 @@ public class RosterIngester {
         }
 
 
+        if(activeAddressNormalization) {
+            AddressEngine ae = new AddressEngine();
+            ae.startStandard("gripsQuery.sql",
+                    "gripsUpdate.sql");
+        }
 
-        AddressEngine ae = new AddressEngine();
-                ae.startStandard("cpdAddressQuery.sql",
-                        "cpdAddressUpdate.sql");
 
 
         try {

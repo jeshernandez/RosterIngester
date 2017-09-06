@@ -19,10 +19,15 @@ import java.util.logging.Logger;
 
 public class RosterIngester {
     private static boolean activateMove = false;
-    private static boolean activateDelegateDetection = false;
+    private static boolean activateDelegateDetection = true;
 
-    private static boolean activeAddressNormalization = true;
+    private static boolean activeAddressNormalization = false;
     private static String typeOfNormalization = "epdbusps";
+
+    public static boolean accentureSupport = true;
+    public static String accentureErrorMsg = "STANDARDIZATION ISSUES: ADDRESS";
+    // STANDARDIZATION ISSUES: ADDRESS
+
 
     public static boolean ingestData = false;
     public static boolean debug = true;
@@ -32,18 +37,19 @@ public class RosterIngester {
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
 
-    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\standardized\\";
-    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
-    public static String ROSTERS = "C:\\DATA\\rosters\\";
-    public static String NETWORK_FOLDER = "C:\\DATA\\rosters\\network_review\\";
-    public static String COMPLETED_ROSTER = "C:\\DATA\\rosters\\archive_completed\\";
+//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\standardized\\";
+//    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
+//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+//    public static String NETWORK_FOLDER = "C:\\DATA\\rosters\\network_review\\";
+//    public static String COMPLETED_ROSTER = "C:\\DATA\\rosters\\archive_completed\\";
 
 
-//    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\standardized\\";
-//    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
-//    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
-//    public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
-//    public static String COMPLETED_ROSTER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\archive_completed\\";
+    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\standardized\\";
+    public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
+    public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
+    public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
+    public static String COMPLETED_ROSTER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\archive_completed\\";
+    public static String ACCENTURE_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\accenture_support\\";
 
     public static void main(String [] args) {
 
@@ -83,6 +89,7 @@ public class RosterIngester {
         //    2.   MOVE AND LOG FILES
         // ----------------------------------
         if(activateMove) new FileMover().detectFilesMoveThem();
+
 
         // ----------------------------------
         //    3.   START DELEGATE DETECTION

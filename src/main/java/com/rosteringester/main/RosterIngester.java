@@ -2,8 +2,6 @@ package com.rosteringester.main;
 
 import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.delegatedetect.DetectDelegate;
-import com.rosteringester.discovery.DiscoverMedicare;
-import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.usps.AddressEngine;
 
@@ -17,14 +15,14 @@ import java.util.logging.Logger;
  * Created by jeshernandez on 6/14/17.
  */
 
-// TODO me - 07/04/2017 remove word from key and add to requiredFields
-// TODO me - 07/04/2017 find a way to remove highest score for iterator
-// TODO: Michael - Add into its own Service Object. Remove from main method.
+
 
 public class RosterIngester {
     private static boolean activateMove = false;
     private static boolean activateDelegateDetection = false;
+
     private static boolean activeAddressNormalization = true;
+    private static String typeOfNormalization = "epdbusps";
 
     public static boolean ingestData = false;
     public static boolean debug = true;
@@ -97,10 +95,36 @@ public class RosterIngester {
 
 
         if(activeAddressNormalization) {
-            AddressEngine ae = new AddressEngine();
-            ae.startStandard("gripsQuery.sql",
-                    "gripsUpdate.sql");
-        }
+
+            if(typeOfNormalization.toLowerCase().equals("grips")) {
+                LOGGER.info("Normalizing grips...");
+                AddressEngine ae = new AddressEngine();
+                ae.startStandard("gripsQuery.sql",
+                        "gripsUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("epdb")) {
+                LOGGER.info("Normalizing epdb...");
+                AddressEngine ae = new AddressEngine();
+                ae.startStandard("epdbAddressQuery.sql",
+                        "epdbAddressUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("cpd")) {
+                LOGGER.info("Normalizing cpd...");
+                AddressEngine ae = new AddressEngine();
+                ae.startStandard("cpdAddressQuery.sql",
+                        "cpdAddressUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("gripsusps")) {
+                LOGGER.info("Normalizing usps cpd...");
+                AddressEngine ae = new AddressEngine();
+                ae.startUSPS("uspsGRIPSQuery.sql",
+                        "uspsGRIPSUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("epdbusps")) {
+                LOGGER.info("Normalizing usps epdb...");
+                AddressEngine ae = new AddressEngine();
+                ae.startUSPS("uspsEPDBQuery.sql",
+                        "uspsEPDBUpdate.sql");
+            }
+
+
+        } // End-if
 
 
 

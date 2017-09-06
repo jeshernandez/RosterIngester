@@ -41,7 +41,8 @@ public class AddressEngine {
     // --------------USPS ---------------------
     public void startUSPS(String queryFile, String updateQuery) {
 
-        DbDB2 db = new DbDB2();
+        DbSqlServer db = new DbSqlServer();
+
 
         // Get DB2 Connection
         Connection conn;
@@ -50,9 +51,10 @@ public class AddressEngine {
         // Get query File
         String query = new ReadEntireTextFiles()
                 .getTextData(this.directoryPath + "\\" + queryFile);
+
         // Send the query
         db.query(conn, query);
-
+        PreparedStatement pstmt = null;
 
         USPS s = new USPS();
 
@@ -76,26 +78,35 @@ public class AddressEngine {
 
             if(localDebug) System.out.println("Processing: " + i + " , of " + rowCount);
             if(localDebug) System.out.println("Sending Address: " + db.getValueAt(i, 0).toString());
-            String[] address = {db.getValueAt(i, 0).toString()};
-            String[] city = {db.getValueAt(i, 1).toString()};
-            String[] state = {db.getValueAt(i, 2).toString()};
+
+            int[] id = {Integer.parseInt(db.getValueAt(i, 0).toString())};
+
+            String[] address = {db.getValueAt(i, 1).toString()};
+            String[] suite  = {db.getValueAt(i, 2).toString()};
+            String addressWithSuite = db.getValueAt(i, 1).toString() + " " + db.getValueAt(i, 2).toString();
+            String[] addressSuite  = {addressWithSuite};
+            String[] city = {db.getValueAt(i, 3).toString()};
+            String[] state = {db.getValueAt(i, 4).toString()};
 
             s.start(true, address, city, state);
             if(localDebug) System.out.println("USPS Address: " + s.getValueAt(0, 0).toString());
 
             try {
-                PreparedStatement pstmt = conn.prepareStatement(updateFile);
+
+
+
+                pstmt = conn.prepareStatement(updateFile);
                 pstmt.setString(1,  s.getValueAt(0, 0).toString());
                 String todaysDate = sdf.format(cal.getTime());
                 pstmt.setString(2, todaysDate);
                 pstmt.setString(3, System.getProperty("user.name").toUpperCase());
-                pstmt.setString(4, address[0]);
-                pstmt.setString(5, city[0]);
-                pstmt.setString(6, state[0]);
+                pstmt.setInt(4, id[0]);
                 pstmt.addBatch();
                 pstmt.executeBatch();
                 pstmt.close();
                 conn.commit();
+
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -172,7 +183,7 @@ public class AddressEngine {
         try {
             pstmt  = conn.prepareStatement(updateFile);
 
-            for (int i = 0; i < 5000; i++) {
+            for (int i = 0; i < rowCount; i++) {
 
                     if(statementHolder < batchMax) {
                         if (localDebug) System.out.println("Processing: " + i + " , of " + rowCount);

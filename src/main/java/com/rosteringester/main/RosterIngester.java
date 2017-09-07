@@ -24,7 +24,7 @@ public class RosterIngester {
     private static boolean activeAddressNormalization = false;
     private static String typeOfNormalization = "epdbusps";
 
-    public static boolean accentureSupport = true;
+    public static boolean accentureSupport = false;
     public static String accentureErrorMsg = "STANDARDIZATION ISSUES - TABS";
     // STANDARDIZATION ISSUES: ADDRESS
     // STANDARDIZATION ISSUES - TABS
@@ -33,7 +33,7 @@ public class RosterIngester {
     public static String networkErrorMsg = "TIN VALIDATION FAILED";
     // ADDRESS MISSING
 
-    public static boolean ingestData = false;
+    public static boolean ingestData = true;
     public static boolean debug = true;
 
 
@@ -136,7 +136,7 @@ public class RosterIngester {
                 LOGGER.info("Normalizing usps cpd...");
                 AddressEngine ae = new AddressEngine();
                 ae.startUSPS("uspsCPDQuery.sql",
-                        "uspsCPDQuery.sql");
+                        "uspsCPDUpdate.sql");
             }
 
 

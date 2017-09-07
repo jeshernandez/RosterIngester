@@ -411,8 +411,8 @@ public class DetectDelegate {
                         .rosterKey(rosterKey)
                         .rowKey(md5.generateRowKey(medicare.normalRoster[0][i],
                                 medicare.normalRoster[1][i],medicare.normalRoster[2][i],
-                                medicare.normalRoster[3][i], medicare.normalRoster[6][i],
-                                medicare.normalRoster[9][i],medicare.normalRoster[17][i]))
+                                medicare.normalRoster[4][i], medicare.normalRoster[6][i],
+                                medicare.normalRoster[9][i],medicare.normalRoster[14][i]))
                         .npi(Integer.parseInt(medicare.normalRoster[0][i]))
                         .tin(Integer.parseInt(medicare.normalRoster[1][i]))
                         .firstName(medicare.normalRoster[2][i])

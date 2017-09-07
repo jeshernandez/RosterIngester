@@ -195,7 +195,11 @@ public class DetectDelegate {
         // ------------------------
         // Update assigned delegate
         // --------------------------
-        db.update(conn, updateQuery);
+            db.update(conn, updateQuery);
+
+
+
+
 
 
 
@@ -239,48 +243,53 @@ public class DetectDelegate {
             sampleSize = totalCount;
         }
 
-        for (int i = 1; i < sampleSize; i++) {
-            int random = (int )(Math.random() * maxRandom + minRandom);
+        // ---------------------------------------------
+        //     SKIP PROCESSING WHEN VENDOR SUPPORT
+        // ---------------------------------------------
 
-            // Detect the last number to avoid adding comma.
-            //System.out.println("Random: " + random);
-            if(i == sampleSize-1) {
-                inTinList.append(tinList[random].toString());
-            } else {
-                inTinList.append(tinList[random].toString() + ",");
+        if(!RosterIngester.accentureSupport) {
+            for (int i = 1; i < sampleSize; i++) {
+                int random = (int) (Math.random() * maxRandom + minRandom);
+
+                // Detect the last number to avoid adding comma.
+                //System.out.println("Random: " + random);
+                if (i == sampleSize - 1) {
+                    inTinList.append(tinList[random].toString());
+                } else {
+                    inTinList.append(tinList[random].toString() + ",");
+                }
+
+            } // End for-loop
+
+
+            // ------------------------
+            // get appropriate query for product
+            // --------------------------
+            String query = null;
+            if (productID == 1) {
+                query = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_tin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
+            } else if (productID == 0) {
+                query = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_cpd_tin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
+            } else if (productID == 2) {
+                query = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_tin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
             }
 
-        } // End for-loop
+            if (localDebug) System.out.println("Query\n: " + query);
 
+            db.query(conn, query);
 
-        // ------------------------
-        // get appropriate query for product
-        // --------------------------
-        String query = null;
-        if(productID == 1) {
-            query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_tin\n" +
-                    " WHERE tin in (" + inTinList.toString() + ")\n";
-        } else if(productID == 0) {
-            query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_cpd_tin\n" +
-                    " WHERE tin in (" + inTinList.toString() + ")\n";
-        } else if (productID == 2) {
-            query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_tin\n" +
-                    " WHERE tin in (" + inTinList.toString() + ")\n";
-        }
+            if (db.getValueAt(0, 0) != null) {
+                delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
+            }
 
-        if(localDebug) System.out.println("Query\n: " + query);
-
-        db.query(conn, query);
-
-        if(db.getValueAt(0,0) != null) {
-            delegateID = Integer.parseInt(db.getValueAt(0,0).toString());
-        }
-
-        if(localDebug) System.out.println("Delegate Found: " + db.getValueAt(0,0));
-
+            if (localDebug) System.out.println("Delegate Found: " + db.getValueAt(0, 0));
+        } // end if-statement
 
         return delegateID;
     }
@@ -313,51 +322,56 @@ public class DetectDelegate {
             sampleSize = totalCount;
         }
 
-        for (int i = 1; i < sampleSize; i++) {
-            int random = (int )(Math.random() * maxRandom + minRandom);
+        // ---------------------------------------------
+        //     SKIP PROCESSING WHEN VENDOR SUPPORT
+        // ---------------------------------------------
 
-            // Detect the last number to avoid adding comma.
-            //System.out.println("Random: " + random);
-            if(i == sampleSize-1) {
-                inTinList.append(tinList[random].toString());
-            } else {
-                inTinList.append(tinList[random].toString() + ",");
+        if(!RosterIngester.accentureSupport) {
+            for (int i = 1; i < sampleSize; i++) {
+                int random = (int) (Math.random() * maxRandom + minRandom);
+
+                // Detect the last number to avoid adding comma.
+                //System.out.println("Random: " + random);
+                if (i == sampleSize - 1) {
+                    inTinList.append(tinList[random].toString());
+                } else {
+                    inTinList.append(tinList[random].toString() + ",");
+                }
+
+            } // End for-loop
+
+
+            // ------------------------
+            // get appropriate query for product
+            // --------------------------
+            String query = null;
+            if (productID == 1) {
+                query = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_poin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
+            } else if (productID == 0) {
+                query = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_cpd_poin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
+            } else if (productID == 2) {
+                query = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_poin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
             }
 
-        } // End for-loop
+            if (localDebug) System.out.println("Query\n: " + query);
 
 
-        // ------------------------
-        // get appropriate query for product
-        // --------------------------
-        String query = null;
-        if(productID == 1) {
-            query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_poin\n" +
-                    " WHERE tin in (" + inTinList.toString() + ")\n";
-        } else if(productID == 0) {
-            query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_cpd_poin\n" +
-                    " WHERE tin in (" + inTinList.toString() + ")\n";
-        } else if (productID == 2) {
-            query = "SELECT DISTINCT did \n" +
-                    " FROM grips.dbo.grips_poin\n" +
-                    " WHERE tin in (" + inTinList.toString() + ")\n";
-        }
-
-        if(localDebug) System.out.println("Query\n: " + query);
+            db.query(conn, query);
 
 
-        db.query(conn, query);
+            if (db.getValueAt(0, 0) != null) {
+                delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
+            }
 
 
-        if(db.getValueAt(0,0) != null) {
-            delegateID = Integer.parseInt(db.getValueAt(0,0).toString());
-        }
-
-
-        if(localDebug) System.out.println("Delegate Found: " + db.getValueAt(0,0));
-
+            if (localDebug) System.out.println("Delegate Found: " + db.getValueAt(0, 0));
+        } // end if-statement
 
         return delegateID;
     }

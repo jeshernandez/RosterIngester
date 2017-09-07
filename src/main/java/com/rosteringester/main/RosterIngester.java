@@ -25,8 +25,9 @@ public class RosterIngester {
     private static String typeOfNormalization = "epdbusps";
 
     public static boolean accentureSupport = true;
-    public static String accentureErrorMsg = "STANDARDIZATION ISSUES: TAX ID";
+    public static String accentureErrorMsg = "STANDARDIZATION ISSUES - TABS";
     // STANDARDIZATION ISSUES: ADDRESS
+    // STANDARDIZATION ISSUES - TABS
 
     public static boolean networkSupport = false;
     public static String networkErrorMsg = "TIN VALIDATION FAILED";
@@ -131,6 +132,11 @@ public class RosterIngester {
                 AddressEngine ae = new AddressEngine();
                 ae.startUSPS("uspsEPDBQuery.sql",
                         "uspsEPDBUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("cpdusps")) {
+                LOGGER.info("Normalizing usps cpd...");
+                AddressEngine ae = new AddressEngine();
+                ae.startUSPS("uspsCPDQuery.sql",
+                        "uspsCPDQuery.sql");
             }
 
 

@@ -206,6 +206,12 @@ public class RecordValidation extends RecordSanitation {
             case "false":
                 finalRole = "spec";
                 break;
+            case "s":
+                finalRole = "spec";
+                break;
+            case "p":
+                finalRole = "pcp";
+                break;
             default:
                 finalRole = "none";
 
@@ -273,16 +279,18 @@ public class RecordValidation extends RecordSanitation {
             finalState = sanitizeState(state);
 
             if(finalState == null) {
-                dbLog = new LogValidationFallout.Builder()
-                        .fileName(filename)
-                        .rowID(rowid)
-                        .status(status)
-                        .description("Failed to validate State")
-                        .dateCreated(dbDate())
-                        .createdBy(getUserName())
-                        .build()
-                        .create(RosterIngester.logConn);
-                LOGGER.info ("STATE FAILED TO VALIDATE " );
+                if(!RosterIngester.accentureSupport) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate State")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    LOGGER.info("STATE FAILED TO VALIDATE ");
+                }
                 //System.out.println("State Failed > " + state);
                 // TODO throw error, and log it.
             }

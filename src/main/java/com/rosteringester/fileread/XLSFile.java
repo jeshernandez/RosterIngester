@@ -22,31 +22,33 @@ import java.util.logging.Logger;
 public class XLSFile extends Excel implements FileReader {
     Logger LOGGER = Logger.getLogger(XLSFile.class.getName());
     private FileType fileType; // Will be used when moving the file to archive.
-
+    HashMap<Integer,String> rosterHeaders;
+    boolean localDebug = false;
 
     // ----------------------------------------------------------
     public HashMap<Integer,String> getHeaders(String FileName) {
-        HashMap<Integer, String> colMapByName = null;
-
+        //HashMap<Integer, String> colMapByName = null;
+        rosterHeaders = new HashMap<>();
         try {
             InputStream ExcelFileToRead = new FileInputStream(FileName);
             HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
-            HSSFSheet sheet = wb.getSheetAt(0);
 
-            int rowNum = sheet.getLastRowNum() + 1;
+            HSSFSheet sheet = wb.getSheetAt(0);
+            sheet.setDisplayGridlines(false);
+
+
             int colNum = sheet.getRow(0).getLastCellNum();
-            colMapByName = new HashMap<>();
             if (sheet.getRow(0).cellIterator().hasNext()) {
                 for (int j = 0; j < colNum; j++) {
 
                     if(sheet.getRow(0).getCell(j) != null) {
                         String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
-                        if(RosterIngester.debug) System.out.println(header);
-                        colMapByName.put(j, header);
+                        if(localDebug) System.out.println(header);
+                        rosterHeaders.put(j,header);
                     } else {
                         // TODO - me log empty field, and drop.
                         LOGGER.info("Empty Field Name");
-                        colMapByName.put(j, "null_field_name");
+                        rosterHeaders.put(j, "null_field_name");
                     }
 
                 }
@@ -57,7 +59,7 @@ public class XLSFile extends Excel implements FileReader {
             e.printStackTrace();
         }
 
-        return colMapByName;
+        return rosterHeaders;
     }
 
 

@@ -52,19 +52,22 @@ public class RecordValidation extends RecordSanitation {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
 
-        if(tin.length() == 9) {
+        if(tin.length() >= 7) {
             finalTIN = tin;
         } else {
-            dbLog = new LogValidationFallout.Builder()
-                    .fileName(filename)
-                    .rowID(rowid)
-                    .status(status)
-                    .description("Failed to validate TIN")
-                    .dateCreated(dbDate())
-                    .createdBy(getUserName())
-                    .build()
-                    .create(RosterIngester.logConn);
-            if(localDebug) LOGGER.info (" TIN FAILED TO VALIDATE " );
+            if(!RosterIngester.accentureSupport) {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate TIN")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if (localDebug) LOGGER.info(" TIN FAILED TO VALIDATE ");
+            }
+            finalTIN = "0";
             // TODO throw error, and log it.
         }
 
@@ -78,26 +81,28 @@ public class RecordValidation extends RecordSanitation {
     public String validatePhone(String phone, String filename, int rowid) {
         String finalPhone = null;
         phone = sanitizeNumber(phone);
-        phone = phone.replace("(", "").replace(")", "");
+        phone = phone.replace("(", "").replace(")", "").replace(".", "");
         if(phone.length() >= 7) {
           if(phone.length() < 11) {
               finalPhone = phone;
           } else {
-              dbLog = new LogValidationFallout.Builder()
-                      .fileName(filename)
-                      .rowID(rowid)
-                      .status(status)
-                      .description("Failed to validate Phone")
-                      .dateCreated(dbDate())
-                      .createdBy(getUserName())
-                      .build()
-                      .create(RosterIngester.logConn);
-              if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
+              if(!RosterIngester.accentureSupport) {
+                  dbLog = new LogValidationFallout.Builder()
+                          .fileName(filename)
+                          .rowID(rowid)
+                          .status(status)
+                          .description("Failed to validate Phone")
+                          .dateCreated(dbDate())
+                          .createdBy(getUserName())
+                          .build()
+                          .create(RosterIngester.logConn);
+                  if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE ");
+              }
           }
         } else {
             if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
             // TODO throw error, and log it.
-            finalPhone = "0";
+            finalPhone = "9999999999";
         }
         return finalPhone;
     }

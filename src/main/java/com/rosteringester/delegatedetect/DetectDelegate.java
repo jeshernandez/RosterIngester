@@ -23,7 +23,7 @@ public class DetectDelegate {
     Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
     DiscoverMedicare medicare;
     private String directoryPath;
-    private boolean localDebug = true;
+    private boolean localDebug = false;
     private Connection conn;
     private DbSqlServer db;
     private String fileName;
@@ -132,30 +132,49 @@ public class DetectDelegate {
 
         if(!RosterIngester.accentureSupport) {
             // Assigned found delegate
-            if (delegateFinal != -1) {
-                LOGGER.info("Logging delegate in database...");
+
+
+
+            if(!RosterIngester.networkSupport) {
+                if (delegateFinal != -1) {
+                    LOGGER.info("Logging delegate in database...");
+
+                    updateQuery = "update logs.dbo.grips_log_received\n" +
+                            " set delegate_id =" + delegateFinal +
+                            " , valid = 'Y'" +
+                            " , status = 'INGESTED' " +
+                            " , standardized = 'Y'" +
+                            " where id = " + id;
+                    if (localDebug) System.out.println("Update: \n" + updateQuery);
+                    FileMover move = new FileMover();
+                    move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
+                } else {
+                    if (localDebug) LOGGER.info("Logging delegate error.");
+
+                    updateQuery = "update logs.dbo.grips_log_received\n" +
+                            " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
+                            " , valid = 'N'" +
+                            " , standardized = 'Y'" +
+                            " where id = " + id;
+                    if (localDebug) System.out.println("Update: \n" + updateQuery);
+                    FileMover move = new FileMover();
+                    move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
+                }
+            } else {
+                LOGGER.info("Logging network manual support...");
 
                 updateQuery = "update logs.dbo.grips_log_received\n" +
                         " set delegate_id =" + delegateFinal +
-                        " , valid = 'Y'" +
-                        " , status = 'INGESTED' " +
-                        " , standardized = 'Y'" +
-                        " where id = " + id;
-                if (localDebug) System.out.println("Update: \n" + updateQuery);
-                FileMover move = new FileMover();
-                move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
-            } else {
-                if (localDebug) LOGGER.info("Logging delegate error.");
-
-                updateQuery = "update logs.dbo.grips_log_received\n" +
-                        " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
                         " , valid = 'N'" +
-                        " , standardized = 'Y'" +
+                        " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
+                        " , standardized = 'N'" +
                         " where id = " + id;
                 if (localDebug) System.out.println("Update: \n" + updateQuery);
                 FileMover move = new FileMover();
                 move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
             }
+
+
         } else {
             LOGGER.info("Logging accenture support...");
 
@@ -168,7 +187,8 @@ public class DetectDelegate {
             if (localDebug) System.out.println("Update: \n" + updateQuery);
             FileMover move = new FileMover();
             move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.ACCENTURE_FOLDER + fileName);
-        }
+
+        } // end accenture if-statement
 
 
 

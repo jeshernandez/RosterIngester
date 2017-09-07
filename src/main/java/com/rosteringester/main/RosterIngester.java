@@ -25,9 +25,12 @@ public class RosterIngester {
     private static String typeOfNormalization = "epdbusps";
 
     public static boolean accentureSupport = true;
-    public static String accentureErrorMsg = "STANDARDIZATION ISSUES: ADDRESS";
+    public static String accentureErrorMsg = "STANDARDIZATION ISSUES: TAX ID";
     // STANDARDIZATION ISSUES: ADDRESS
 
+    public static boolean networkSupport = false;
+    public static String networkErrorMsg = "TIN VALIDATION FAILED";
+    // ADDRESS MISSING
 
     public static boolean ingestData = false;
     public static boolean debug = true;

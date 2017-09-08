@@ -33,7 +33,7 @@ public class RosterIngester {
     public static String networkErrorMsg = "TIN VALIDATION FAILED";
     // ADDRESS MISSING
 
-    public static boolean ingestData = true;
+    public static boolean ingestData = false;
     public static boolean debug = true;
 
 

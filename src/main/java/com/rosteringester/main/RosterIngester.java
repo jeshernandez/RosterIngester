@@ -54,6 +54,7 @@ public class RosterIngester {
     public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
     public static String COMPLETED_ROSTER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\archive_completed\\";
     public static String ACCENTURE_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\accenture_support\\";
+    public static String BACKUP_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\BACKUP\\";
 
     public static void main(String [] args) {
 

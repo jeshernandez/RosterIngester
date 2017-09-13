@@ -76,7 +76,7 @@ public class RosterFactory {
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
                     .degree(Arrays.asList("degree", "credential"))
-                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name"))
+                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name", "tin owner"))
                     .address(Arrays.asList("address", "physicial address", "office address one", "office address", "add one",
                             "practice address", "service address","address one", "addr1", "prim add", "PrimaryAddressLine"))
                     .suite(Arrays.asList("suite", "office  two", "practice suite", "second address"

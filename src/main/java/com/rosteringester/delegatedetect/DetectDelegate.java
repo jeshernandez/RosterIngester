@@ -29,7 +29,7 @@ public class DetectDelegate {
     Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
     DiscoverMedicare medicare;
     private String directoryPath;
-    private boolean localDebug = false;
+    private boolean localDebug = true;
     private Connection conn;
     private DbSqlServer db;
     private String fileName;
@@ -161,6 +161,7 @@ public class DetectDelegate {
                             " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
                             " , valid = 'N'" +
                             " , standardized = 'Y'" +
+                            " , delegate_id = -1 " +
                             " where id = " + id;
                     if (localDebug) System.out.println("Update: \n" + updateQuery);
                     FileMover move = new FileMover();
@@ -173,6 +174,7 @@ public class DetectDelegate {
                         " set delegate_id =" + delegateFinal +
                         " , valid = 'N'" +
                         " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
+                        " , delegate_id = -1 " +
                         " , standardized = 'N'" +
                         " where id = " + id;
                 if (localDebug) System.out.println("Update: \n" + updateQuery);
@@ -306,9 +308,17 @@ public class DetectDelegate {
 
             db.query(conn, query);
 
-            if (db.getValueAt(0, 0) != null) {
-                delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
+            // -----------------------------------------------
+            // Detect if more than one delegate was found.
+            // -----------------------------------------------
+            if(db.getRowCount() == 1) {
+                if (db.getValueAt(0, 0) != null) {
+                    delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
+                }
+            } else if(db.getRowCount() > 1) {
+                LOGGER.info("DELEGATE ERROR: More than one delegate was found.");
             }
+
 
             if (localDebug) System.out.println("Delegate Found: " + db.getValueAt(0, 0));
         } // end if-statement
@@ -386,9 +396,15 @@ public class DetectDelegate {
 
             db.query(conn, query);
 
-
-            if (db.getValueAt(0, 0) != null) {
-                delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
+            // -----------------------------------------------
+            // Detect if more than one delegate was found.
+            // -----------------------------------------------
+            if(db.getRowCount() == 1) {
+                if (db.getValueAt(0, 0) != null) {
+                    delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
+                }
+            } else if(db.getRowCount() > 1) {
+                LOGGER.info("DELEGATE ERROR: More than one delegate was found.");
             }
 
 

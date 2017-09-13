@@ -26,16 +26,21 @@ public class RecordValidation extends RecordSanitation {
         if(npi.length() == 10) {
             finalNPI = npi;
         } else {
-            dbLog = new LogValidationFallout.Builder()
-                    .fileName(filename)
-                    .rowID(rowid)
-                    .status(status)
-                    .description("Failed to validate NPI")
-                    .dateCreated(dbDate())
-                    .createdBy(getUserName())
-                    .build()
-                    .create(RosterIngester.logConn);
-            if(localDebug) LOGGER.info (" NPI FAILED TO VALIDATE " );
+            if(RosterIngester.networkSupport != true) {
+                if(RosterIngester.accentureSupport != true) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate NPI")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    if (localDebug) LOGGER.info(" NPI FAILED TO VALIDATE ");
+                }
+            }
+
             // TODO throw error, and log it.
             finalNPI = "-1";
         }
@@ -55,17 +60,19 @@ public class RecordValidation extends RecordSanitation {
         if(tin.length() >= 7) {
             finalTIN = tin;
         } else {
-            if(!RosterIngester.accentureSupport) {
-                dbLog = new LogValidationFallout.Builder()
-                        .fileName(filename)
-                        .rowID(rowid)
-                        .status(status)
-                        .description("Failed to validate TIN")
-                        .dateCreated(dbDate())
-                        .createdBy(getUserName())
-                        .build()
-                        .create(RosterIngester.logConn);
-                if (localDebug) LOGGER.info(" TIN FAILED TO VALIDATE ");
+            if(RosterIngester.networkSupport != true) {
+                if(RosterIngester.accentureSupport != true) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate TIN")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    if (localDebug) LOGGER.info(" TIN FAILED TO VALIDATE ");
+                }
             }
             finalTIN = "0";
             // TODO throw error, and log it.

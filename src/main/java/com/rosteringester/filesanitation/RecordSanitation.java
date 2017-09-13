@@ -48,10 +48,20 @@ public class RecordSanitation {
     // --------------------------------------------
     String sanitizeZip(String zip){
         zip = getcleanNumber(zip);
+        zip = getCleanString(zip);
 
-        if(zip.length() > 5) {
-            zip = zip.substring(0, 5);
+        if(zip.length()>1) {
+            if(zip.length() > 5) {
+                zip = zip.substring(0, 5);
+            } else {
+                zip = zip;
+                System.out.println("Zip----> " + zip);
+            }
+        } else {
+            zip = "0";
         }
+
+        System.out.println("Final Zip----> " + zip);
 
         return zip;
     }

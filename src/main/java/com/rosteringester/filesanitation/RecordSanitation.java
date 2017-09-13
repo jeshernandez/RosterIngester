@@ -133,12 +133,14 @@ public class RecordSanitation {
 
     // ------- COMMON METHODS TO USE --------------
     String getcleanNumber(String keyword) {
+        keyword = keyword.trim();
         keyword = keyword.replaceAll("[^a-zA-Z0-9_//~~!`@#$%^&*()_+={\\[}\\]|.,<>]","");
         return keyword;
     }
 
 
     String getCleanString(String keyword) {
+        keyword = keyword.trim();
         keyword = keyword.replaceAll("[//~~!`\"@#$%^&*()_+={\\[}\\]|.,<>-]","");
         return keyword;
     }

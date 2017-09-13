@@ -7,14 +7,20 @@ import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.fileread.ReadEntireTextFiles;
 import com.rosteringester.main.RosterIngester;
+import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Created by jeshernandez on 09/02/2017.
@@ -185,8 +191,24 @@ public class DetectDelegate {
                     " , standardized = 'N'" +
                     " where id = " + id;
             if (localDebug) System.out.println("Update: \n" + updateQuery);
+
+            // Make a copy before sending to Accenture.
+            // ------------------------------------------
+            String source = RosterIngester.ROSTERS + fileName;
+            String target = RosterIngester.BACKUP_FOLDER + fileName;
             FileMover move = new FileMover();
+
+            File fSource = new File(source.toString());
+            File fTarget = new File(target.toString());
+
+            try {
+                FileUtils.copyFile(fSource, fTarget);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.ACCENTURE_FOLDER + fileName);
+
 
         } // end accenture if-statement
 

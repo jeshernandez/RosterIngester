@@ -68,14 +68,14 @@ public class RosterFactory {
                             "fname"))
                     .lastName(Arrays.asList("provider last name", "provider last", "last name",
                             "lname"))
-                    .middleName(Arrays.asList("middle", "provider middle ", "mi", "middle", "mname", "middle initial"))
+                    .middleName(Arrays.asList("middle", "provider middle ", "mi", "middle", "mname", "middle initial", "initial"))
                     .role(Arrays.asList("role", "provider role", "pcp", "pcp spec", "type", "primary category", "category",
                             "pcp status", "provider pcp", "pcp indicator", "PCP Spec Both"))
                     .specialty(Arrays.asList("specialty", "primary specialty", "specialty one", "specialty  one", "division name", "Specialty one Primary specialty", "Expertise"))
                     .npi(Arrays.asList( "npi", "provider npi number", "provider npi","individual npi", "npi number"))
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
-                    .degree(Arrays.asList("degree"))
+                    .degree(Arrays.asList("degree", "credential"))
                     .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name"))
                     .address(Arrays.asList("address", "physicial address", "office address one", "office address", "add one",
                             "practice address", "service address","address one", "addr1", "prim add", "PrimaryAddressLine"))

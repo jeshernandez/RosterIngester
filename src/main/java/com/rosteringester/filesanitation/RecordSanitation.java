@@ -55,13 +55,11 @@ public class RecordSanitation {
                 zip = zip.substring(0, 5);
             } else {
                 zip = zip;
-                System.out.println("Zip----> " + zip);
             }
         } else {
             zip = "0";
         }
 
-        System.out.println("Final Zip----> " + zip);
 
         return zip;
     }

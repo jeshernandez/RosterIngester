@@ -99,23 +99,28 @@ public class DetectDelegate {
         delegateIDPOIN = getDelegateIDPOIN(tinList);
 
 
-        if(localDebug) System.out.println("Delegate TIN: " + delegateIDTIN);
-        if(localDebug) System.out.println("Delegate POIN: " + delegateIDPOIN);
+         System.out.println("Delegate TIN: " + delegateIDTIN);
+         System.out.println("Delegate POIN: " + delegateIDPOIN);
 
 
-        if (delegateIDTIN == -1 && delegateIDPOIN == -1) {
-            LOGGER.info("No delegate information was found.");
-            delegateErrorMsg = "NO DELEGATE FOUND";
-        } else if(delegateIDTIN != -1) {
-            LOGGER.info("Delegate found on TIN list.");
-            delegateFinal = delegateIDTIN;
-        } else if(delegateIDPOIN != -1) {
-            LOGGER.info("Delegate found on POIN list.");
-            delegateFinal = delegateIDPOIN;
-        } else if(delegateIDTIN != -1 && delegateIDPOIN != -1) {
-            LOGGER.info("Delegate found on both TIN and POIN lists.");
-            delegateErrorMsg = "DELEGATE OVERLAP";
-        }
+
+         if(delegateIDTIN != -1 && delegateIDPOIN != -1) {
+             LOGGER.info("Delegate found on both TIN and POIN lists.");
+             delegateErrorMsg = "DELEGATE OVERLAP: (" + delegateIDTIN + "),(" +delegateIDPOIN+")" ;
+         } else {
+             if (delegateIDTIN == -1 && delegateIDPOIN == -1) {
+                 LOGGER.info("No delegate information was found.");
+                 delegateErrorMsg = "NO DELEGATE FOUND";
+             } else if (delegateIDTIN != -1) {
+                 LOGGER.info("Delegate found on TIN list.");
+                 delegateFinal = delegateIDTIN;
+             } else if (delegateIDPOIN != -1) {
+                 LOGGER.info("Delegate found on POIN list.");
+                 delegateFinal = delegateIDPOIN;
+             }
+
+         }
+
 
         // Ingest the roster if ingest flag is true and delegate ID was captured
         // for either POIN or TIN list.
@@ -307,6 +312,19 @@ public class DetectDelegate {
             if (localDebug) System.out.println("Query\n: " + query);
 
             db.query(conn, query);
+
+            String backupQuery = null;
+            if(productID == 2 && db.getValueAt(0,0) == null) {
+                LOGGER.info("DETECTED BOTH PRODUCTS, EMPTY on EPDB. Delegate detection CPD side.");
+                backupQuery = "SELECT DISTINCT did \n" +
+                        " FROM grips.dbo.grips_cpd_tin\n" +
+                        " WHERE tin in (" + inTinList.toString() + ")\n";
+                db.query(conn, backupQuery);
+            }
+
+
+        // TODO me: product is being wiped out
+            //
 
             // -----------------------------------------------
             // Detect if more than one delegate was found.

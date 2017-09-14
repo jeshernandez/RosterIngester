@@ -140,6 +140,7 @@ public class RecordSanitation {
     String getCleanString(String keyword) {
         keyword = keyword.trim();
         keyword = keyword.replaceAll("[//~~!`\"@#$%^&*()_+={\\[}\\]|.,<>-]","");
+        keyword = keyword.toLowerCase();
         return keyword;
     }
 

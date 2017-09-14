@@ -29,7 +29,7 @@ public class DetectDelegate {
     Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
     DiscoverMedicare medicare;
     private String directoryPath;
-    private boolean localDebug = true;
+    private boolean localDebug = false;
     private Connection conn;
     private DbSqlServer db;
     private String fileName;
@@ -104,22 +104,28 @@ public class DetectDelegate {
 
 
 
-         if(delegateIDTIN != -1 && delegateIDPOIN != -1) {
-             LOGGER.info("Delegate found on both TIN and POIN lists.");
-             delegateErrorMsg = "DELEGATE OVERLAP: (" + delegateIDTIN + "),(" +delegateIDPOIN+")" ;
+         if(delegateIDPOIN == -2 || delegateIDTIN == -2) {
+             delegateFinal = -2;
+             LOGGER.info("More than one delegate found.");
+             delegateFinal = delegateIDPOIN;
          } else {
-             if (delegateIDTIN == -1 && delegateIDPOIN == -1) {
-                 LOGGER.info("No delegate information was found.");
-                 delegateErrorMsg = "NO DELEGATE FOUND";
-             } else if (delegateIDTIN != -1) {
-                 LOGGER.info("Delegate found on TIN list.");
-                 delegateFinal = delegateIDTIN;
-             } else if (delegateIDPOIN != -1) {
-                 LOGGER.info("Delegate found on POIN list.");
-                 delegateFinal = delegateIDPOIN;
+             if(delegateIDTIN != -1 && delegateIDPOIN != -1) {
+                 LOGGER.info("Delegate found on both TIN and POIN lists.");
+                 delegateErrorMsg = "DELEGATE OVERLAP: (" + delegateIDTIN + "),(" +delegateIDPOIN+")" ;
+             } else {
+                 if (delegateIDTIN == -1 && delegateIDPOIN == -1) {
+                     LOGGER.info("No delegate information was found.");
+                     delegateErrorMsg = "NO DELEGATE FOUND";
+                 } else if (delegateIDTIN != -1) {
+                     LOGGER.info("Delegate found on TIN list.");
+                     delegateFinal = delegateIDTIN;
+                 } else if (delegateIDPOIN != -1) {
+                     LOGGER.info("Delegate found on POIN list.");
+                     delegateFinal = delegateIDPOIN;
+                 }
              }
-
          }
+
 
 
         // Ingest the roster if ingest flag is true and delegate ID was captured
@@ -141,83 +147,90 @@ public class DetectDelegate {
         // --------------------------
 
 
-        if(!RosterIngester.accentureSupport) {
-            // Assigned found delegate
+        if(delegateFinal != -2) {
+            if (!RosterIngester.accentureSupport) {
+                // Assigned found delegate
+                if (!RosterIngester.networkSupport) {
+                    if (delegateFinal != -1) {
+                        LOGGER.info("Logging delegate in database...");
 
+                        updateQuery = "update logs.dbo.grips_log_received\n" +
+                                " set delegate_id =" + delegateFinal +
+                                " , valid = 'Y'" +
+                                " , status = 'INGESTED' " +
+                                " , standardized = 'Y'" +
+                                " where id = " + id;
+                        if (localDebug) System.out.println("Update: \n" + updateQuery);
+                        FileMover move = new FileMover();
+                        move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
+                    } else {
+                        if (localDebug) LOGGER.info("Logging delegate error.");
 
-
-            if(!RosterIngester.networkSupport) {
-                if (delegateFinal != -1) {
-                    LOGGER.info("Logging delegate in database...");
+                        updateQuery = "update logs.dbo.grips_log_received\n" +
+                                " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
+                                " , valid = 'N'" +
+                                " , standardized = 'Y'" +
+                                " , delegate_id = -1 " +
+                                " where id = " + id;
+                        if (localDebug) System.out.println("Update: \n" + updateQuery);
+                        FileMover move = new FileMover();
+                        move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
+                    }
+                } else {
+                    LOGGER.info("Logging network manual support...");
 
                     updateQuery = "update logs.dbo.grips_log_received\n" +
                             " set delegate_id =" + delegateFinal +
-                            " , valid = 'Y'" +
-                            " , status = 'INGESTED' " +
-                            " , standardized = 'Y'" +
-                            " where id = " + id;
-                    if (localDebug) System.out.println("Update: \n" + updateQuery);
-                    FileMover move = new FileMover();
-                    move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
-                } else {
-                    if (localDebug) LOGGER.info("Logging delegate error.");
-
-                    updateQuery = "update logs.dbo.grips_log_received\n" +
-                            " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
                             " , valid = 'N'" +
-                            " , standardized = 'Y'" +
+                            " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
                             " , delegate_id = -1 " +
+                            " , standardized = 'N'" +
                             " where id = " + id;
                     if (localDebug) System.out.println("Update: \n" + updateQuery);
                     FileMover move = new FileMover();
                     move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
                 }
+
             } else {
-                LOGGER.info("Logging network manual support...");
+                LOGGER.info("Logging accenture support...");
 
                 updateQuery = "update logs.dbo.grips_log_received\n" +
                         " set delegate_id =" + delegateFinal +
                         " , valid = 'N'" +
-                        " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
-                        " , delegate_id = -1 " +
+                        " , status = 'ACCENTURE SUPPORT: " + RosterIngester.accentureErrorMsg + "'" +
                         " , standardized = 'N'" +
                         " where id = " + id;
                 if (localDebug) System.out.println("Update: \n" + updateQuery);
+
+                // Make a copy before sending to Accenture.
+                // ------------------------------------------
+                String source = RosterIngester.ROSTERS + fileName;
+                String target = RosterIngester.BACKUP_FOLDER + fileName;
                 FileMover move = new FileMover();
-                move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
-            }
 
+                File fSource = new File(source.toString());
+                File fTarget = new File(target.toString());
 
+                try {
+                    FileUtils.copyFile(fSource, fTarget);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.ACCENTURE_FOLDER + fileName);
+
+            } // end accenture if-statement
         } else {
-            LOGGER.info("Logging accenture support...");
-
             updateQuery = "update logs.dbo.grips_log_received\n" +
                     " set delegate_id =" + delegateFinal +
                     " , valid = 'N'" +
-                    " , status = 'ACCENTURE SUPPORT: " + RosterIngester.accentureErrorMsg + "'" +
+                    " , status = 'NETWORK SUPPORT: MULTIPLE DELEGATES FOUND.'" +
                     " , standardized = 'N'" +
                     " where id = " + id;
             if (localDebug) System.out.println("Update: \n" + updateQuery);
-
-            // Make a copy before sending to Accenture.
-            // ------------------------------------------
-            String source = RosterIngester.ROSTERS + fileName;
-            String target = RosterIngester.BACKUP_FOLDER + fileName;
             FileMover move = new FileMover();
-
-            File fSource = new File(source.toString());
-            File fTarget = new File(target.toString());
-
-            try {
-                FileUtils.copyFile(fSource, fTarget);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.ACCENTURE_FOLDER + fileName);
-
-
-        } // end accenture if-statement
+            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
+        } // end multiple delegates if-statement
 
 
 
@@ -225,11 +238,6 @@ public class DetectDelegate {
         // Update assigned delegate
         // --------------------------
             db.update(conn, updateQuery);
-
-
-
-
-
 
 
 
@@ -334,7 +342,8 @@ public class DetectDelegate {
                     delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
                 }
             } else if(db.getRowCount() > 1) {
-                LOGGER.info("DELEGATE ERROR: More than one delegate was found.");
+                LOGGER.info("DELEGATE ERROR [TIN]: More than one delegate was found.");
+                delegateID = -2;
             }
 
 
@@ -422,7 +431,8 @@ public class DetectDelegate {
                     delegateID = Integer.parseInt(db.getValueAt(0, 0).toString());
                 }
             } else if(db.getRowCount() > 1) {
-                LOGGER.info("DELEGATE ERROR: More than one delegate was found.");
+                LOGGER.info("DELEGATE ERROR [POIN]: More than one delegate was found.");
+                delegateID = -2;
             }
 
 

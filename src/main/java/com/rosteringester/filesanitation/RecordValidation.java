@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
-    private boolean localDebug = true;
+    private boolean localDebug = false;
     private String status = "validate error";
     LogValidationFallout dbLog = null;
     // ---------------------------
@@ -87,35 +87,69 @@ public class RecordValidation extends RecordSanitation {
 
     public String validatePhone(String phone, String filename, int rowid) {
         String finalPhone = null;
+
         phone = sanitizeNumber(phone);
+        phone = getcleanNumber(phone);
         phone = phone.replace("(", "").replace(")", "").replace(".", "");
 
-        if(!phone.equals("") || phone == null) {
-            if (phone.length() >= 7) {
-                if (phone.length() < 11) {
-                    finalPhone = phone;
-                } else {
-                    if (!RosterIngester.accentureSupport) {
-                        dbLog = new LogValidationFallout.Builder()
-                                .fileName(filename)
-                                .rowID(rowid)
-                                .status(status)
-                                .description("Failed to validate Phone")
-                                .dateCreated(dbDate())
-                                .createdBy(getUserName())
-                                .build()
-                                .create(RosterIngester.logConn);
-                        if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE ");
-                    }
-                }
-            } else {
-                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE ");
-                // TODO throw error, and log it.
-                finalPhone = "9999999999";
-            }
-        } else {
-            finalPhone = "9999999999";
+
+        if (phone.length() == 10) {
+            finalPhone = phone;
         }
+
+
+        if (phone.length() > 10) {
+            // TODO throw error, and log it.
+            if (!RosterIngester.accentureSupport) {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate Phone:long")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO LONG ");
+                finalPhone = "0";
+            }
+        }
+
+            if (phone.length() < 10) {
+                // TODO throw error, and log it.
+                if (!RosterIngester.accentureSupport) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate Phone:small")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO SMALL ");
+                    finalPhone = "0";
+                }
+            }
+
+        if (phone == null || phone.equals("")) {
+            // TODO throw error, and log it.
+            if (!RosterIngester.accentureSupport) {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate Phone:blank")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: BLANK ");
+                finalPhone = "0";
+            }
+        }
+
+
 
         if (localDebug) System.out.println("Clean Phone: " + finalPhone);
 

@@ -147,43 +147,56 @@ public class DetectDelegate {
         // --------------------------
 
 
-        if(delegateFinal != -2) {
+
             if (!RosterIngester.accentureSupport) {
                 // Assigned found delegate
                 if (!RosterIngester.networkSupport) {
-                    if (delegateFinal != -1) {
-                        LOGGER.info("Logging delegate in database...");
 
+                    if(delegateFinal != -2) {
+                        if (delegateFinal != -1) {
+                            LOGGER.info("Logging delegate in database...");
+
+                            updateQuery = "update logs.dbo.grips_log_received\n" +
+                                    " set delegate_id =" + delegateFinal +
+                                    " , valid = 'Y'" +
+                                    " , status = 'INGESTED' " +
+                                    " , standardized = 'Y'" +
+                                    " where id = " + id;
+                            if (localDebug) System.out.println("Update: \n" + updateQuery);
+                            FileMover move = new FileMover();
+                            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
+                        } else {
+                            if (localDebug) LOGGER.info("Logging delegate error.");
+
+                            updateQuery = "update logs.dbo.grips_log_received\n" +
+                                    " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
+                                    " , valid = 'N'" +
+                                    " , standardized = 'Y'" +
+                                    " , delegate_id = -1 " +
+                                    " where id = " + id;
+                            if (localDebug) System.out.println("Update: \n" + updateQuery);
+                            FileMover move = new FileMover();
+                            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
+                        }
+                    } else {
                         updateQuery = "update logs.dbo.grips_log_received\n" +
                                 " set delegate_id =" + delegateFinal +
-                                " , valid = 'Y'" +
-                                " , status = 'INGESTED' " +
-                                " , standardized = 'Y'" +
-                                " where id = " + id;
-                        if (localDebug) System.out.println("Update: \n" + updateQuery);
-                        FileMover move = new FileMover();
-                        move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.COMPLETED_ROSTER + fileName);
-                    } else {
-                        if (localDebug) LOGGER.info("Logging delegate error.");
-
-                        updateQuery = "update logs.dbo.grips_log_received\n" +
-                                " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
                                 " , valid = 'N'" +
-                                " , standardized = 'Y'" +
-                                " , delegate_id = -1 " +
+                                " , status = 'NETWORK SUPPORT: MULTIPLE DELEGATES FOUND.'" +
+                                " , standardized = 'N'" +
                                 " where id = " + id;
                         if (localDebug) System.out.println("Update: \n" + updateQuery);
                         FileMover move = new FileMover();
                         move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
-                    }
+                    } // end multiple delegates if-statement
+
                 } else {
                     LOGGER.info("Logging network manual support...");
 
                     updateQuery = "update logs.dbo.grips_log_received\n" +
-                            " set delegate_id =" + delegateFinal +
+                            " set delegate_id = -1"+
                             " , valid = 'N'" +
                             " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
-                            " , delegate_id = -1 " +
                             " , standardized = 'N'" +
                             " where id = " + id;
                     if (localDebug) System.out.println("Update: \n" + updateQuery);
@@ -220,17 +233,7 @@ public class DetectDelegate {
                 move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.ACCENTURE_FOLDER + fileName);
 
             } // end accenture if-statement
-        } else {
-            updateQuery = "update logs.dbo.grips_log_received\n" +
-                    " set delegate_id =" + delegateFinal +
-                    " , valid = 'N'" +
-                    " , status = 'NETWORK SUPPORT: MULTIPLE DELEGATES FOUND.'" +
-                    " , standardized = 'N'" +
-                    " where id = " + id;
-            if (localDebug) System.out.println("Update: \n" + updateQuery);
-            FileMover move = new FileMover();
-            move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.NETWORK_FOLDER + fileName);
-        } // end multiple delegates if-statement
+
 
 
 
@@ -331,7 +334,6 @@ public class DetectDelegate {
             }
 
 
-        // TODO me: product is being wiped out
             //
 
             // -----------------------------------------------

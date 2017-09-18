@@ -74,7 +74,7 @@ public class RecordValidation extends RecordSanitation {
                     if (localDebug) LOGGER.info(" TIN FAILED TO VALIDATE ");
                 }
             }
-            finalTIN = "0";
+            finalTIN = "-1";
             // TODO throw error, and log it.
         }
 
@@ -111,7 +111,7 @@ public class RecordValidation extends RecordSanitation {
                         .build()
                         .create(RosterIngester.logConn);
                 if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO LONG ");
-                finalPhone = "0";
+                finalPhone = "-1";
             }
         }
 
@@ -128,7 +128,7 @@ public class RecordValidation extends RecordSanitation {
                             .build()
                             .create(RosterIngester.logConn);
                     if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO SMALL ");
-                    finalPhone = "0";
+                    finalPhone = "-1";
                 }
             }
 
@@ -145,7 +145,7 @@ public class RecordValidation extends RecordSanitation {
                         .build()
                         .create(RosterIngester.logConn);
                 if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: BLANK ");
-                finalPhone = "0";
+                finalPhone = "-1";
             }
         }
 

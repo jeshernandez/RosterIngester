@@ -88,6 +88,7 @@ public class AddressEngine {
             String[] city = {db.getValueAt(i, 3).toString()};
             String[] state = {db.getValueAt(i, 4).toString()};
 
+            System.out.println("Sending... " + address[0]);
             s.start(true, address, city, state);
             if(localDebug) System.out.println("USPS Address: " + s.getValueAt(0, 0).toString());
 
@@ -159,6 +160,8 @@ public class AddressEngine {
         if(localDebug) System.out.println("Row counts: " + rowCount);
 
 
+        // Check to see if rowCount is smaller than batchMax.
+        if(rowCount < batchMax) batchMax = rowCount-1;
 
         // Get update query  File
         String updateFile = new ReadEntireTextFiles()
@@ -180,12 +183,13 @@ public class AddressEngine {
         int statementHolder = 0;
         PreparedStatement pstmt = null;
 
+
         try {
             pstmt  = conn.prepareStatement(updateFile);
 
             for (int i = 0; i < rowCount; i++) {
 
-                    if(statementHolder < batchMax) {
+                    if(statementHolder < batchMax ) {
                         if (localDebug) System.out.println("Processing: " + i + " , of " + rowCount);
                         if (localDebug) System.out.println("Batching Address[" + db.getValueAt(i, 1).toString()
                                 + "] Suite[" + db.getValueAt(i, 2).toString()
@@ -266,7 +270,8 @@ public class AddressEngine {
     public void startAddressInText(String queryFile, String updateQuery) {
 
 
-        DbDB2 db = new DbDB2();
+        DbSqlServer db = new DbSqlServer();
+        db.setConnectionUrl();
 
         // Get DB2 Connection
         Connection conn;
@@ -303,19 +308,20 @@ public class AddressEngine {
         for (int i = 0; i < rowCount; i++){
 
             if(localDebug) System.out.println("Processing: " + i + " , of " + rowCount);
-            if(localDebug) System.out.println("Sending Address: " + db.getValueAt(i, 0).toString());
-            String[] address = {db.getValueAt(i, 0).toString()};
-            //String[] suite = {db.getValueAt(i, 1).toString()};
+            if(localDebug) System.out.println("Sending Address: " + db.getValueAt(i, 1).toString());
 
-            //String[] addressWSuite = {address[0] + " " + suite[0]};
+            String[] id = {db.getValueAt(i, 0).toString()};
+            String[] address = {db.getValueAt(i, 1).toString()};
+            String[] suite = {db.getValueAt(i, 2).toString()};
+            String[] city = {db.getValueAt(i, 3).toString()};
+            String[] state = {db.getValueAt(i, 4).toString()};
 
-            String[] city = {db.getValueAt(i, 1).toString()};
-            String[] state = {db.getValueAt(i, 2).toString()};
+            String[] addressSuite = {address[0] + " " + suite[0]};
 
             // ---------------------------------------------------------
             //                ADDRESS STANDARDIZATION
             // ---------------------------------------------------------
-            s.startTextInAddress(true, address, city, state);
+            s.startTextInAddress(true, addressSuite, city, state);
             //s.start(true, address, city, state);
 
 
@@ -332,9 +338,7 @@ public class AddressEngine {
                     String todaysDate = sdf.format(cal.getTime());
                     pstmt.setString(2, todaysDate);
                     pstmt.setString(3, System.getProperty("user.name").toUpperCase());
-                    pstmt.setString(4, address[0]);
-                    pstmt.setString(5, city[0]);
-                    pstmt.setString(6, state[0]);
+                    pstmt.setString(4, id[0]);
                     pstmt.addBatch();
                     pstmt.executeBatch();
                     pstmt.close();

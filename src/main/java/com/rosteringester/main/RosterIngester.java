@@ -4,6 +4,7 @@ import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.delegatedetect.DetectDelegate;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.usps.AddressEngine;
+import com.rosteringester.usps.AddressInText;
 
 
 import java.sql.Connection;
@@ -19,10 +20,10 @@ import java.util.logging.Logger;
 
 public class RosterIngester {
     private static boolean activateMove = false;
-    private static boolean activateDelegateDetection = true;
+    private static boolean activateDelegateDetection = false;
 
-    private static boolean activeAddressNormalization = false;
-    private static String typeOfNormalization = "epdbusps";
+    private static boolean activeAddressNormalization = true;
+    private static String typeOfNormalization = "gripstext";
 
     public static boolean accentureSupport = false;
     public static String accentureErrorMsg = "STANDARDIZATION ISSUES - TABS";
@@ -30,8 +31,11 @@ public class RosterIngester {
     // STANDARDIZATION ISSUES - TABS
 
     public static boolean networkSupport = false;
-    public static String networkErrorMsg = "TIN VALIDATION FAILED";
+    public static String networkErrorMsg = "MISSING FLAGS, ROLE";
     // ADDRESS MISSING
+    // ROLE VALUES CANNOT BE MAPPED
+    // ROSTER MISSING PHONE, TIN, OTHER FIELDS
+    // MISSING DIR PRINT, MUL DELEGATES
 
     public static boolean ingestData = false;
     public static boolean debug = true;
@@ -138,7 +142,20 @@ public class RosterIngester {
                 AddressEngine ae = new AddressEngine();
                 ae.startUSPS("uspsCPDQuery.sql",
                         "uspsCPDUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("epdbtext")) {
+                LOGGER.info("Normalizing usps text EPDB...");
+                AddressEngine ae = new AddressEngine();
+                ae.startAddressInText("textEPDBQuery.sql",
+                        "textEPDBUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("gripstext")) {
+                LOGGER.info("Normalizing usps text GRIPS...");
+                AddressEngine ae = new AddressEngine();
+                ae.startAddressInText("textGRIPSQuery.sql",
+                        "textGRIPSUpdate.sql");
             }
+
+
+
 
 
         } // End-if

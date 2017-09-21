@@ -19,10 +19,10 @@ import java.util.logging.Logger;
 
 
 public class RosterIngester {
-    private static boolean activateMove = false;
+    private static boolean activateMove = true;
     private static boolean activateDelegateDetection = false;
 
-    private static boolean activeAddressNormalization = true;
+    private static boolean activeAddressNormalization = false;
     private static String typeOfNormalization = "gripstext";
 
     public static boolean accentureSupport = false;

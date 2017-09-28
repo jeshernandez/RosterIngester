@@ -74,7 +74,7 @@ public class FileMover extends RecordSanitation {
                                 .dateReceived(lastAccessDate)
                                 .dateUpdated(dbDate())
                                 .createdBy(getUserName())
-                                .valid("Y")
+                                .valid("N")
                                 .build()
                                 .create(RosterIngester.logConn);
 

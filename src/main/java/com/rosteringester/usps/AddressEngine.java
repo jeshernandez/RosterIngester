@@ -1,6 +1,6 @@
 package com.rosteringester.usps;
 
-import com.rosteringester.db.DbDB2;
+
 import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.fileread.ReadEntireTextFiles;
 import org.yaml.snakeyaml.Yaml;
@@ -161,6 +161,7 @@ public class AddressEngine {
 
 
         // Check to see if rowCount is smaller than batchMax.
+        // this allows for address under batchMax to be processed.
         if(rowCount < batchMax) batchMax = rowCount-1;
 
         // Get update query  File

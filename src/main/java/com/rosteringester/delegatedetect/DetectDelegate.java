@@ -307,15 +307,15 @@ public class DetectDelegate {
             // --------------------------
             String query = null;
             if (productID == 1) {
-                query = "SELECT DISTINCT did \n" +
+                query = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_tin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
             } else if (productID == 0) {
-                query = "SELECT DISTINCT did \n" +
+                query = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_cpd_tin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
             } else if (productID == 2) {
-                query = "SELECT DISTINCT did \n" +
+                query = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_tin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
             }
@@ -327,7 +327,7 @@ public class DetectDelegate {
             String backupQuery = null;
             if(productID == 2 && db.getValueAt(0,0) == null) {
                 LOGGER.info("DETECTED BOTH PRODUCTS, EMPTY on EPDB. Delegate detection CPD side.");
-                backupQuery = "SELECT DISTINCT did \n" +
+                backupQuery = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_cpd_tin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
                 db.query(conn, backupQuery);

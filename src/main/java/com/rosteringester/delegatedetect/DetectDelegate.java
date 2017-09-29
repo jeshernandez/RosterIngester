@@ -407,15 +407,15 @@ public class DetectDelegate {
             // --------------------------
             String query = null;
             if (productID == 1) {
-                query = "SELECT DISTINCT did \n" +
+                query = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_poin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
             } else if (productID == 0) {
-                query = "SELECT DISTINCT did \n" +
+                query = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_cpd_poin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
             } else if (productID == 2) {
-                query = "SELECT DISTINCT did \n" +
+                query = "SELECT DISTINCT delegate_id \n" +
                         " FROM grips.dbo.grips_poin\n" +
                         " WHERE tin in (" + inTinList.toString() + ")\n";
             }

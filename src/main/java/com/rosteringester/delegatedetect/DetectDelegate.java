@@ -161,6 +161,7 @@ public class DetectDelegate {
                                     " , valid = 'Y'" +
                                     " , status = 'INGESTED' " +
                                     " , standardized = 'Y'" +
+                                    " , last_modified = current_timestamp " +
                                     " where id = " + id;
                             if (localDebug) System.out.println("Update: \n" + updateQuery);
                             FileMover move = new FileMover();
@@ -173,6 +174,7 @@ public class DetectDelegate {
                                     " , valid = 'N'" +
                                     " , standardized = 'Y'" +
                                     " , delegate_id = -1 " +
+                                    " , last_modified = current_timestamp " +
                                     " where id = " + id;
                             if (localDebug) System.out.println("Update: \n" + updateQuery);
                             FileMover move = new FileMover();
@@ -184,6 +186,7 @@ public class DetectDelegate {
                                 " , valid = 'N'" +
                                 " , status = 'NETWORK SUPPORT: MULTIPLE DELEGATES FOUND.'" +
                                 " , standardized = 'N'" +
+                                " , last_modified = current_timestamp " +
                                 " where id = " + id;
                         if (localDebug) System.out.println("Update: \n" + updateQuery);
                         FileMover move = new FileMover();
@@ -198,6 +201,7 @@ public class DetectDelegate {
                             " , valid = 'N'" +
                             " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
                             " , standardized = 'N'" +
+                            " , last_modified = current_timestamp " +
                             " where id = " + id;
                     if (localDebug) System.out.println("Update: \n" + updateQuery);
                     FileMover move = new FileMover();
@@ -212,6 +216,7 @@ public class DetectDelegate {
                         " , valid = 'N'" +
                         " , status = 'ACCENTURE SUPPORT: " + RosterIngester.accentureErrorMsg + "'" +
                         " , standardized = 'N'" +
+                        " , last_modified = current_timestamp " +
                         " where id = " + id;
                 if (localDebug) System.out.println("Update: \n" + updateQuery);
 

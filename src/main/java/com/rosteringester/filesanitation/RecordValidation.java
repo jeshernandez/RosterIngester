@@ -224,6 +224,9 @@ public class RecordValidation extends RecordSanitation {
         String finalRole = null;
         finalRole = sanitizeWords(role).toLowerCase();
 
+        if(finalRole.contains("pcp")) finalRole = "pcp";
+        if(finalRole.contains("scp")) finalRole = "spec";
+
         switch (finalRole) {
             case "pcp":
                 finalRole = finalRole;

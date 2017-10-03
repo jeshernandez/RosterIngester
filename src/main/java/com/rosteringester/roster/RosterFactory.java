@@ -75,7 +75,7 @@ public class RosterFactory {
                     .npi(Arrays.asList( "npi", "provider npi number", "provider npi","individual npi", "npi number"))
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
-                    .degree(Arrays.asList("degree", "credential"))
+                    .degree(Arrays.asList("degree", "credential", "title"))
                     .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name", "tin owner"))
                     .address(Arrays.asList("address", "physicial address", "office address one", "office address", "add one",
                             "practice address", "service address","address one", "addr1", "prim add", "PrimaryAddressLine"))

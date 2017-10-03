@@ -45,10 +45,27 @@ public class RecordSanitation {
     }
 
 
+    String sanitizeSpec(String spec) {
+        spec = getCleanString(spec);
+
+        if(spec.length()>1) {
+            if(spec.length() > 50) {
+                spec = spec.substring(0, 50);
+            } else {
+                spec = spec;
+            }
+        }
+
+        return spec;
+
+    }
+
+
     // --------------------------------------------
     String sanitizeZip(String zip){
         zip = getcleanNumber(zip);
         zip = getCleanString(zip);
+        zip = zip.replaceAll("-", "");
 
         if(zip.length()>1) {
             if(zip.length() > 5) {
@@ -57,7 +74,7 @@ public class RecordSanitation {
                 zip = zip;
             }
         } else {
-            zip = "0";
+            zip = "-1";
         }
 
 
@@ -132,7 +149,8 @@ public class RecordSanitation {
     // ------- COMMON METHODS TO USE --------------
     String getcleanNumber(String keyword) {
         keyword = keyword.trim();
-        keyword = keyword.replaceAll("[^a-zA-Z0-9_//~~!`@#$%^&*()_+={\\[}\\]|.,<>]","");
+        //keyword = keyword.replaceAll("[^a-zA-Z0-9_//~~!`@#$%^&*()_+={\\[}\\]|.,<>]","");
+        keyword = keyword.replaceAll("[^0-9.]", "");
         return keyword;
     }
 

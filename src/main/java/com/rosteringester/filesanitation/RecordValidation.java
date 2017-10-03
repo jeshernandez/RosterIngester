@@ -368,6 +368,21 @@ public class RecordValidation extends RecordSanitation {
 
 
     // ---------------------------
+    //      VALIDATE SPECIALTY
+    // ---------------------------
+
+    public String validateSpec(String spec) {
+
+        String finalSpecialty = null;
+        finalSpecialty = sanitizeSpec(spec);
+
+        return finalSpecialty;
+    }
+
+
+
+
+    // ---------------------------
     //      VALIDATE DIRECTORY
     // ---------------------------
 

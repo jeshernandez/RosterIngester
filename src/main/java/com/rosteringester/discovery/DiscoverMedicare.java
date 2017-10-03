@@ -348,7 +348,7 @@ public class DiscoverMedicare extends Discover {
             normalRoster[6][0] = roster.getSpecialty();
             for (int i = 1; i < getRowCount()-1; i++) {
                 if(specialtyLoc > -1) {
-                    normalRoster[6][i] = rv.validateCleanWords(getValueAt(i, specialtyLoc));
+                    normalRoster[6][i] = rv.validateSpec(getValueAt(i, specialtyLoc));
                 } else {
                     normalRoster[6][i] = "";
                 }

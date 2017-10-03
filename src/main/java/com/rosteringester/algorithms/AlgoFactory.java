@@ -45,7 +45,11 @@ public class AlgoFactory {
         cleanField = cleanField.toLowerCase();
         int index = 0;
 
-            if(cleanAlgoName.equals("L")) {
+        cleanField = checkRosterPhone(cleanField);
+        cleanField = checkRole(cleanField);
+
+
+        if(cleanAlgoName.equals("L")) {
                 //if(RosterIngester.debug) LOGGER.info("Levenshtein Best Getting Score.");
                 Levenshtein l = new Levenshtein();
 
@@ -83,8 +87,10 @@ public class AlgoFactory {
 
                     for (int i = 0; i < discoveryList.length; i++) {
                         double tempDistance = 0.0;
-//                        if(debugLocal) System.out.println("Clean: " + cleanField + ": Discover: "
-//                                + discoveryList[i].toString());
+
+
+
+
                         tempDistance = c.startAlgo(cleanAlgoName,
                                 cleanField.toLowerCase().replace(" ", ""),
                                 discoveryList[i].toString().toLowerCase().replace(" ", ""));
@@ -94,6 +100,8 @@ public class AlgoFactory {
                         // July2017 - corrected issue with zip code not captured by algo due to zip size (3).
                         // 08052017 - corrected issue with accepting new patient and tin discovery
                         // 08172017 - trying lower case scores.
+                        // 10032017 - adding patient phone method
+
 
 
                         if(tempDistance > finalDistance) {
@@ -139,6 +147,36 @@ public class AlgoFactory {
 
 
     } // End of getBestScore
+
+
+
+    // --------------------------------------------------------------------------
+    public String checkRosterPhone(String keyword)
+    {
+
+        if(keyword.toLowerCase().contains("patients would call")) {
+            if(debugLocal) System.out.println("Found special phone field>>>");
+            keyword = "phone";
+        }
+
+        return keyword;
+    }
+
+
+    // --------------------------------------------------------------------------
+    public String checkRole(String keyword)
+    {
+
+        if(keyword.toLowerCase().contains("role pcp spec")) {
+            if(debugLocal) System.out.println("Found special role field>>>");
+            keyword = "role";
+        }
+
+        return keyword;
+    }
+
+
+
 
 
 

@@ -98,6 +98,8 @@ public class SmartyStreets extends AddressP {
                 record[2] = components.getState().toUpperCase();
                 record[3] = components.getZipCode();
 
+                System.out.println(">>>> SUITE???: " + components.getSecondaryNumber());
+
 
 //                System.out.println("County:          " + metadata.getCountyName());
 //                System.out.println("Latitude:        " + metadata.getLatitude());

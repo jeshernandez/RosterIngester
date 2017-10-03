@@ -47,6 +47,7 @@ public class AlgoFactory {
 
         cleanField = checkRosterPhone(cleanField);
         cleanField = checkRole(cleanField);
+        cleanField = checkNPI(cleanField);
 
 
         if(cleanAlgoName.equals("L")) {
@@ -175,6 +176,18 @@ public class AlgoFactory {
         return keyword;
     }
 
+
+    // --------------------------------------------------------------------------
+    public String checkNPI(String keyword)
+    {
+
+        if(keyword.toLowerCase().contains("national provider identification")) {
+            if(debugLocal) System.out.println("Found special NPI field>>>");
+            keyword = "npi";
+        }
+
+        return keyword;
+    }
 
 
 

@@ -264,6 +264,9 @@ public class RecordValidation extends RecordSanitation {
             case "p":
                 finalRole = "pcp";
                 break;
+            case "pcp no panel":
+                finalRole = "pcp";
+                break;
             default:
                 finalRole = "none";
 
@@ -416,6 +419,9 @@ public class RecordValidation extends RecordSanitation {
                 finalDir = "N";
                 break;
             case "true":
+                finalDir = "Y";
+                break;
+            case "directory":
                 finalDir = "Y";
                 break;
 

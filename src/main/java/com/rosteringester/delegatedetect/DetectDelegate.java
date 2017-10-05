@@ -93,7 +93,6 @@ tinList[i] = medicare.normalRoster[1][i];
 
 if(preDelegateID > 1) {
     delegateFinal = preDelegateID;
-    delegateIDTIN = preDelegateID;
 } else {
     // Default final value
     delegateFinal = -1;
@@ -179,7 +178,7 @@ if (!RosterIngester.accentureSupport) {
                     if (localDebug) LOGGER.info("Logging delegate error.");
 
                     updateQuery = "update logs.dbo.grips_log_received\n" +
-                            " set status = 'NETWORK REVIEW: " + delegateErrorMsg + "'" +
+                            " set status = 'PDIU SUPPORT: " + delegateErrorMsg + "'" +
                             " , valid = 'N'" +
                             " , standardized = 'Y'" +
                             " , delegate_id = -1 " +
@@ -194,7 +193,7 @@ if (!RosterIngester.accentureSupport) {
                 updateQuery = "update logs.dbo.grips_log_received\n" +
                         " set delegate_id =" + delegateFinal +
                         " , valid = 'N'" +
-                        " , status = 'NETWORK SUPPORT: MULTIPLE DELEGATES FOUND.'" +
+                        " , status = 'PDIU SUPPORT: MULTIPLE DELEGATES FOUND.'" +
                         " , standardized = 'N'" +
                         " , date_last_modified = current_timestamp " +
                         " where id = " + id;
@@ -210,7 +209,7 @@ if (!RosterIngester.accentureSupport) {
         updateQuery = "update logs.dbo.grips_log_received\n" +
                 " set delegate_id = -1"+
                 " , valid = 'N'" +
-                " , status = 'NETWORK REVIEW: " + RosterIngester.networkErrorMsg + "'" +
+                " , status = 'PDIU SUPPORT: " + RosterIngester.networkErrorMsg + "'" +
                 " , standardized = 'N'" +
                 " , date_last_modified = current_timestamp " +
                 " where id = " + id;

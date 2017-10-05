@@ -23,19 +23,22 @@ public class RosterIngester {
     private static boolean activateDelegateDetection = false;
 
     private static boolean activeAddressNormalization = false;
-    private static String typeOfNormalization = "gripstext";
+    private static String typeOfNormalization = "grips";
 
     public static boolean accentureSupport = false;
-    public static String accentureErrorMsg = "STANDARDIZATION ISSUES - TABS";
+    public static String accentureErrorMsg = "HORIZONTAL DATA";
     // STANDARDIZATION ISSUES: ADDRESS
     // STANDARDIZATION ISSUES - TABS
 
     public static boolean networkSupport = false;
-    public static String networkErrorMsg = "MISSING FLAGS, ROLE";
+    public static String networkErrorMsg = "SPECIAL DLGT (9961)";
     // ADDRESS MISSING
     // ROLE VALUES CANNOT BE MAPPED
     // ROSTER MISSING PHONE, TIN, OTHER FIELDS
     // MISSING DIR PRINT, MUL DELEGATES
+    // MISSING DIRECTORY PRINT"
+    // MISSING ACCEPTING NEW PAT
+    // BAD ROSTERS, MISSING FIELDS
 
     public static boolean ingestData = false;
     public static boolean debug = true;
@@ -46,8 +49,8 @@ public class RosterIngester {
     public static Connection logConn = null;
 
 //    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\standardized\\";
-//    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
-//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+    //public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
+   // public static String ROSTERS = "C:\\DATA\\rosters\\";
 //    public static String NETWORK_FOLDER = "C:\\DATA\\rosters\\network_review\\";
 //    public static String COMPLETED_ROSTER = "C:\\DATA\\rosters\\archive_completed\\";
 
@@ -95,7 +98,7 @@ public class RosterIngester {
         logConn = dbSql.getDBConn();
 
         // ----------------------------------
-        //    2.   MOVE AND LOG FILES
+        //    2.   MOVE AND LOG FILES (package: filewrite)
         // ----------------------------------
         if(activateMove) new FileMover().detectFilesMoveThem();
 

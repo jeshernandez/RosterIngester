@@ -5,6 +5,7 @@ import com.rosteringester.filesanitation.RecordSanitation;
 import com.rosteringester.logs.LogReceived;
 import com.rosteringester.main.RosterIngester;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class FileMover extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(FileMover.class.getName());
-    boolean localDebug = true;
+    boolean localDebug = false;
     LogReceived  lr = null;
 
 
@@ -56,6 +57,12 @@ public class FileMover extends RecordSanitation {
                     // get product
                     cfs = new CategorizeFileStrategy(files.get(i).toString());
 
+                    getPreDelegateID(name);
+
+                    int dID = Integer.parseInt(getPreDelegateID(name));
+                    // get pre_delegate_id
+
+
                     // format for size into MB
                     size = getFileSize(files.get(i).toString());
                     NumberFormat formatter = new DecimalFormat("#0.00");
@@ -67,16 +74,19 @@ public class FileMover extends RecordSanitation {
                         if (localDebug) System.out.println("FileSize>>>" + size);
                         if (localDebug) System.out.println("Last Access>>>" + lastAccessDate);
 
-                        lr = new LogReceived.Builder()
-                                .fileName(name)
-                                .size(formatter.format(size))
-                                .product(cfs.getCategorization())
-                                .dateReceived(lastAccessDate)
-                                .dateUpdated(dbDate())
-                                .createdBy(getUserName())
-                                .valid("N")
-                                .build()
-                                .create(RosterIngester.logConn);
+                        if(!localDebug) {
+                            lr = new LogReceived.Builder()
+                                    .fileName(name)
+                                    .size(formatter.format(size))
+                                    .product(cfs.getCategorization())
+                                    .dateReceived(lastAccessDate)
+                                    .dateUpdated(dbDate())
+                                    .createdBy(getUserName())
+                                    .valid("N")
+                                    .preDelegateID(dID)
+                                    .build()
+                                    .create(RosterIngester.logConn);
+                        }
 
 
                         moveFile(files.get(i).toString(), RosterIngester.ROSTERS + name);
@@ -103,6 +113,31 @@ public class FileMover extends RecordSanitation {
 
 
     // --------------------------------------------------------
+    public String getPreDelegateID(String path) {
+        String delegateID = null;
+
+        System.out.println("Full name: " + path);
+
+
+        if(path.toLowerCase().contains("dlg")) {
+            String[] parts = path.split("_");
+
+            System.out.println("PreDelegateID: " + parts[2]);
+            delegateID = parts[2];
+        } else {
+            delegateID = "-1";
+        }
+
+
+
+        return delegateID;
+
+    }
+
+
+
+
+    // --------------------------------------------------------
     public String lastAccess(String path) {
         String fileTime = null;
 
@@ -119,6 +154,8 @@ public class FileMover extends RecordSanitation {
         return fileTime;
 
     }
+
+
 
 
 

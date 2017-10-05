@@ -267,6 +267,9 @@ public class RecordValidation extends RecordSanitation {
             case "pcp no panel":
                 finalRole = "pcp";
                 break;
+            case "dual":
+                finalRole = "both";
+                break;
             default:
                 finalRole = "none";
 

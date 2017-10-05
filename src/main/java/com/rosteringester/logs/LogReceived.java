@@ -17,6 +17,8 @@ public class LogReceived {
     private String createdBy;
     private String valid;
 
+    private int preDelegateID;
+
 
     public static class Builder {
         private String fileName;
@@ -27,7 +29,14 @@ public class LogReceived {
         private String dateUpdated;
         private String createdBy;
         private String valid;
+        private int preDelegateID;
 
+
+        public LogReceived.Builder preDelegateID(int preDelegateID)
+        {
+            this.preDelegateID = preDelegateID;
+            return this;
+        }
 
         public LogReceived.Builder fileName(String fileName)
         {
@@ -102,14 +111,15 @@ public class LogReceived {
         this.dateUpdated = b.dateUpdated;
         this.createdBy = b.createdBy;
         this.valid = b.valid;
+        this.preDelegateID = b.preDelegateID;
 
     }
 
 
     // ------------------------------------------------
     public LogReceived create(Connection conn){
-        String query = "INSERT into [logs].[dbo].[grips_log_received] (filename, size, product, date_last_modified, date_created, created_by, valid)"
-                + " values (?, ?, ?, ?, ?, ?,?)";
+        String query = "INSERT into [logs].[dbo].[grips_log_received] (filename, size, product, date_last_modified, date_created, created_by, valid, pre_delegate_id)"
+                + " values (?, ?, ?, ?, ?, ?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, this.fileName);
@@ -119,6 +129,7 @@ public class LogReceived {
             stmt.setString(5, this.dateUpdated);
             stmt.setString(6, this.createdBy);
             stmt.setString(7, this.valid);
+            stmt.setInt(8, this.preDelegateID);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace(System.err);
@@ -162,6 +173,10 @@ public class LogReceived {
 
     public String getValid() {
         return valid;
+    }
+
+    public int getPreDelegateID() {
+        return preDelegateID;
     }
 
 

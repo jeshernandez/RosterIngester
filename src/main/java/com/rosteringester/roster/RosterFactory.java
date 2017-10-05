@@ -90,7 +90,7 @@ public class RosterFactory {
                     .officeHours(Arrays.asList("hours"))
                     .directoryPrint(Arrays.asList("directory print", "directory", "print directory", "show directory", "list directory"))
                     //.practiceAgeLimits(Arrays.asList("age limits"))
-                    .acceptingNewPatients(Arrays.asList("accept new patients", "new patients", "accept", "closed", "taking new", "open"))
+                    .acceptingNewPatients(Arrays.asList("accept new patients", "new patients", "accept", "taking new", "open"))
                     .build();
 
         }

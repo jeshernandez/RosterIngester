@@ -38,6 +38,7 @@ private int id;
 private int delegateIDTIN;
 private int delegateIDPOIN;
 private int delegateFinal;
+private int preDelegateID;
 private String delegateErrorMsg;
 private int scanRecords = 8000;
 
@@ -73,6 +74,8 @@ fileName = db.getValueAt(0,0).toString();
 productID = Integer.parseInt(db.getValueAt(0,1).toString());
 id = Integer.parseInt(db.getValueAt(0,2).toString());
 
+preDelegateID = Integer.parseInt(db.getValueAt(0,4).toString());
+
 if(localDebug) System.out.println("File Name: " + db.getValueAt(0,0).toString());
 
 medicare = new DiscoverMedicare();
@@ -88,15 +91,20 @@ for (int i = 1; i < listSize; i++) {
 tinList[i] = medicare.normalRoster[1][i];
 }
 
-// Default final value
-delegateFinal = -1;
-// Detect delegate ID Based on TIN
-delegateIDTIN = -1;
-delegateIDTIN = getDelegateIDTIN(tinList);
+if(preDelegateID > 1) {
+    delegateFinal = preDelegateID;
+    delegateIDTIN = preDelegateID;
+} else {
+    // Default final value
+    delegateFinal = -1;
+    // Detect delegate ID Based on TIN
+    delegateIDTIN = -1;
+    delegateIDTIN = getDelegateIDTIN(tinList);
 
-// Detect delegate ID Based on POIN TIN list.
-delegateIDPOIN = -1;
-delegateIDPOIN = getDelegateIDPOIN(tinList);
+    // Detect delegate ID Based on POIN TIN list.
+    delegateIDPOIN = -1;
+    delegateIDPOIN = getDelegateIDPOIN(tinList);
+}
 
 
 System.out.println("Delegate TIN: " + delegateIDTIN);

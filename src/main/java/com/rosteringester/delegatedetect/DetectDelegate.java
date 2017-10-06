@@ -29,7 +29,7 @@ public class DetectDelegate {
 Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
 DiscoverMedicare medicare;
 private String directoryPath;
-private boolean localDebug = false;
+private boolean localDebug = true;
 private Connection conn;
 private DbSqlServer db;
 private String fileName;
@@ -424,15 +424,15 @@ for (int i = 1; i < sampleSize; i++) {
 String query = null;
 if (productID == 1) {
     query = "SELECT DISTINCT delegate_id \n" +
-            " FROM grips.dbo.grips_poin\n" +
+            " FROM grips.dbo.grips_grpaffil\n" +
             " WHERE tin in (" + inTinList.toString() + ")\n";
 } else if (productID == 0) {
     query = "SELECT DISTINCT delegate_id \n" +
-            " FROM grips.dbo.grips_cpd_poin\n" +
+            " FROM grips.dbo.grips_grpaffil\n" +
             " WHERE tin in (" + inTinList.toString() + ")\n";
 } else if (productID == 2) {
     query = "SELECT DISTINCT delegate_id \n" +
-            " FROM grips.dbo.grips_poin\n" +
+            " FROM grips.dbo.grips_grpaffil\n" +
             " WHERE tin in (" + inTinList.toString() + ")\n";
 }
 

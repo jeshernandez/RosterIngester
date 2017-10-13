@@ -19,14 +19,14 @@ import java.util.logging.Logger;
 
 
 public class RosterIngester {
-    private static boolean activateMove = true;
+    private static boolean activateMove = false;
     private static boolean activateDelegateDetection = false;
 
-    private static boolean activeAddressNormalization = false;
-    private static String typeOfNormalization = "grips";
+    private static boolean activeAddressNormalization = true;
+    private static String typeOfNormalization = "vendorusps";
 
     public static boolean accentureSupport = false;
-    public static String accentureErrorMsg = "HORIZONTAL DATA";
+    public static String accentureErrorMsg = "COMBINED ROLE;COL (M,N)";
     // STANDARDIZATION ISSUES: ADDRESS
     // STANDARDIZATION ISSUES - TABS
 
@@ -155,6 +155,11 @@ public class RosterIngester {
                 AddressEngine ae = new AddressEngine();
                 ae.startAddressInText("textGRIPSQuery.sql",
                         "textGRIPSUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("vendorusps")) {
+                LOGGER.info("Normalizing usps text VENDOR USPS...");
+                AddressEngine ae = new AddressEngine();
+                ae.startSmartyWithSuite("vendorUSPS_DATA_Query.sql",
+                        "vendorUSPS_DATA_Update.sql");
             }
 
 

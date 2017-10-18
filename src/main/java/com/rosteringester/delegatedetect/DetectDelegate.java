@@ -29,7 +29,7 @@ public class DetectDelegate {
 Logger LOGGER = Logger.getLogger(DetectDelegate.class.getName());
 DiscoverMedicare medicare;
 private String directoryPath;
-private boolean localDebug = true;
+private boolean localDebug = false;
 private Connection conn;
 private DbSqlServer db;
 private String fileName;

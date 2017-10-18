@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class RecordValidation extends RecordSanitation {
     Logger LOGGER = Logger.getLogger(RecordValidation.class.getName());
 
-    private boolean localDebug = false;
+    private boolean localDebug = true;
     private String status = "validate error";
     LogValidationFallout dbLog = null;
     // ---------------------------
@@ -22,8 +22,9 @@ public class RecordValidation extends RecordSanitation {
     public String validateNPI(String npi, String filename, int rowid) {
         String finalNPI = null;
         npi = sanitizeNumber(npi);
+        npi = getcleanNumber(npi);
 
-        if(npi.length() == 10) {
+        if(npi.length() <= 10) {
             finalNPI = npi;
         } else {
             if(RosterIngester.networkSupport != true) {
@@ -56,8 +57,9 @@ public class RecordValidation extends RecordSanitation {
     public String validateTIN(String tin, String filename, int rowid) {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
+        tin = getcleanNumber(tin);
 
-        if(tin.length() >= 7) {
+        if(tin.length() >= 7 && tin.length() <= 9) {
             finalTIN = tin;
         } else {
             if(RosterIngester.networkSupport != true) {
@@ -110,9 +112,14 @@ public class RecordValidation extends RecordSanitation {
                         .createdBy(getUserName())
                         .build()
                         .create(RosterIngester.logConn);
-                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO LONG ");
-                finalPhone = "-1";
+                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO LONG " + phone);
+                //finalPhone = "-1";
+                finalPhone = phone.substring(0, 10);
             }
+            // trimming to receive only 10 digits.
+            finalPhone = phone.substring(0, 10);
+
+
         }
 
             if (phone.length() < 10) {
@@ -267,8 +274,17 @@ public class RecordValidation extends RecordSanitation {
             case "pcp no panel":
                 finalRole = "pcp";
                 break;
+            case "primary care physician":
+                finalRole = "pcp";
+                break;
             case "dual":
                 finalRole = "both";
+                break;
+            case "specialty care":
+                finalRole = "spec";
+                break;
+            case "primary care":
+                finalRole = "pcp";
                 break;
             default:
                 finalRole = "none";
@@ -466,6 +482,12 @@ public class RecordValidation extends RecordSanitation {
                 finalAccpt = "Y";
                 break;
             case "false":
+                finalAccpt = "N";
+                break;
+            case "open":
+                finalAccpt = "Y";
+                break;
+            case "closed":
                 finalAccpt = "N";
                 break;
 

@@ -19,19 +19,20 @@ import java.util.logging.Logger;
 
 
 public class RosterIngester {
-    private static boolean activateMove = false;
+    private static boolean activateMove = true;
     private static boolean activateDelegateDetection = false;
 
-    private static boolean activeAddressNormalization = true;
+    private static boolean activeAddressNormalization = false;
     private static String typeOfNormalization = "vendorusps";
 
     public static boolean accentureSupport = false;
-    public static String accentureErrorMsg = "COMBINED ROLE;COL (M,N)";
+    public static String accentureErrorMsg = "ADDRESS HORIZONTAL";
     // STANDARDIZATION ISSUES: ADDRESS
     // STANDARDIZATION ISSUES - TABS
-
+    // FIELDS, PARSE REQUIRED
+    // ADDRESS HORIZONTAL
     public static boolean networkSupport = false;
-    public static String networkErrorMsg = "SPECIAL DLGT (9961)";
+    public static String networkErrorMsg = "ROSTER EMAIL QUESTION";
     // ADDRESS MISSING
     // ROLE VALUES CANNOT BE MAPPED
     // ROSTER MISSING PHONE, TIN, OTHER FIELDS
@@ -39,6 +40,7 @@ public class RosterIngester {
     // MISSING DIRECTORY PRINT"
     // MISSING ACCEPTING NEW PAT
     // BAD ROSTERS, MISSING FIELDS
+    // MISSING DIR PRINT, ACCPT PT
 
     public static boolean ingestData = false;
     public static boolean debug = true;

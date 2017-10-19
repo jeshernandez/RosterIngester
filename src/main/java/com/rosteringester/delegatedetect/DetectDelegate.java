@@ -235,18 +235,22 @@ if (!RosterIngester.accentureSupport) {
     // ------------------------------------------
     String source = RosterIngester.ROSTERS + fileName;
     String target = RosterIngester.BACKUP_FOLDER + fileName;
+    String accentureFolder = RosterIngester.ACCENTURE_FOLDER + fileName;
     FileMover move = new FileMover();
 
     File fSource = new File(source.toString());
     File fTarget = new File(target.toString());
+    File fAccenture = new File(accentureFolder.toString());
 
     try {
         FileUtils.copyFile(fSource, fTarget);
+        FileUtils.copyFile(fSource, fAccenture);
     } catch (IOException e) {
         e.printStackTrace();
     }
 
-    move.moveFile(RosterIngester.ROSTERS + fileName, RosterIngester.ACCENTURE_FOLDER + fileName);
+    move.moveFile(RosterIngester.ROSTERS + fileName,
+            "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\ACCENTURE_LOCK_TEST\\" + fileName);
 
 } // end accenture if-statement
 

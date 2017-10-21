@@ -76,9 +76,10 @@ public class RosterFactory {
                     .tin(Arrays.asList("tax id number", "tax id", "tin", "provider tin number", "provider tin",
                             "individual tin", "taxid", "practice tin", "entity tax id", "primary practice tin"))
                     .degree(Arrays.asList("degree", "credential", "title"))
-                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name", "tin owner"))
+                    .groupName(Arrays.asList("group name", "clinic name", "group", "office name", "physical group name", "tin owner", "group practice"))
                     .address(Arrays.asList("address", "physicial address", "office address one", "office address", "add one",
-                            "practice address", "service address","address one", "addr1", "prim add", "PrimaryAddressLine"))
+                            "practice address", "service address","address one", "addr1", "prim add", "PrimaryAddressLine",
+                            "address line one"))
                     .suite(Arrays.asList("suite", "office  two", "practice suite", "second address"
                             , "address two", "addr2", "address  two", "Service location suite"))
                     .city(Arrays.asList("city", "office city", "practice city" ,"city one", "primary city", "service city"))
@@ -88,7 +89,7 @@ public class RosterFactory {
                     .servicePhone(Arrays.asList("phone", "service phone", "main phone", "primary phone","location phone", "practice phone",
                             "phone number", "office phone","telephone", "one phone", "call appointments"))
                     .officeHours(Arrays.asList("hours"))
-                    .directoryPrint(Arrays.asList("directory print", "directory", "print directory", "show directory", "list directory"))
+                    .directoryPrint(Arrays.asList("directory print", "directory", "print directory", "show directory", "list directory", "include directories"))
                     //.practiceAgeLimits(Arrays.asList("age limits"))
                     .acceptingNewPatients(Arrays.asList("accept new patients", "new patients", "accept", "taking new", "open"))
                     .build();

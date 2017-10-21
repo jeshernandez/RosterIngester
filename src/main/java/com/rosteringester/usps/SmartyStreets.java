@@ -98,8 +98,6 @@ public class SmartyStreets extends AddressP {
                 record[2] = components.getState().toUpperCase();
                 record[3] = components.getZipCode();
 
-                System.out.println(">>>> SUITE???: " + components.getSecondaryNumber());
-
 
 //                System.out.println("County:          " + metadata.getCountyName());
 //                System.out.println("Latitude:        " + metadata.getLatitude());
@@ -162,12 +160,14 @@ public class SmartyStreets extends AddressP {
         int recordCount = batch.size();
 
 
+
         for (int i = 0; i < batch.size(); i++) {
             ArrayList<Candidate> candidates = lookups.get(i).getResult();
 
             String[] record = new String[8];
 
             if (candidates.isEmpty()) {
+
                 this.setValidAddress(false);
                 System.out.println("Address " + i + " is invalid.\n");
                 record[0] = "Invalid Address";
@@ -214,6 +214,7 @@ public class SmartyStreets extends AddressP {
 
                 record[6] = anl.getVacant(); // ADDRESS ACTIVE DATA
 
+
                 if(record[6] == null) {
                     record[6] = "";
                 }
@@ -225,6 +226,15 @@ public class SmartyStreets extends AddressP {
                 if(record[7] == null) {
                     record[7] = "";
                 }
+
+                System.out.println(">>>> Extra Secondary Numnber???: " + components.getExtraSecondaryNumber());
+                System.out.println(">>>> Extra Secondary Designator???: " + components.getExtraSecondaryDesignator());
+                System.out.println(">>>> Extra PMB Number???: " + components.getPmbNumber());
+                System.out.println(">>>> Extra PMB Designator???: " + components.getPmbDesignator());
+                System.out.println(">>>> Record Type (e.g. F, G, H, P, R, S, blank) : " + md.getRecordType());
+                System.out.println(">>>> Building Indidicator : " + md.getBuildingDefaultIndicator());
+                System.out.println(">>>> Footnotes (match) : " + anl.getFootnotes());
+
 
 
 //                // CANDIDATE DATA

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 public class DiscoverMedicare extends Discover {
     Logger LOGGER = Logger.getLogger(FileFactory.class.getName());
-    private boolean localDebug = true;
+    private boolean localDebug = false;
 
     public String[][] normalRoster;
 
@@ -463,15 +463,20 @@ public class DiscoverMedicare extends Discover {
                 }
             }
 
-            // -----------SET HOURS CODE--------------------
-            normalRoster[17][0] = roster.getAcceptingNewPatients();
-            for (int i = 1; i < getRowCount()-1; i++) {
-                if(acceptingLoc > -1) {
-                    normalRoster[17][i] = rv.validateAccepting(getValueAt(i, acceptingLoc));
-                } else {
-                    normalRoster[17][i] = "";
+            // -----------SET ACCEPTING NEW--------------------
+            if(roster.getAcceptingNewPatients() == null) {
+                normalRoster[17][0] = "";
+            } else {
+                normalRoster[17][0] = roster.getAcceptingNewPatients();
+                for (int i = 1; i < getRowCount()-1; i++) {
+                    if(acceptingLoc > -1) {
+                        normalRoster[17][i] = rv.validateAccepting(getValueAt(i, acceptingLoc));
+                    } else {
+                        normalRoster[17][i] = "";
+                    }
                 }
             }
+
 
 
             RosterWriter rw = new RosterWriter();

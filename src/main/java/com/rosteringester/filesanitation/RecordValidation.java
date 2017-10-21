@@ -24,7 +24,7 @@ public class RecordValidation extends RecordSanitation {
         npi = sanitizeNumber(npi);
         npi = getcleanNumber(npi);
 
-        if(npi.length() <= 10) {
+        if(npi.length() >= 5 && npi.length() <= 10) {
             finalNPI = npi;
         } else {
             if(RosterIngester.networkSupport != true) {
@@ -59,6 +59,7 @@ public class RecordValidation extends RecordSanitation {
         tin = sanitizeNumber(tin);
         tin = getcleanNumber(tin);
 
+
         if(tin.length() >= 7 && tin.length() <= 9) {
             finalTIN = tin;
         } else {
@@ -74,6 +75,7 @@ public class RecordValidation extends RecordSanitation {
                             .build()
                             .create(RosterIngester.logConn);
                     if (localDebug) LOGGER.info(" TIN FAILED TO VALIDATE ");
+                    finalTIN = "-1";
                 }
             }
             finalTIN = "-1";
@@ -94,6 +96,10 @@ public class RecordValidation extends RecordSanitation {
         phone = getcleanNumber(phone);
         phone = phone.replace("(", "").replace(")", "").replace(".", "");
 
+
+        if (phone.length() == 0 || phone.equals("") || phone == null) {
+            finalPhone = "-1";
+        }
 
         if (phone.length() == 10) {
             finalPhone = phone;
@@ -443,6 +449,12 @@ public class RecordValidation extends RecordSanitation {
             case "directory":
                 finalDir = "Y";
                 break;
+            case "dir":
+                finalDir = "Y";
+                break;
+            case "nondir":
+                finalDir = "N";
+                break;
 
         }
         return finalDir;
@@ -458,6 +470,7 @@ public class RecordValidation extends RecordSanitation {
 
         accpt = sanitizeWords(accpt);
         accpt = accpt.toLowerCase().trim();
+
 
         switch (accpt) {
             case "0":
@@ -490,8 +503,14 @@ public class RecordValidation extends RecordSanitation {
             case "closed":
                 finalAccpt = "N";
                 break;
+            case "na":
+                finalAccpt = "N";
+                break;
 
         }
+
+        if(localDebug) System.out.println("Final>>> " + finalAccpt);
+
         return finalAccpt;
     }
 

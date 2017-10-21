@@ -243,14 +243,13 @@ if (!RosterIngester.accentureSupport) {
     File fAccenture = new File(accentureFolder.toString());
 
     try {
-        FileUtils.copyFile(fSource, fTarget);
+        //FileUtils.copyFile(fSource, fTarget);
         FileUtils.copyFile(fSource, fAccenture);
     } catch (IOException e) {
         e.printStackTrace();
     }
 
-    move.moveFile(RosterIngester.ROSTERS + fileName,
-            "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\ACCENTURE_LOCK_TEST\\" + fileName);
+    move.moveFile(RosterIngester.ROSTERS + fileName, target);
 
 } // end accenture if-statement
 
@@ -488,11 +487,21 @@ for (int i = 1; i < recordSize; i++) {
     System.out.println(getPercentage(i, recordSize));
 
 
+//    // Check for empty or blank NPI's
+//    if(medicare.normalRoster[0][i] == null || medicare.normalRoster[0][i].length() < 1) {
+//        medicare.normalRoster[0][i] = "-1";
+//    }
+//
+//    // Check for empty or blank TIN's
+//    if(medicare.normalRoster[1][i] == null || medicare.normalRoster[1][i].length() < 1) {
+//        medicare.normalRoster[1][i] = "-1";
+//    }
+//
+//    // Check for empty or blank PHONE's
+//    if(medicare.normalRoster[14][i] == null || medicare.normalRoster[14][i].length() < 1) {
+//        medicare.normalRoster[14][i] = "-1";
+//    }
 
-//                if(localDebug) System.out.println("Value [" + i+"] " + md5.generateRowKey(medicare.normalRoster[0][i],
-//                        medicare.normalRoster[1][i],medicare.normalRoster[2][i],
-//                        medicare.normalRoster[3][i], medicare.normalRoster[6][i],
-//                        medicare.normalRoster[9][i],medicare.normalRoster[17][i]));
     dbRoster = new DBRosterMDCRRequired.Builder()
             .delegateID(delegateID)
             .rosterName(rosterFileName)
@@ -513,7 +522,7 @@ for (int i = 1; i < recordSize; i++) {
             .address(medicare.normalRoster[9][i])
             .suite(medicare.normalRoster[10][i])
             .city(medicare.normalRoster[11][i])
-            .state(medicare.normalRoster[12][i])
+            .state(medicare.normalRoster[12][i].toUpperCase())
             .zipCode(Integer.parseInt(medicare.normalRoster[13][i]))
             .servicePhone(Long.parseLong(medicare.normalRoster[14][i]))
             .officeHours(medicare.normalRoster[15][i])

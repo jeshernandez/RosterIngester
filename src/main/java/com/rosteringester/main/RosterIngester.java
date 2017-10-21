@@ -16,23 +16,28 @@ import java.util.logging.Logger;
  * Created by jeshernandez on 6/14/17.
  */
 
-
+// ------------------------------------------------------------------------------------------------
+// TODO - ISSUE#1: me certain templates hang, example: IL_Adventist_Aetna and Coventry...
+// TODO - issue is solved by copying and pasting in text form.
+// -------------------------------------------------------------------------------------------------
 
 public class RosterIngester {
-    private static boolean activateMove = true;
-    private static boolean activateDelegateDetection = false;
+    public static boolean debug = true;
+    private static boolean activateMove = false;
+    private static boolean activateDelegateDetection = true;
 
     private static boolean activeAddressNormalization = false;
     private static String typeOfNormalization = "vendorusps";
 
     public static boolean accentureSupport = false;
-    public static String accentureErrorMsg = "ADDRESS HORIZONTAL";
+    public static String accentureErrorMsg = "HORIZONTAL DATA";
     // STANDARDIZATION ISSUES: ADDRESS
     // STANDARDIZATION ISSUES - TABS
     // FIELDS, PARSE REQUIRED
-    // ADDRESS HORIZONTAL
+    // HORIZONTAL ADDRESSS
+    // SPLIT TIN TO PROVDR ROWS
     public static boolean networkSupport = false;
-    public static String networkErrorMsg = "ROSTER EMAIL QUESTION";
+    public static String networkErrorMsg = "MISSING TIN, FLAGS";
     // ADDRESS MISSING
     // ROLE VALUES CANNOT BE MAPPED
     // ROSTER MISSING PHONE, TIN, OTHER FIELDS
@@ -42,10 +47,7 @@ public class RosterIngester {
     // BAD ROSTERS, MISSING FIELDS
     // MISSING DIR PRINT, ACCPT PT
 
-    public static boolean ingestData = false;
-    public static boolean debug = true;
-
-
+    public static boolean ingestData = true;
 
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;

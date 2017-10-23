@@ -521,6 +521,9 @@ public class RecordValidation extends RecordSanitation {
             case "closed to all":
                 finalAccpt = "N";
                 break;
+            case "no panel":
+                finalAccpt = "N";
+                break;
 
         }
 

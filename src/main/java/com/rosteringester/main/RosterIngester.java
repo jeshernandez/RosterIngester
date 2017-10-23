@@ -19,6 +19,14 @@ import java.util.logging.Logger;
 // ------------------------------------------------------------------------------------------------
 // TODO - ISSUE#1: me certain templates hang, example: IL_Adventist_Aetna and Coventry...
 // TODO - issue is solved by copying and pasting in text form.
+// TODO - ISSUE#2: parallel ingestion of rosters, indicate in MS SQL while a roster is in progress.
+// TODO - this will allow additional threads to run and allow multiple rosters to ingest at same time.
+// TODO - ISSUE#3: need a way to stop and validate fields captured by distance algorithm are valid. Then
+// TODO - give user opportunity to accept, or select new fields. This is for GUI version.
+// TODO - ISSUE #3: come up with a solution to automatically track rosters throughout the process
+// TODO - difficulty comes in when roster name (title) changes.
+// TODO - rosters with no product, fail with simple NullPointerException. Need to throw exception.
+// TODO - rosters with no SUITE are very common. We need a workaround to allow these rosters.
 // -------------------------------------------------------------------------------------------------
 
 public class RosterIngester {
@@ -30,14 +38,14 @@ public class RosterIngester {
     private static String typeOfNormalization = "vendorusps";
 
     public static boolean accentureSupport = false;
-    public static String accentureErrorMsg = "HORIZONTAL DATA";
+    public static String accentureErrorMsg = "TABS, EXCLUDE RED";
     // STANDARDIZATION ISSUES: ADDRESS
     // STANDARDIZATION ISSUES - TABS
     // FIELDS, PARSE REQUIRED
-    // HORIZONTAL ADDRESSS
+    // HORIZONTAL ADDRESS
     // SPLIT TIN TO PROVDR ROWS
     public static boolean networkSupport = false;
-    public static String networkErrorMsg = "MISSING TIN, FLAGS";
+    public static String networkErrorMsg = "MISSING DIR PRINT, ACCPT PT";
     // ADDRESS MISSING
     // ROLE VALUES CANNOT BE MAPPED
     // ROSTER MISSING PHONE, TIN, OTHER FIELDS

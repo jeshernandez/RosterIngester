@@ -292,6 +292,9 @@ public class RecordValidation extends RecordSanitation {
             case "primary care":
                 finalRole = "pcp";
                 break;
+            case "sp":
+                finalRole = "spec";
+                break;
             default:
                 finalRole = "none";
 
@@ -455,6 +458,12 @@ public class RecordValidation extends RecordSanitation {
             case "nondir":
                 finalDir = "N";
                 break;
+            case "referrable":
+                finalDir = "Y";
+                break;
+            case "not referrable":
+                finalDir = "N";
+                break;
 
         }
         return finalDir;
@@ -504,6 +513,12 @@ public class RecordValidation extends RecordSanitation {
                 finalAccpt = "N";
                 break;
             case "na":
+                finalAccpt = "N";
+                break;
+            case "open to all":
+                finalAccpt = "Y";
+                break;
+            case "closed to all":
                 finalAccpt = "N";
                 break;
 

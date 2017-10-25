@@ -45,13 +45,38 @@ public class RecordSanitation {
     }
 
 
+    String sanitizeSpec(String spec) {
+        spec = getCleanString(spec);
+
+        if(spec.length()>1) {
+            if(spec.length() > 50) {
+                spec = spec.substring(0, 50);
+            } else {
+                spec = spec;
+            }
+        }
+
+        return spec;
+
+    }
+
+
     // --------------------------------------------
     String sanitizeZip(String zip){
         zip = getcleanNumber(zip);
+        zip = getCleanString(zip);
+        zip = zip.replaceAll("-", "");
 
-        if(zip.length() > 5) {
-            zip = zip.substring(0, 5);
+        if(zip.length()>1) {
+            if(zip.length() > 5) {
+                zip = zip.substring(0, 5);
+            } else {
+                zip = zip;
+            }
+        } else {
+            zip = "-1";
         }
+
 
         return zip;
     }
@@ -123,13 +148,17 @@ public class RecordSanitation {
 
     // ------- COMMON METHODS TO USE --------------
     String getcleanNumber(String keyword) {
-        keyword = keyword.replaceAll("[^a-zA-Z0-9_//~~!`@#$%^&*()_+={\\[}\\]|.,<>]","");
+        keyword = keyword.trim();
+        //keyword = keyword.replaceAll("[^a-zA-Z0-9_//~~!`@#$%^&*()_+={\\[}\\]|.,<>]","");
+        keyword = keyword.replaceAll("[^0-9.]", "");
         return keyword;
     }
 
 
     String getCleanString(String keyword) {
+        keyword = keyword.trim();
         keyword = keyword.replaceAll("[//~~!`\"@#$%^&*()_+={\\[}\\]|.,<>-]","");
+        keyword = keyword.toLowerCase();
         return keyword;
     }
 

@@ -2,10 +2,9 @@ package com.rosteringester.main;
 
 import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.delegatedetect.DetectDelegate;
-import com.rosteringester.discovery.DiscoverMedicare;
-import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.usps.AddressEngine;
+import com.rosteringester.usps.AddressInText;
 
 
 import java.sql.Connection;
@@ -17,28 +16,64 @@ import java.util.logging.Logger;
  * Created by jeshernandez on 6/14/17.
  */
 
-// TODO me - 07/04/2017 remove word from key and add to requiredFields
-// TODO me - 07/04/2017 find a way to remove highest score for iterator
-// TODO: Michael - Add into its own Service Object. Remove from main method.
+// ------------------------------------------------------------------------------------------------
+// TODO - ISSUE#1: me certain templates hang, example: IL_Adventist_Aetna and Coventry...
+// TODO - issue is solved by copying and pasting in text form.
+// TODO - ISSUE#2: parallel ingestion of rosters, indicate in MS SQL while a roster is in progress.
+// TODO - this will allow additional threads to run and allow multiple rosters to ingest at same time.
+// TODO - ISSUE#3: need a way to stop and validate fields captured by distance algorithm are valid. Then
+// TODO - give user opportunity to accept, or select new fields. This is for GUI version.
+// TODO - ISSUE #3: come up with a solution to automatically track rosters throughout the process
+// TODO - difficulty comes in when roster name (title) changes.
+// TODO - rosters with no product, fail with simple NullPointerException. Need to throw exception.
+// TODO - rosters with no SUITE are very common. We need a workaround to allow these rosters.
+// -------------------------------------------------------------------------------------------------
 
 public class RosterIngester {
     public static boolean debug = true;
     private static boolean activateMove = false;
     private static boolean activateDelegateDetection = true;
-    public static boolean ingestData = false;
 
+    private static boolean activeAddressNormalization = false;
+    private static String typeOfNormalization = "vendorusps";
+
+    public static boolean accentureSupport = false;
+    public static String accentureErrorMsg = "TABS, EXCLUDE RED";
+    // STANDARDIZATION ISSUES: ADDRESS
+    // STANDARDIZATION ISSUES - TABS
+    // FIELDS, PARSE REQUIRED
+    // HORIZONTAL ADDRESS
+    // SPLIT TIN TO PROVDR ROWS
+    public static boolean networkSupport = false;
+    public static String networkErrorMsg = "MISSING DIR PRINT, ACCPT PT";
+    // ADDRESS MISSING
+    // ROLE VALUES CANNOT BE MAPPED
+    // ROSTER MISSING PHONE, TIN, OTHER FIELDS
+    // MISSING DIR PRINT, MUL DELEGATES
+    // MISSING DIRECTORY PRINT"
+    // MISSING ACCEPTING NEW PAT
+    // BAD ROSTERS, MISSING FIELDS
+    // MISSING DIR PRINT, ACCPT PT
+
+    public static boolean ingestData = true;
 
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
 
-//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\normalized\\";
-//    public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
-//    public static String ROSTERS = "C:\\DATA\\rosters\\";
+//    public static String NORMALIZE_PATH = "C:\\DATA\\rosters\\standardized\\";
+    //public static String ARRIVING_ROSTERS = "C:\\DATA\\rosters\\arrived";
+   // public static String ROSTERS = "C:\\DATA\\rosters\\";
+//    public static String NETWORK_FOLDER = "C:\\DATA\\rosters\\network_review\\";
+//    public static String COMPLETED_ROSTER = "C:\\DATA\\rosters\\archive_completed\\";
 
-    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\normalized\\";
+
+    public static String NORMALIZE_PATH = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\standardized\\";
     public static String ARRIVING_ROSTERS = "\\\\midp-sfs-009\\Prov_addresses_CleanUp\\Round 2\\Rosters";
     public static String ROSTERS = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\";
     public static String NETWORK_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\network_review\\";
+    public static String COMPLETED_ROSTER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\archive_completed\\";
+    public static String ACCENTURE_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\accenture_support\\";
+    public static String BACKUP_FOLDER = "\\\\frsp-oa-001\\DirectoryAccuracyITStrg\\rosters\\BACKUP\\";
 
     public static void main(String [] args) {
 
@@ -75,9 +110,10 @@ public class RosterIngester {
         logConn = dbSql.getDBConn();
 
         // ----------------------------------
-        //    2.   MOVE AND LOG FILES
+        //    2.   MOVE AND LOG FILES (package: filewrite)
         // ----------------------------------
         if(activateMove) new FileMover().detectFilesMoveThem();
+
 
         // ----------------------------------
         //    3.   START DELEGATE DETECTION
@@ -89,12 +125,61 @@ public class RosterIngester {
         }
 
 
-//        DiscoverMedicare medicare = new DiscoverMedicare();
-//        medicare.findField();
+        if(activeAddressNormalization) {
 
-//        AddressEngine ae = new AddressEngine();
-//                ae.startStandard("epdbQueryCustom.sql",
-//                        "epdbUpdate.sql");
+            if(typeOfNormalization.toLowerCase().equals("grips")) {
+                LOGGER.info("Normalizing grips...");
+                AddressEngine ae = new AddressEngine();
+                ae.startStandard("gripsQuery.sql",
+                        "gripsUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("epdb")) {
+                LOGGER.info("Normalizing epdb...");
+                AddressEngine ae = new AddressEngine();
+                ae.startStandard("epdbAddressQuery.sql",
+                        "epdbAddressUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("cpd")) {
+                LOGGER.info("Normalizing cpd...");
+                AddressEngine ae = new AddressEngine();
+                ae.startStandard("cpdAddressQuery.sql",
+                        "cpdAddressUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("gripsusps")) {
+                LOGGER.info("Normalizing usps cpd...");
+                AddressEngine ae = new AddressEngine();
+                ae.startUSPS("uspsGRIPSQuery.sql",
+                        "uspsGRIPSUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("epdbusps")) {
+                LOGGER.info("Normalizing usps epdb...");
+                AddressEngine ae = new AddressEngine();
+                ae.startUSPS("uspsEPDBQuery.sql",
+                        "uspsEPDBUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("cpdusps")) {
+                LOGGER.info("Normalizing usps cpd...");
+                AddressEngine ae = new AddressEngine();
+                ae.startUSPS("uspsCPDQuery.sql",
+                        "uspsCPDUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("epdbtext")) {
+                LOGGER.info("Normalizing usps text EPDB...");
+                AddressEngine ae = new AddressEngine();
+                ae.startAddressInText("textEPDBQuery.sql",
+                        "textEPDBUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("gripstext")) {
+                LOGGER.info("Normalizing usps text GRIPS...");
+                AddressEngine ae = new AddressEngine();
+                ae.startAddressInText("textGRIPSQuery.sql",
+                        "textGRIPSUpdate.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("vendorusps")) {
+                LOGGER.info("Normalizing usps text VENDOR USPS...");
+                AddressEngine ae = new AddressEngine();
+                ae.startSmartyWithSuite("vendorUSPS_DATA_Query.sql",
+                        "vendorUSPS_DATA_Update.sql");
+            }
+
+
+
+
+
+        } // End-if
+
 
 
         try {

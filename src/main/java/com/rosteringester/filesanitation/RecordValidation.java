@@ -22,20 +22,26 @@ public class RecordValidation extends RecordSanitation {
     public String validateNPI(String npi, String filename, int rowid) {
         String finalNPI = null;
         npi = sanitizeNumber(npi);
+        npi = getcleanNumber(npi);
 
-        if(npi.length() == 10) {
+        if(npi.length() >= 5 && npi.length() <= 10) {
             finalNPI = npi;
         } else {
-            dbLog = new LogValidationFallout.Builder()
-                    .fileName(filename)
-                    .rowID(rowid)
-                    .status(status)
-                    .description("Failed to validate NPI")
-                    .dateCreated(dbDate())
-                    .createdBy(getUserName())
-                    .build()
-                    .create(RosterIngester.logConn);
-            if(localDebug) LOGGER.info (" NPI FAILED TO VALIDATE " );
+            if(RosterIngester.networkSupport != true) {
+                if(RosterIngester.accentureSupport != true) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate NPI")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    if (localDebug) LOGGER.info(" NPI FAILED TO VALIDATE ");
+                }
+            }
+
             // TODO throw error, and log it.
             finalNPI = "-1";
         }
@@ -51,20 +57,28 @@ public class RecordValidation extends RecordSanitation {
     public String validateTIN(String tin, String filename, int rowid) {
         String finalTIN = null;
         tin = sanitizeNumber(tin);
+        tin = getcleanNumber(tin);
 
-        if(tin.length() == 9) {
+
+        if(tin.length() >= 7 && tin.length() <= 9) {
             finalTIN = tin;
         } else {
-            dbLog = new LogValidationFallout.Builder()
-                    .fileName(filename)
-                    .rowID(rowid)
-                    .status(status)
-                    .description("Failed to validate TIN")
-                    .dateCreated(dbDate())
-                    .createdBy(getUserName())
-                    .build()
-                    .create(RosterIngester.logConn);
-            if(localDebug) LOGGER.info (" TIN FAILED TO VALIDATE " );
+            if(RosterIngester.networkSupport != true) {
+                if(RosterIngester.accentureSupport != true) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate TIN")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    if (localDebug) LOGGER.info(" TIN FAILED TO VALIDATE ");
+                    finalTIN = "-1";
+                }
+            }
+            finalTIN = "-1";
             // TODO throw error, and log it.
         }
 
@@ -77,28 +91,81 @@ public class RecordValidation extends RecordSanitation {
 
     public String validatePhone(String phone, String filename, int rowid) {
         String finalPhone = null;
+
         phone = sanitizeNumber(phone);
-        phone = phone.replace("(", "").replace(")", "");
-        if(phone.length() >= 7) {
-          if(phone.length() < 11) {
-              finalPhone = phone;
-          } else {
-              dbLog = new LogValidationFallout.Builder()
-                      .fileName(filename)
-                      .rowID(rowid)
-                      .status(status)
-                      .description("Failed to validate Phone")
-                      .dateCreated(dbDate())
-                      .createdBy(getUserName())
-                      .build()
-                      .create(RosterIngester.logConn);
-              if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
-          }
-        } else {
-            if(localDebug) LOGGER.info (" PHONE FAILED TO VALIDATE " );
-            // TODO throw error, and log it.
-            finalPhone = "0";
+        phone = getcleanNumber(phone);
+        phone = phone.replace("(", "").replace(")", "").replace(".", "");
+
+
+        if (phone.length() == 0 || phone.equals("") || phone == null) {
+            finalPhone = "-1";
         }
+
+        if (phone.length() == 10) {
+            finalPhone = phone;
+        }
+
+
+        if (phone.length() > 10) {
+            // TODO throw error, and log it.
+            if (!RosterIngester.accentureSupport) {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate Phone:long")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO LONG " + phone);
+                //finalPhone = "-1";
+                finalPhone = phone.substring(0, 10);
+            }
+            // trimming to receive only 10 digits.
+            finalPhone = phone.substring(0, 10);
+
+
+        }
+
+            if (phone.length() < 10) {
+                // TODO throw error, and log it.
+                if (!RosterIngester.accentureSupport) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate Phone:small")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: TOO SMALL ");
+                    finalPhone = "-1";
+                }
+            }
+
+        if (phone == null || phone.equals("")) {
+            // TODO throw error, and log it.
+            if (!RosterIngester.accentureSupport) {
+                dbLog = new LogValidationFallout.Builder()
+                        .fileName(filename)
+                        .rowID(rowid)
+                        .status(status)
+                        .description("Failed to validate Phone:blank")
+                        .dateCreated(dbDate())
+                        .createdBy(getUserName())
+                        .build()
+                        .create(RosterIngester.logConn);
+                if (localDebug) LOGGER.info(" PHONE FAILED TO VALIDATE: BLANK ");
+                finalPhone = "-1";
+            }
+        }
+
+
+
+        if (localDebug) System.out.println("Clean Phone: " + finalPhone);
+
         return finalPhone;
     }
 
@@ -169,7 +236,9 @@ public class RecordValidation extends RecordSanitation {
 
         String finalRole = null;
         finalRole = sanitizeWords(role).toLowerCase();
-        if(localDebug) System.out.println("Role: " + finalRole);
+
+        if(finalRole.contains("pcp")) finalRole = "pcp";
+        if(finalRole.contains("scp")) finalRole = "spec";
 
         switch (finalRole) {
             case "pcp":
@@ -198,7 +267,32 @@ public class RecordValidation extends RecordSanitation {
                 break;
             case "true":
                 finalRole = "pcp";
+                break;
             case "false":
+                finalRole = "spec";
+                break;
+            case "s":
+                finalRole = "spec";
+                break;
+            case "p":
+                finalRole = "pcp";
+                break;
+            case "pcp no panel":
+                finalRole = "pcp";
+                break;
+            case "primary care physician":
+                finalRole = "pcp";
+                break;
+            case "dual":
+                finalRole = "both";
+                break;
+            case "specialty care":
+                finalRole = "spec";
+                break;
+            case "primary care":
+                finalRole = "pcp";
+                break;
+            case "sp":
                 finalRole = "spec";
                 break;
             default:
@@ -232,7 +326,7 @@ public class RecordValidation extends RecordSanitation {
 
         String finalSuite = null;
         suite = sanitizeAddress(suite);
-        System.out.println("Validated Suite: " + suite);
+
         if(suite.length() > 10) {
 //            dbLog = new LogValidationFallout.Builder()
 //                    .fileName(filename)
@@ -268,16 +362,18 @@ public class RecordValidation extends RecordSanitation {
             finalState = sanitizeState(state);
 
             if(finalState == null) {
-                dbLog = new LogValidationFallout.Builder()
-                        .fileName(filename)
-                        .rowID(rowid)
-                        .status(status)
-                        .description("Failed to validate State")
-                        .dateCreated(dbDate())
-                        .createdBy(getUserName())
-                        .build()
-                        .create(RosterIngester.logConn);
-                LOGGER.info ("STATE FAILED TO VALIDATE " );
+                if(!RosterIngester.accentureSupport) {
+                    dbLog = new LogValidationFallout.Builder()
+                            .fileName(filename)
+                            .rowID(rowid)
+                            .status(status)
+                            .description("Failed to validate State")
+                            .dateCreated(dbDate())
+                            .createdBy(getUserName())
+                            .build()
+                            .create(RosterIngester.logConn);
+                    LOGGER.info("STATE FAILED TO VALIDATE ");
+                }
                 //System.out.println("State Failed > " + state);
                 // TODO throw error, and log it.
             }
@@ -300,6 +396,21 @@ public class RecordValidation extends RecordSanitation {
 
         return finalZip;
     }
+
+
+    // ---------------------------
+    //      VALIDATE SPECIALTY
+    // ---------------------------
+
+    public String validateSpec(String spec) {
+
+        String finalSpecialty = null;
+        finalSpecialty = sanitizeSpec(spec);
+
+        return finalSpecialty;
+    }
+
+
 
 
     // ---------------------------
@@ -332,6 +443,27 @@ public class RecordValidation extends RecordSanitation {
             case "n":
                 finalDir = dir;
                 break;
+            case "false":
+                finalDir = "N";
+                break;
+            case "true":
+                finalDir = "Y";
+                break;
+            case "directory":
+                finalDir = "Y";
+                break;
+            case "dir":
+                finalDir = "Y";
+                break;
+            case "nondir":
+                finalDir = "N";
+                break;
+            case "referrable":
+                finalDir = "Y";
+                break;
+            case "not referrable":
+                finalDir = "N";
+                break;
 
         }
         return finalDir;
@@ -347,6 +479,7 @@ public class RecordValidation extends RecordSanitation {
 
         accpt = sanitizeWords(accpt);
         accpt = accpt.toLowerCase().trim();
+
 
         switch (accpt) {
             case "0":
@@ -367,8 +500,35 @@ public class RecordValidation extends RecordSanitation {
             case "n":
                 finalAccpt = accpt;
                 break;
+            case "true":
+                finalAccpt = "Y";
+                break;
+            case "false":
+                finalAccpt = "N";
+                break;
+            case "open":
+                finalAccpt = "Y";
+                break;
+            case "closed":
+                finalAccpt = "N";
+                break;
+            case "na":
+                finalAccpt = "N";
+                break;
+            case "open to all":
+                finalAccpt = "Y";
+                break;
+            case "closed to all":
+                finalAccpt = "N";
+                break;
+            case "no panel":
+                finalAccpt = "N";
+                break;
 
         }
+
+        if(localDebug) System.out.println("Final>>> " + finalAccpt);
+
         return finalAccpt;
     }
 

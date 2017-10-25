@@ -8,14 +8,15 @@ import com.smartystreets.api.us_street.*;
 
 import java.io.IOException;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 /**
  * Created by jeshernandez on 07/14/2017.
  */
 public class AddressInText extends AddressP {
     Vector<String[]> standardAddyVector;
-
-
+    private boolean localDebug = true;
+    Logger LOGGER = Logger.getLogger(AddressInText.class.getName());
 
     // ---------------------------------------------------------------
     public Vector<String[]> startTextInAddress(boolean isBehindProxy, String[] textInAddress,

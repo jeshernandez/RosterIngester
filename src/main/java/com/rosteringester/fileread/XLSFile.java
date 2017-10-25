@@ -1,7 +1,5 @@
 package com.rosteringester.fileread;
 
-import com.rosteringester.main.RosterIngester;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -11,9 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
@@ -22,31 +18,33 @@ import java.util.logging.Logger;
 public class XLSFile extends Excel implements FileReader {
     Logger LOGGER = Logger.getLogger(XLSFile.class.getName());
     private FileType fileType; // Will be used when moving the file to archive.
-
+    HashMap<Integer,String> rosterHeaders;
+    boolean localDebug = false;
 
     // ----------------------------------------------------------
     public HashMap<Integer,String> getHeaders(String FileName) {
-        HashMap<Integer, String> colMapByName = null;
-
+        //HashMap<Integer, String> colMapByName = null;
+        rosterHeaders = new HashMap<>();
         try {
             InputStream ExcelFileToRead = new FileInputStream(FileName);
             HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
-            HSSFSheet sheet = wb.getSheetAt(0);
 
-            int rowNum = sheet.getLastRowNum() + 1;
+            HSSFSheet sheet = wb.getSheetAt(0);
+            sheet.setDisplayGridlines(false);
+
+
             int colNum = sheet.getRow(0).getLastCellNum();
-            colMapByName = new HashMap<>();
             if (sheet.getRow(0).cellIterator().hasNext()) {
                 for (int j = 0; j < colNum; j++) {
 
                     if(sheet.getRow(0).getCell(j) != null) {
                         String header = cleanHeaders(sheet.getRow(0).getCell(j).toString());
-                        if(RosterIngester.debug) System.out.println(header);
-                        colMapByName.put(j, header);
+                        if(localDebug) System.out.println(header);
+                        rosterHeaders.put(j,header);
                     } else {
                         // TODO - me log empty field, and drop.
                         LOGGER.info("Empty Field Name");
-                        colMapByName.put(j, "null_field_name");
+                        rosterHeaders.put(j, "null_field_name");
                     }
 
                 }
@@ -57,14 +55,14 @@ public class XLSFile extends Excel implements FileReader {
             e.printStackTrace();
         }
 
-        return colMapByName;
+        return rosterHeaders;
     }
 
 
 
 
     // ----------------------------------------------------------
-    static String[][] getRecords(String excelFileName)  {
+    public String[][] getRecords(String excelFileName)  {
         String[][] xlsxData = null;
         // TODO Jesse, find workaround for special empty values, skipping cell.
 
@@ -107,7 +105,7 @@ public class XLSFile extends Excel implements FileReader {
 
                         if(cell.getCellTypeEnum().equals(CellType.STRING)) {
                             xlsxData[rowTracker][colTracker] = cell.getStringCellValue();
-                            //System.out.println("[STRING]: " + xlsxData[rowTracker][colTracker]);
+                            if(localDebug)  System.out.println("[STRING]: " + xlsxData[rowTracker][colTracker]);
                         } else if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
                             if (DateUtil.isCellDateFormatted(cell)) {
                                 xlsxData[rowTracker][colTracker] = df.format(cell.getDateCellValue());
@@ -119,13 +117,20 @@ public class XLSFile extends Excel implements FileReader {
 
                         } else if (cell.getCellTypeEnum().equals(CellType.ERROR)) {
                             xlsxData[rowTracker][colTracker] = "error";
+                        } else if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)) {
+                            if(cell.getBooleanCellValue()) {
+                                xlsxData[rowTracker][colTracker] = "TRUE";
+                            } else {
+                                xlsxData[rowTracker][colTracker] = "FALSE";
+                            }
+                            if(localDebug) System.out.println("[BOOLEAN]: " + xlsxData[rowTracker][colTracker]);
                         } else if (cell.getCellTypeEnum().equals(CellType._NONE)) {
                             xlsxData[rowTracker][colTracker] = "none";
                         }  else if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
                             xlsxData[rowTracker][colTracker] = "formula";
                         } else if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
                             xlsxData[rowTracker][colTracker] = "";
-                            //System.out.println("[BLANK]: " + xlsxData[rowTracker][colTracker]);
+                            //if(localDebug) System.out.println("[BLANK]: " + xlsxData[rowTracker][colTracker]);
                         }
                     }
 

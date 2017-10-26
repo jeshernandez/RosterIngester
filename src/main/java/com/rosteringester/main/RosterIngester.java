@@ -2,6 +2,7 @@ package com.rosteringester.main;
 
 import com.rosteringester.db.DbSqlServer;
 import com.rosteringester.delegatedetect.DetectDelegate;
+import com.rosteringester.emailsystem.SendEmail;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.usps.AddressEngine;
 import com.rosteringester.usps.AddressInText;
@@ -27,15 +28,17 @@ import java.util.logging.Logger;
 // TODO - difficulty comes in when roster name (title) changes.
 // TODO - rosters with no product, fail with simple NullPointerException. Need to throw exception.
 // TODO - rosters with no SUITE are very common. We need a workaround to allow these rosters.
+// TODO - ISSUE #4 multiple tab detection xls xlsx
+// TODO ISSUE #5 reject rosters that do not have a product
 // -------------------------------------------------------------------------------------------------
 
 public class RosterIngester {
     public static boolean debug = true;
     private static boolean activateMove = false;
-    private static boolean activateDelegateDetection = true;
+    private static boolean activateDelegateDetection = false;
 
-    private static boolean activeAddressNormalization = false;
-    private static String typeOfNormalization = "vendorusps";
+    private static boolean activeAddressNormalization = true;
+    private static String typeOfNormalization = "grips2";
 
     public static boolean accentureSupport = false;
     public static String accentureErrorMsg = "TABS, EXCLUDE RED";
@@ -45,7 +48,7 @@ public class RosterIngester {
     // HORIZONTAL ADDRESS
     // SPLIT TIN TO PROVDR ROWS
     public static boolean networkSupport = false;
-    public static String networkErrorMsg = "MISSING DIR PRINT, ACCPT PT";
+    public static String networkErrorMsg = "STILL MISSING TIN";
     // ADDRESS MISSING
     // ROLE VALUES CANNOT BE MAPPED
     // ROSTER MISSING PHONE, TIN, OTHER FIELDS
@@ -55,7 +58,7 @@ public class RosterIngester {
     // BAD ROSTERS, MISSING FIELDS
     // MISSING DIR PRINT, ACCPT PT
 
-    public static boolean ingestData = true;
+    public static boolean ingestData = false;
 
     static Logger LOGGER = Logger.getLogger(RosterIngester.class.getName());
     public static Connection logConn = null;
@@ -100,7 +103,7 @@ public class RosterIngester {
 
        // Discover the roster
 
-
+//        new SendEmail().init("GRIPS: URGENT - Medicare / Roster Updates", "Our very first GRIPS notificaiton email.");
 
         // ----------------------------------
         //    1.   INSTANTIATE CONN
@@ -172,6 +175,11 @@ public class RosterIngester {
                 AddressEngine ae = new AddressEngine();
                 ae.startSmartyWithSuite("vendorUSPS_DATA_Query.sql",
                         "vendorUSPS_DATA_Update.sql");
+            } else if(typeOfNormalization.toLowerCase().equals("grips2")) {
+                LOGGER.info("Normalizing usps text GRIPS NO SUITE...");
+                AddressEngine ae = new AddressEngine();
+                ae.startNoSuite("gripsQueryNoSuite.sql",
+                        "gripsUpdateNoSuite.sql");
             }
 
 

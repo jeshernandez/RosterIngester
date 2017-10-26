@@ -111,7 +111,7 @@ public class XLSFile extends Excel implements FileReader {
                                 xlsxData[rowTracker][colTracker] = df.format(cell.getDateCellValue());
                                 //System.out.println("[DATE]: " + df.format(cell.getDateCellValue()));
                             } else {
-                                xlsxData[rowTracker][colTracker] = String.valueOf((int) cell.getNumericCellValue()).toString();
+                                xlsxData[rowTracker][colTracker] = String.valueOf((long) cell.getNumericCellValue()).toString();
                                 //System.out.println("[NUMERIC]: " + xlsxData[rowTracker][colTracker]);
                             }
 

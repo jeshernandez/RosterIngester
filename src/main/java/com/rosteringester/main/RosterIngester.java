@@ -30,6 +30,9 @@ import java.util.logging.Logger;
 // TODO - rosters with no SUITE are very common. We need a workaround to allow these rosters.
 // TODO - ISSUE #4 multiple tab detection xls xlsx
 // TODO ISSUE #5 reject rosters that do not have a product
+// TODO - ISSUE #5 rosters are being ingested with blanks, have to figure out how to convert entire sheet
+// TODO - to text base only to eliminate ingesting rows that may detect a space and ingested blank.
+    // TODO - "smarty streets" sends 100 batch address, under 100 causes not to send.
 // -------------------------------------------------------------------------------------------------
 
 public class RosterIngester {
@@ -38,7 +41,7 @@ public class RosterIngester {
     private static boolean activateDelegateDetection = false;
 
     private static boolean activeAddressNormalization = true;
-    private static String typeOfNormalization = "grips2";
+    private static String typeOfNormalization = "grips";
 
     public static boolean accentureSupport = false;
     public static String accentureErrorMsg = "TABS, EXCLUDE RED";
@@ -47,6 +50,9 @@ public class RosterIngester {
     // FIELDS, PARSE REQUIRED
     // HORIZONTAL ADDRESS
     // SPLIT TIN TO PROVDR ROWS
+
+
+
     public static boolean networkSupport = false;
     public static String networkErrorMsg = "STILL MISSING TIN";
     // ADDRESS MISSING

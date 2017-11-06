@@ -6,21 +6,19 @@ import com.rosteringester.discovery.DiscoverMedicare;
 import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.filecategorization.FileMover;
 import com.rosteringester.fileread.ReadEntireTextFiles;
+import com.rosteringester.logs.LogGripsRosterProgress;
 import com.rosteringester.main.RosterIngester;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
 * Created by jeshernandez on 09/02/2017.
@@ -42,6 +40,7 @@ private int preDelegateID;
 private String delegateErrorMsg;
 private int scanRecords = 8000;
 
+LogGripsRosterProgress dbLog = null;
 String updateQuery = null;
 
 public DetectDelegate() {
@@ -65,16 +64,28 @@ db.setConnectionUrl();
 conn = db.getDBConn();
 
 String[] tinList;
-
+// Generating the query out of GRIPS_QUERIES folder.
+// "queryFile" pass-by-value is the filename of the query.
 String query = new ReadEntireTextFiles()
     .getTextData(this.directoryPath + "\\" + queryFile);
+// Sending the query based on the generated query above.
 db.query(conn, query);
 
+// Gets the actual roster filename.
 fileName = db.getValueAt(0,0).toString();
 productID = Integer.parseInt(db.getValueAt(0,1).toString());
 id = Integer.parseInt(db.getValueAt(0,2).toString());
 
+// Gets the delegate ID when file contains DLG value. Example foobar_dlg_5_<...>.xlsx
 preDelegateID = Integer.parseInt(db.getValueAt(0,4).toString());
+
+// Update in-progress roster, so there is no clashing.
+    dbLog = new LogGripsRosterProgress.Builder()
+        .inProgress('Y')
+        .userIngesting(System.getProperty("user.name").toUpperCase())
+        .recordID(id)
+        .build()
+        .create(RosterIngester.logConn);
 
 if(localDebug) System.out.println("File Name: " + db.getValueAt(0,0).toString());
 
@@ -259,8 +270,12 @@ if (!RosterIngester.accentureSupport) {
 // ------------------------
 // Update assigned delegate
 // --------------------------
-db.update(conn, updateQuery);
-
+    new LogGripsRosterProgress.Builder()
+            .inProgress('N')
+            .userIngesting(System.getProperty("user.name").toUpperCase())
+            .recordID(id)
+            .build()
+            .create(RosterIngester.logConn);
 
 
 // Close the connection if its open.

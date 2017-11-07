@@ -40,7 +40,13 @@ private int preDelegateID;
 private String delegateErrorMsg;
 private int scanRecords = 8000;
 
-LogGripsRosterProgress dbLog = null;
+    public static int getRosterID() {
+        return rosterID;
+    }
+
+    private static int rosterID;
+
+
 String updateQuery = null;
 
 public DetectDelegate() {
@@ -80,7 +86,7 @@ id = Integer.parseInt(db.getValueAt(0,2).toString());
 preDelegateID = Integer.parseInt(db.getValueAt(0,4).toString());
 
 // Update in-progress roster, so there is no clashing.
-    dbLog = new LogGripsRosterProgress.Builder()
+    new LogGripsRosterProgress.Builder()
         .inProgress('Y')
         .userIngesting(System.getProperty("user.name").toUpperCase())
         .recordID(id)

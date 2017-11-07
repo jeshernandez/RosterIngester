@@ -2,11 +2,13 @@ package com.rosteringester.discovery;
 
 
 import com.rosteringester.db.dbModels.DBRosterMDCRRequired;
+import com.rosteringester.delegatedetect.DetectDelegate;
 import com.rosteringester.encryption.MD5Hasher;
 import com.rosteringester.fileread.DirectoryFiles;
 import com.rosteringester.fileread.FileFactory;
 import com.rosteringester.filesanitation.RecordValidation;
 import com.rosteringester.filewrite.RosterWriter;
+import com.rosteringester.logs.LogGripsRosterProgress;
 import com.rosteringester.main.RosterIngester;
 import com.rosteringester.roster.Discovery;
 import com.rosteringester.roster.Roster;
@@ -19,6 +21,7 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class DiscoverMedicare extends Discover {
@@ -248,6 +251,51 @@ public class DiscoverMedicare extends Discover {
 
 
             System.out.println("Fields successful: " + getFieldSuccessCount());
+
+            // Stop and get user input:
+
+            Scanner reader = new Scanner(System.in);  // Reading from System.in
+            System.out.println("All fields OK? ");
+            String value = reader.next();
+
+            // ------------------------------------------
+            //             VALIDATE THE FIELDS
+            // ------------------------------------------
+            if(!value.toUpperCase().equals("Y")) {
+
+                // Cleaning up.
+
+                // Reset the roster.
+                new LogGripsRosterProgress.Builder()
+                        .inProgress('N')
+                        .userIngesting(System.getProperty("user.name").toUpperCase())
+                        .recordID(DetectDelegate.getRosterID())
+                        .build()
+                        .create(RosterIngester.logConn);
+
+                LOGGER.info("Roster Reset");
+
+                // Close the connection.
+                try {
+                    if(!RosterIngester.logConn.isClosed()) {
+                        RosterIngester.logConn.close();
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                LOGGER.info("Connection Closed.");
+                // Exit.
+                LOGGER.info("Existing...");
+                System.exit(0);
+
+            }
+
+        // ------------------------------------------
+        //             VALIDATE THE FIELDS ENDS
+        // ------------------------------------------
+
 
             HashMap failedField;
             failedField = getFailed(fieldcount);

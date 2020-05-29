@@ -14,7 +14,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:////frsp-oa-001/DirectoryAccuracyIT/SourceCodeExamples/Java/Libraries/IBMDB2Drivers/64bit/db2jcc4.jar!/" />
+          <root url="jar:////PATH/SourceCodeExamples/Java/Libraries/IBMDB2Drivers/64bit/db2jcc4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -23,7 +23,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:////frsp-oa-001/DirectoryAccuracyIT/SourceCodeExamples/Java/Libraries/commons-lang3-3.5.jar!/" />
+          <root url="jar:////PATH/SourceCodeExamples/Java/Libraries/commons-lang3-3.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
